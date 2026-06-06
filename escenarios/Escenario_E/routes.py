@@ -3,12 +3,16 @@ import math
 from flask import Blueprint, render_template, request
 
 escenario_E_bp = Blueprint(
-    'escenario_E',
-    __name__,
+    'escenario_E', 
+    __name__, 
+    url_prefix='/Escenario_E',
     template_folder='templates',
     static_folder='static'
 )
 
+@escenario_E_bp.route("/")
+def inicio():
+    return render_template("escenario_e.html")
 # ==========================================
 # 1. MODELOS MATEMÁTICOS (ESCENARIO E)
 # ==========================================

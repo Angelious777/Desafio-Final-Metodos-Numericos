@@ -2,14 +2,16 @@ from flask import Blueprint, render_template, request, jsonify
 import numpy as np
 
 escenario_C_bp = Blueprint(
-    'escenario_C', __name__, 
-    template_folder='templates', 
+    'escenario_C', 
+    __name__, 
+    url_prefix='/Escenario_C',
+    template_folder='templates',
     static_folder='static'
 )
 
-@escenario_C_bp.route("/escenario-c")
+@escenario_C_bp.route("/")
 def inicio():
-    return render_template("index.html")
+    return render_template("escenario_c.html")
 # Datos reales adaptados al caso de la carne de pollo (Bs/Kg)
 DATOS_POLLO = {
     "x": [1, 5, 10, 15, 20, 30],

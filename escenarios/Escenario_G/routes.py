@@ -2,15 +2,16 @@ from flask import Blueprint, render_template, jsonify, request
 from escenarios.Escenario_G.simulation.solver import ejecutar_simulacion
 
 escenario_G_bp = Blueprint(
-    'escenario_G',
-    __name__,
+    'escenario_G', 
+    __name__, 
+    url_prefix='/Escenario_G',
     template_folder='templates',
     static_folder='static'
 )
 
-@escenario_G_bp.route("/escenario-g")
+@escenario_G_bp.route("/")
 def inicio():
-    return render_template("index.html")
+    return render_template("escenario_g.html")
 
 @escenario_G_bp.route('/api/simular', methods=['POST'])
 def api_simular():

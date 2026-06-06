@@ -2,15 +2,16 @@ from flask import Blueprint, render_template, request, jsonify
 import numpy as np
 
 escenario_F_bp = Blueprint(
-    'escenario_F',
-    __name__,
+    'escenario_F', 
+    __name__, 
+    url_prefix='/Escenario_F',
     template_folder='templates',
     static_folder='static'
 )
 
-@escenario_F_bp.route("/escenario-f")
+@escenario_F_bp.route("/")
 def inicio():
-    return render_template("index.html")
+    return render_template("escenario_f.html")
 
 def descomposicion_lu_paso_a_paso(A, b):
     n = len(A)

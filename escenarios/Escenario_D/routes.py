@@ -11,15 +11,16 @@ from escenarios.Escenario_D.numerical.economic_analysis import (
 )
 
 escenario_D_bp = Blueprint(
-    'escenario_D',
-    __name__,
+    'escenario_D', 
+    __name__, 
+    url_prefix='/Escenario_D',
     template_folder='templates',
     static_folder='static'
 )
 
-@escenario_D_bp.route("/escenario-d")
+@escenario_D_bp.route("/")
 def inicio():
-    return render_template("index.html")
+    return render_template("escenario_d.html")
 
 @escenario_D_bp.route('/api/calcular_gasto', methods=['POST'])
 def calcular_gasto():
