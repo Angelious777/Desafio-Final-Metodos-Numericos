@@ -11,10 +11,11 @@ from escenarios.Escenario_A.numerical.lu import lu
 from escenarios.Escenario_A.numerical.gradiente_conjugado import gradiente_conjugado
 
 escenario_A_bp = Blueprint(
-    'escenario_A_bp', 
+    'escenario_A', 
     __name__, 
     url_prefix='/Escenario_A',
     template_folder='templates' 
+    static_folder='static'
 )
 
 @escenario_A_bp.route("/")
