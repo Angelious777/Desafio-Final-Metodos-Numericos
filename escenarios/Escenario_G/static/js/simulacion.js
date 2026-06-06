@@ -30,7 +30,7 @@ function conmutarTab(elemento, tipoEscenario) {
     const estabaActivo = elemento.classList.contains('border-win-active');
     
     // Limpiamos la selección visual de absolutamente todos los botones primero
-    resetearTabsVisuales(null);
+    resetearTabsVisuales();
     
     if (estabaActivo) {
         // Si ya estaba activo, el segundo clic lo libera pasando a control manual puro
@@ -43,13 +43,24 @@ function conmutarTab(elemento, tipoEscenario) {
 }
 
 /**
- * Helper para resetear estilos visuales inconsistentes en las tabs
+ * LIMPIEZA BLINDADA: Remueve los estilos activos apuntando directamente a cada ID
+ * para evitar fallos si no comparten la misma clase CSS en el HTML.
  */
-function resetearTabsVisuales(elementoActivo) {
-    document.querySelectorAll('.btn-tab').forEach(btn => btn.classList.remove('border-win-active'));
-    if (elementoActivo && elementoActivo.classList) {
-        elementoActivo.classList.add('border-win-active');
-    }
+function resetearTabsVisuales() {
+    const idsBotones = ['btn-caso-base', 'btn-alto-dialogo', 'btn-sin-mediadores', 'btn-alta-propagacion'];
+    
+    idsBotones.forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.classList.remove('border-win-active');
+            btn.classList.remove('active'); // Remoción de respaldo por si acaso
+        }
+    });
+
+    // Mantenemos el selector genérico por si también se usa en otras partes
+    document.querySelectorAll('.btn-tab').forEach(btn => {
+        btn.classList.remove('border-win-active');
+    });
 }
 
 /**
@@ -125,7 +136,8 @@ function restablecerValores() {
         if (el) el.value = sliders[id];
     });
 
-    resetearTabsVisuales(null);
+    // Ahora sí limpiará los botones por ID de forma infalible
+    resetearTabsVisuales();
 
     logBitacora("Valores de fábrica restablecidos con éxito. Reiniciando simulación base...");
     lanzarSimulacion();
@@ -580,7 +592,7 @@ function ejecutarLogicaAutomatizada(data) {
     // 3. ¿QUÉ PASA SI MEJORA LA TASA DE DIÁLOGO?
     asignarTextoSeguro(
         "ans-dialogo",
-        "Un incremento de la tasa de diálogo (c) acelera la reducción de manifestantes y favorece la estabilización del sistema."
+        "Un incremento de la tasa de diálogo (c) acelera la reducción de manifestantes y favorsce la estabilización del sistema."
     );
 
     // 4. ¿QUÉ PASA SI NO EXISTEN MEDIADORES?
