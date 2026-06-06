@@ -2,13 +2,13 @@
 from flask import Blueprint, render_template, request, jsonify
 
 # Importar motores matemáticos puros
-from numerical.helpers import verificar_dominancia, calcular_condicion
-from numerical.model_builder import construir_sistema_logistico, generar_interpretacion_logistica
-from numerical.jacobi import jacobi
-from numerical.gauss_seidel import gauss_seidel
-from numerical.sor import sor
-from numerical.lu import lu
-from numerical.gradiente_conjugado import gradiente_conjugado
+from escenarios.Escenario_A.numerical.helpers import verificar_dominancia, calcular_condicion
+from escenarios.Escenario_A.numerical.model_builder import construir_sistema_logistico, generar_interpretacion_logistica
+from escenarios.Escenario_A.numerical.jacobi import jacobi
+from escenarios.Escenario_A.numerical.gauss_seidel import gauss_seidel
+from escenarios.Escenario_A.numerical.sor import sor
+from escenarios.Escenario_A.numerical.lu import lu
+from escenarios.Escenario_A.numerical.gradiente_conjugado import gradiente_conjugado
 
 escenario_A_bp = Blueprint(
     'escenario_A',
