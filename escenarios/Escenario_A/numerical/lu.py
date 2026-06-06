@@ -1,5 +1,5 @@
 # numerical/lu.py
-from numerical.helpers import calcular_residuo
+from escenarios.Escenario_A.numerical.helpers import calcular_residuo
 
 def lu_decomposition(A):
     """Realiza la descomposición LU usando el método de Doolittle (L con 1s en la diagonal)."""

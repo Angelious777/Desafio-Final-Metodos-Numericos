@@ -1,5 +1,5 @@
 # numerical/gradiente_conjugado.py
-from numerical.helpers import calcular_residuo
+from escenarios.Escenario_A.numerical.helpers import calcular_residuo
 
 def producto_matriz_vector(A, v):
     """Multiplica una matriz de nxn por un vector de nx1 (Puro Python)."""

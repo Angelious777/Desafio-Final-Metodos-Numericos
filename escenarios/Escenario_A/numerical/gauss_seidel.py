@@ -1,5 +1,5 @@
 # numerical/gauss_seidel.py
-from numerical.helpers import calcular_residuo
+from escenarios.Escenario_A.numerical.helpers import calcular_residuo
 
 def gauss_seidel(A, b, tol=1e-6, max_iter=100):
     n = len(A)

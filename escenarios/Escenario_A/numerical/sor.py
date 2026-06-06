@@ -1,5 +1,5 @@
 # numerical/sor.py
-from numerical.helpers import calcular_residuo
+from escenarios.Escenario_A.numerical.helpers import calcular_residuo
 
 def sor(A, b, omega=1.1, tol=1e-6, max_iter=100):
     n = len(A)
