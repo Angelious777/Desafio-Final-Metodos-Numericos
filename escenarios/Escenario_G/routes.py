@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, jsonify, request
-from simulation.solver import ejecutar_simulacion
+from escenarios.Escenario_G.simulation.solver import ejecutar_simulacion
 
 escenario_G_bp = Blueprint(
     'escenario_G',
