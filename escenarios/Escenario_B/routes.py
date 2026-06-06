@@ -199,5 +199,5 @@ def index():
             'umbral': round(umbral_critico, 2)
         }
 
-    return render_template('index.html', resultados=resultados, inputs=inputs, analisis=analisis)
+    return render_template('escenario_b.html', resultados=resultados, inputs=inputs, analisis=analisis)
 

@@ -9,9 +9,6 @@ escenario_C_bp = Blueprint(
     static_folder='static'
 )
 
-@escenario_C_bp.route("/")
-def inicio():
-    return render_template("escenario_c.html")
 # Datos reales adaptados al caso de la carne de pollo (Bs/Kg)
 DATOS_POLLO = {
     "x": [1, 5, 10, 15, 20, 30],
@@ -155,7 +152,7 @@ def calcular_splines(x_datos, y_datos, x_interp):
 
 @escenario_C_bp.route('/')
 def index():
-    return render_template('index.html', datos=DATOS_POLLO)
+    return render_template('escenario_c.html', datos=DATOS_POLLO)
 
 
 @escenario_C_bp.route('/calcular', methods=['POST'])
