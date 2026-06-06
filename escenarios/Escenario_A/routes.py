@@ -14,7 +14,7 @@ escenario_A_bp = Blueprint(
     'escenario_A', 
     __name__, 
     url_prefix='/Escenario_A',
-    template_folder='templates' 
+    template_folder='templates',
     static_folder='static'
 )
 
