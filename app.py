@@ -10,40 +10,13 @@ from escenarios.Escenario_E.routes import escenario_E_bp
 from escenarios.Escenario_F.routes import escenario_F_bp
 from escenarios.Escenario_G.routes import escenario_G_bp
 
-app.register_blueprint(
-    escenario_A_bp, 
-    url_prefix='/Escenario_A'
-)
-
-app.register_blueprint(
-    escenario_B_bp, 
-    url_prefix='/Escenario_B'
-)
-
-app.register_blueprint(
-    escenario_C_bp, 
-    url_prefix='/Escenario_C'
-)
-
-app.register_blueprint(
-    escenario_D_bp, 
-    url_prefix='/Escenario_D'
-)
-
-app.register_blueprint(
-    escenario_E_bp, 
-    url_prefix='/Escenario_E'
-)
-
-app.register_blueprint(
-    escenario_F_bp, 
-    url_prefix='/Escenario_F'
-)
-
-app.register_blueprint(
-    escenario_G_bp, 
-    url_prefix='/Escenario_G'
-)
+app.register_blueprint(escenario_A_bp, url_prefix='/Escenario_A', name='escenario_A')
+app.register_blueprint(escenario_B_bp, url_prefix='/Escenario_B', name='escenario_B')
+app.register_blueprint(escenario_C_bp, url_prefix='/Escenario_C', name='escenario_C')
+app.register_blueprint(escenario_D_bp, url_prefix='/Escenario_D', name='escenario_D')
+app.register_blueprint(escenario_E_bp, url_prefix='/Escenario_E', name='escenario_E')
+app.register_blueprint(escenario_F_bp, url_prefix='/Escenario_F', name='escenario_F')
+app.register_blueprint(escenario_G_bp, url_prefix='/Escenario_G', name='escenario_G')
 
 
 # Ruta para la página principal (index.html)
