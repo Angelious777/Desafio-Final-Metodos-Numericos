@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafío Final - Métodos Numéricos</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/layout.css">
+    <link rel="stylesheet" href="static/css/components.css">
+    <style>
+        /* Ajustes menores específicos para el diseño de la grilla de la página de inicio */
+        .grid-2-cols {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .scenario-item-retro {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+        .scenario-item-retro:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .badge-retro {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 1px solid var(--border-dark);
+        }
+        .badge-v {
+            background-color: var(--blue-soft);
+            color: var(--text);
+        }
+        .badge-a {
+            background-color: var(--green-soft);
+            color: var(--text);
+        }
+        .footer-retro {
+            margin-top: 40px;
+            padding: 15px 0;
+            border-top: 1px solid var(--border-dark);
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .container-custom {
+                margin: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body class="retro-os-environment">
+
+    <div class="container-custom" style="padding-top: 30px; padding-bottom: 30px;">
+        
+        <header class="retro-window" style="margin-bottom: 30px;">
+            <div class="retro-window-header">
+                <span class="window-title">SISTEMA OPERATIVO DE SIMULACIÓN NUMÉRICA v1.0</span>
+                <span class="window-title" class="font-monospace">2026_CRISIS_MODE</span>
+            </div>
+            <div class="retro-window-body" style="background: var(--bg-panel); text-align: center; padding: 30px 20px;">
+                <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Simulación Numérica de Abastecimiento, Precios y Conflicto Social
+                </h1>
+                <p class="q-text" style="font-size: 14px; color: var(--text-light); margin-bottom: 0;">
+                    Desafío Final — Plataforma Matemática para el Análisis de Escenarios Reales y Toma de Decisiones Estratégicas
+                </p>
+            </div>
+        </header>
+
+        <div class="grid-2-cols">
+            
+            <main>
+                <section class="retro-window" style="height: 100%;">
+                    <div class="retro-window-header">
+                        <span class="window-title">Introducción y Contexto Socioeconómico</span>
+                    </div>
+                    <div class="retro-window-body">
+                        <h2 class="q-title">Entorno Multidimensional de Crisis</h2>
+                        <p class="q-text">
+                            El entorno actual presenta desafíos complejos e interconectados. Las fluctuaciones críticas en el abastecimiento de carburantes, las variaciones abruptas de precios en alimentos esenciales, la propagación de rumores y la consecuente emergencia de dinámicas de descontento social son fenómenos que impactan de forma directa el poder adquisitivo familiar y la estabilidad nacional.
+                        </p>
+                        <p class="q-text">
+                            Este proyecto afronta esta coyuntura desde una perspectiva rigurosamente académica y algorítmica. Utilizando los <strong>métodos numéricos</strong> como motor analítico transversal, se ha consolidado este entorno interactivo con 7 escenarios de simulación que traducen la incertidumbre empírica en modelos matemáticos resolubles.
+                        </p>
+                        <div class="retro-alert-box" style="margin-top: 15px;">
+                            <strong>Aviso de Enfoque Académico:</strong> El modelado matemático lineal, de interpolación, integración y ecuaciones diferenciales se implementa con el fin de contrastar escenarios hipotéticos bajo criterios computacionales de convergencia y estabilidad, absteniéndose de emitir posicionamientos de índole política.
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <section class="retro-window">
+                <div class="retro-window-header">
+                    <span class="window-title">Equipo de Desarrollo / Desarrolladores</span>
+                </div>
+                <div class="retro-window-body">
+                    <h2 class="q-title">Asignación de Módulos Técnicos</h2>
+                    <p class="q-text">El diseño e implementación de los solucionadores numéricos interactivos ha sido distribuido equitativamente entre los siguientes integrantes:</p>
+                    
+                    <div class="formula-container-retro" style="margin-bottom: 15px; border-left: 4px solid var(--text-light);">
+                        <h3 style="font-weight: bold; font-size: 14px;">Vivian Roxana Esquivel Castillo</h3>
+                        <span class="retro-label" style="margin-top: 4px;">Especialista a Cargo de Escenarios:</span>
+                        <div class="font-monospace" style="font-size: 13px; color: #1e40af;">
+                            [Escenario A] — [Escenario D] — [Escenario G]
+                        </div>
+                        <p class="q-text small" style="margin-top: 5px; margin-bottom: 0;">
+                            Encargada de Sistemas Lineales de Distribución, Integración de Impacto Económico Familiar y Dinámicas Epidémicas de Descontento Social.
+                        </p>
+                    </div>
+
+                    <div class="formula-container-retro" style="border-left: 4px solid var(--text-light);">
+                        <h3 style="font-weight: bold; font-size: 14px;">Angel Daniel Escobar</h3>
+                        <span class="retro-label" style="margin-top: 4px;">Especialista a Cargo de Escenarios:</span>
+                        <div class="font-monospace" style="font-size: 13px; color: #92400e;">
+                            [Escenario B] — [Escenario C] — [Escenario E] — [Escenario F]
+                        </div>
+                        <p class="q-text small" style="margin-top: 5px; margin-bottom: 0;">
+                            Encargado del Vaciado de Reservas Temporales, Interpolación de Curvas Dispersas, Análisis de Umbrales Críticos y Sistemas Mal Condicionados por Rumores.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <section class="retro-window" style="margin-top: 20px;">
+            <div class="retro-window-header">
+                <span class="window-title">Módulos de Simulación y Solucionadores Disponibles</span>
+            </div>
+            <div class="retro-window-body">
+                <h2 class="q-title">Selección de Escenario Analítico</h2>
+                <p class="q-text" style="margin-bottom: 20px;">
+                    Active el ejecutable correspondiente a cada módulo para interactuar con los formularios de entrada de datos, tablas de iteración y sus respectivos gráficos de convergencia:
+                </p>
+
+                <div class="scroll-retro-container" style="max-height: none; padding: 0 15px;">
+                    
+                    <div class="scenario-item-retro">
+                        <div style="flex: 1; min-width: 280px;">
+                            <div class="font-monospace" style="font-weight: bold; color: var(--title);">[MÓDULO A] Optimización de Abastecimiento y Transporte</div>
+                            <p class="q-text small" style="margin-bottom: 0;">Flujos de distribución mediante sistemas de ecuaciones lineales lineales (Jacobi, Gauss-Seidel, SOR, LU, Gradiente Conjugado).</p>
+                            <span class="badge-retro badge-v">Vivian Esquivel</span>
+                        </div>
+                        <a href="/escenario-a" class="retro-btn-execute" style="display: inline-block; text-align: center;">Ejecutar Módulo</a>
+                    </div>
+
+                    <div class="scenario-item-retro">
+                        <div style="flex: 1; min-width: 280px;">
+                            <div class="font-monospace" style="font-weight: bold; color: var(--title);">[MÓDULO B] Vaciado Crítico de Reservas de Carburantes</div>
+                            <p class="q-text small" style="margin-bottom: 0;">Simulación de disminución de stock por demanda mediante ecuaciones diferenciales ordinarias (Euler, Heun, RK4).</p>
+                            <span class="badge-retro badge-a">Angel Escobar</span>
+                        </div>
+                        <a href="/escenario-b" class="retro-btn-execute" style="display: inline-block; text-align: center;">Ejecutar Módulo</a>
+                    </div>
+
+                    <div class="scenario-item-retro">
+                        <div style="flex: 1; min-width: 280px;">
+                            <div class="font-monospace" style="font-weight: bold; color: var(--title);">[MÓDULO C] Desabastecimiento y Curva Continua de Precios</div>
+                            <p class="q-text small" style="margin-bottom: 0;">Reconstrucción analítica de tendencias y precios de la canasta básica a partir de datos dispersos (Lagrange, Newton, Splines).</p>
+                            <span class="badge-retro badge-a">Angel Escobar</span>
+                        </div>
+                        <a href="/escenario-c" class="retro-btn-execute" style="display: inline-block; text-align: center;">Ejecutar Módulo</a>
+                    </div>
+
+                    <div class="scenario-item-retro">
+                        <div style="flex: 1; min-width: 280px;">
+                            <div class="font-monospace" style="font-weight: bold; color: var(--title);">[MÓDULO D] Costo Acumulado y Pérdida de Poder Adquisitivo</div>
+                            <p class="q-text small" style="margin-bottom: 0;">Integración numérica del gasto familiar acumulado bajo curvas de inflación progresiva (Trapecio, Simpson 1/3 y 3/8).</p>
+                            <span class="badge-retro badge-v">Vivian Esquivel</span>
+                        </div>
+                        <a href="/escenario-d" class="retro-btn-execute" style="display: inline-block; text-align: center;">Ejecutar Módulo</a>
+                    </div>
+
+                    <div class="scenario-item-retro">
+                        <div style="flex: 1; min-width: 280px;">
+                            <div class="font-monospace" style="font-weight: bold; color: var(--title);">[MÓDULO E] Umbrales Críticos de Abastecimiento y Quiebre</div>
+                            <p class="q-text small" style="margin-bottom: 0;">Resolución de funciones no lineales para hallar raíces operativas de colapso de ingresos y reposición (Bisección, Newton, Secante).</p>
+                            <span class="badge-retro badge-a">Angel Escobar</span>
+                        </div>
+                        <a href="/escenario-e" class="retro-btn-execute" style="display: inline-block; text-align: center;">Ejecutar Módulo</a>
+                    </div>
+
+                    <div class="scenario-item-retro">
+                        <div style="flex: 1; min-width: 280px;">
+                            <div class="font-monospace" style="font-weight: bold; color: var(--title);">[MÓDULO F] Rumores e Inestabilidad de Demanda en la Red</div>
+                            <p class="q-text small" style="margin-bottom: 0;">Modelado de pánico de compras mediante análisis de sistemas lineales mal condicionados, números de condición y perturbaciones.</p>
+                            <span class="badge-retro badge-a">Angel Escobar</span>
+                        </div>
+                        <a href="/escenario-f" class="retro-btn-execute" style="display: inline-block; text-align: center;">Ejecutar Módulo</a>
+                    </div>
+
+                    <div class="scenario-item-retro">
+                        <div style="flex: 1; min-width: 280px;">
+                            <div class="font-monospace" style="font-weight: bold; color: var(--title);">[MÓDULO G] Modelo de Difusión de Opinión y Conflicto Social</div>
+                            <p class="q-text small" style="margin-bottom: 0;">Evolución temporal de poblaciones sociales dinámicas: Neutrales (N), Manifestantes (M) y Mediadores (D) mediante RK4.</p>
+                            <span class="badge-retro badge-v">Vivian Esquivel</span>
+                        </div>
+                        <a href="/escenario-g" class="retro-btn-execute" style="display: inline-block; text-align: center;">Ejecutar Módulo</a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer-retro">
+            <p class="font-monospace" style="font-size: 11px; color: var(--text-light); margin-bottom: 0;">
+                ENTREGABLE ACADÉMICO COLECTIVO &bull; MÉTODOS NUMÉRICOS &bull; &copy; 2026
+            </p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

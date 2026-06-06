@@ -1,0 +1,293 @@
+/* ==========================================
+   BOTONES
+========================================== */
+
+.win-btn,
+.win-btn-sm{
+    border:1px solid var(--border);
+    background:#f7f7f2;
+    color:#444;
+     font-size:13px;
+    cursor:pointer;
+    padding:2px 8px;
+}
+
+.win-btn:hover,
+.win-btn-sm:hover{
+    background:#ecece5;
+}
+
+
+/* ==========================================
+   BOTON PRINCIPAL
+========================================== */
+
+.retro-btn-execute{
+    border:1px solid var(--border-dark);
+    background:#f5f5ef;
+    padding:6px 14px;
+     font-size:13px;
+    cursor:pointer;
+    color:#444;
+}
+
+.retro-btn-execute:hover{
+    background:#ecece5;
+}
+
+.retro-btn-reset{
+    border:1px solid var(--border-dark);
+    background:#f5f5ef;
+    padding:6px 14px;
+     font-size:13px;
+    cursor:pointer;
+    color:#444;
+}
+
+.retro-btn-reset:hover{
+    background:#ecece5;
+}
+
+/* ==========================================
+   INPUTS
+========================================== */
+
+.retro-input,
+.retro-select{
+    width:100%;
+    border:1px solid var(--border);
+    background:white;
+    color:#444;
+    padding:5px 8px;
+     font-size:13px;
+    outline:none;
+}
+
+.retro-input:focus,
+.retro-select:focus{
+    border-color:#aab6a4;
+}
+
+
+/* ==========================================
+   LABELS
+========================================== */
+
+.retro-label{
+    display:block;
+    margin-bottom:5px;
+    font-size:10px;
+    color:#666;
+}
+
+
+/* ==========================================
+   TABLAS
+========================================== */
+
+.table-retro-style{
+    margin-bottom:0;
+     font-size:13px;
+    border-collapse:collapse;
+}
+
+.table-retro-style th{
+    background:#f3f3ed;
+    font-weight:normal;
+}
+
+.table-retro-style th,
+.table-retro-style td{
+    border:1px solid var(--border);
+    padding:6px;
+}
+
+
+/* ==========================================
+   FORMULA
+========================================== */
+
+.formula-container-retro{
+    background:#fafaf7;
+}
+
+#formula-display{
+    border:1px solid var(--border);
+    background:white;
+}
+
+
+/* ==========================================
+   CODIGO
+========================================== */
+
+.retro-code-box{
+    background:#fbfbf8;
+    color:#555;
+    font-size:10px;
+    padding:15px;
+    min-height:280px;
+    overflow:auto;
+}
+
+
+/* ==========================================
+   METRICAS
+========================================== */
+
+.retro-metric-card{
+    background:#f7f7f2;
+    border:1px solid var(--border);
+    padding:10px;
+}
+
+.retro-metric-card .label{
+    display:block;
+    color:#777;
+    font-size:10px;
+}
+
+.retro-metric-card .value{
+    display:block;
+    margin-top:5px;
+    font-size:16px;
+}
+
+
+/* ==========================================
+   ALERTAS
+========================================== */
+
+.retro-alert-box{
+    border:1px solid var(--border);
+    background:#f4f4ef;
+    padding:8px;
+}
+
+
+/* ==========================================
+   PANEL DE RESULTADOS
+========================================== */
+
+.bg-retro-panel{
+    background:#f7f7f2;
+}
+
+.bg-light-gray{
+    background:#f5f5ef;
+}
+
+
+/* ==========================================
+   VENTANA ACTIVA
+========================================== */
+
+.border-win-active{
+    border-color:#a9b8a2;
+}
+
+.bg-win-active{
+    background:#a9b8a2 !important;
+}
+
+
+/* ==========================================
+   RESULTADO CIRCULAR
+========================================== */
+
+.retro-circle-result{
+    position:absolute;
+    bottom:10px;
+    right:10px;
+    width:75px;
+    height:75px;
+    border-radius:50%;
+    background:#fafaf6;
+    border:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.circle-label{
+    font-size:9px;
+    color:#666;
+}
+
+.circle-val{
+    font-size:13px;
+}
+
+
+/* ==========================================
+   PLACEHOLDER
+========================================== */
+
+#placeholder-results{
+    min-height:300px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+
+/* ==========================================
+   ANIMACION SUAVE
+========================================== */
+
+.retro-window,
+.retro-btn-execute,
+.retro-input,
+.retro-select{
+    transition:.2s ease;
+}
+
+/* ==========================================================
+   VALIDACIÓN DEL ESCENARIO
+========================================================== */
+
+.news-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-top:15px;
+}
+
+.news-link-card{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:140px;
+    padding:12px;
+    border:2px solid #cfd5cf;
+    background:#f7f7f2;
+    text-decoration:none;
+    transition:all .25s ease;
+}
+
+.news-link-card:hover{
+    transform:translateY(-2px);
+    border-color:#55735f;
+    background:#eef3ee;
+}
+
+.news-source{
+    font-weight:bold;
+    font-size:.75rem;
+    color:#2e4a3e;
+    letter-spacing:1px;
+}
+
+.news-title{
+    font-size:.75rem;
+    color:#444;
+    font-family:monospace;
+    margin:8px 0;
+    line-height:1.4;
+}
+
+.news-footer{
+    font-size:.65rem;
+    color:#888;
+}

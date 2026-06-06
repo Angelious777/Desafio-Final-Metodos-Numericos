@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Numérico: Desabastecimiento y Precios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('escenario_C.static', filename='css/style.css') }}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Georgia', serif; }
+        .card { border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .math-block { background-color: #f1f3f5; padding: 15px; border-left: 5px solid #0d6efd; border-radius: 4px; font-family: sans-serif; }
+        h1, h2, h3 { font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 700; color: #212529; }
+    </style>
+</head>
+<body>
+
+<div id="datos-flask" 
+     data-x='{{ datos["x"]|tojson }}' 
+     data-y='{{ datos["y"]|tojson }}'>
+</div>
+
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <span class="text-uppercase text-muted tracking-wider">Desafío Final - Métodos Numéricos</span>
+        <h1 class="display-4 mt-2">Simulación de Desabastecimiento de Alimentos y Curva Continua de Precios</h1>
+        <p class="lead text-muted">Análisis matemático y reconstrucción de curvas de oferta a partir de muestreos dispersos.</p>
+        <hr class="w-25 mx-auto">
+    </div>
+
+    <section class="mb-5 card p-4 bg-white clearfix">
+        <h2>1. Introducción y Marco Teórico</h2>
+        <p>En contextos de crisis socioeconómica y bloqueos de carreteras, el flujo de alimentos hacia los mercados principales se vuelve intermitente. Esta discontinuidad genera desinformación y volatilidad de precios. El modelado matemático a través de la <strong>Interpolación Numérica</strong> nos permite reconstruir una función continua de precios \(P(x)\) a partir de un conjunto de datos discretos \((x_i, y_i)\).</p>
+        
+        <h3 class="mt-4">Métodos Utilizados</h3>
+        <div class="row g-4 mt-2 d-flex align-items-stretch">
+            <div class="col-xl-4 col-md-6">
+                <div class="p-3 bg-light border border-secondary-subtle rounded d-flex flex-column h-100">
+                    <h5 class="fw-bold text-primary">Polinomio de Lagrange</h5>
+                    <p class="small text-muted flex-grow-1">Construye el polinomio interceptor sumando productos de polinomios basales de Lagrange:</p>
+                    <div class="py-3 px-2 bg-white border rounded text-center overflow-hidden my-2">
+                        $$P_n(x) = \sum_{i=0}^{n} y_i L_i(x)$$
+                        $$L_i(x) = \prod_{j \neq i} \frac{x - x_j}{x_i - x_j}$$
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-md-6">
+                <div class="p-3 bg-light border border-secondary-subtle rounded d-flex flex-column h-100">
+                    <h5 class="fw-bold text-warning-emphasis">Polinomio de Newton</h5>
+                    <p class="small text-muted flex-grow-1">Utiliza diferencias divididas, permitiendo agregar nuevos datos de forma secuencial y eficiente:</p>
+                    <div class="py-3 px-2 bg-white border rounded text-center overflow-hidden my-2">
+                        $$P_n(x) = a_0 + \sum_{i=1}^{n} a_i \prod_{j=0}^{i-1} (x - x_j)$$
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-12">
+                <div class="p-3 bg-light border border-secondary-subtle rounded d-flex flex-column h-100">
+                    <h5 class="bold text-info-emphasis">Splines o Trazadores</h5>
+                    <p class="small text-muted flex-grow-1">Divide el dominio en subintervalos, conectando los puntos mediante ecuaciones locales independientes:</p>
+                    <div class="py-3 px-2 bg-white border rounded text-center overflow-hidden my-2">
+                        $$S(x) = \begin{cases} S_0(x), & x \in [x_0, x_1] \\ S_1(x), & x \in [x_1, x_2] \\ \vdots & \vdots \\ S_{n-1}(x), & x \in [x_{n-1}, x_n] \end{cases}$$
+                        <div class="mt-2 pt-2 border-top text-start">
+                            <small class="text-muted d-block" style="font-size: 0.78em;">Donde: \(S_i(x) = y_i + m_i(x - x_i)\)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-5 card p-4 bg-white clearfix">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h2 class="text-danger-emphasis fw-bold mb-3">Contextualización del Caso Real: Crisis del Sector Avícola</h2>
+                <p>
+                    Para llevar la matemática de la interpolación a un escenario crítico de la economía familiar, este modelo simula el impacto de un <strong>bloqueo logístico de rutas prioritarias</strong> en el precio de la <strong>carne de pollo</strong> en los mercados de consumo principal.
+                </p>
+                <p class="small text-muted">
+                    El pollo es un producto de primera necesidad con una cadena de suministro sumamente frágil. Ante un escenario de desabastecimiento, la oferta cae de golpe y el precio experimenta un comportamiento no lineal gobernado por el pánico financiero y la especulación a corto plazo. 
+                </p>
+                
+                <h5 class="fw-bold mt-4 text-secondary">¿Qué estamos resolviendo y qué se está tratando?</h5>
+                <ul class="text-muted small ps-3">
+                    <li class="mb-2"><strong>El Problema Real:</strong> Las intendencias municipales y los analistas económicos solo logran recolectar datos de precios de manera intermitente (por ejemplo, los días de feria o muestreos dispersos los días 1, 5, 10...). No se tiene un registro del día a día.</li>
+                    <li class="mb-2"><strong>El Objetivo Matemático:</strong> A través de los algoritmos de <em>Lagrange, Newton y Splines</em>, procesamos esos "puntos dispersos" para <strong>reconstruir la curva continua oculta</strong> del mercado. Esto permite realizar auditorías de precios y estimar con precisión matemática cuánto costaba el kilo de pollo un día específico en el que ningún inspector salió a registrar datos.</li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="p-3 bg-light border rounded">
+                    <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">Variables del Modelo (Caso Pollo)</h6>
+                    <table class="table table-sm table-borderless mb-0 style-table">
+                        <tbody>
+                            <tr>
+                                <td class="fw-bold text-muted small" style="width: 35%;">Variable \(x\):</td>
+                                <td class="small"><strong>Tiempo transcurrido</strong> (Días del mes bajo cerco logístico).</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold text-muted small">Variable \(y\):</td>
+                                <td class="small"><strong>Precio del kilo de pollo</strong> (Expresado en Bs/Kg en mercado central).</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold text-muted small">Comportamiento:</td>
+                                <td class="small text-danger fw-bold">Escalada inflacionaria por escasez de oferta.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card p-4 bg-white h-100">
+                <h3>Datos Muestreados</h3>
+                <p class="text-muted small">Precio sugerido de el kilo de pollo en mercados principales (Bs/Día):</p>
+                <table class="table table-striped text-center align-middle">
+                    <thead class="table-dark">
+                        <tr><th>Día (\(x\))</th><th>Precio (\(y\))</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for i in range(datos['x']|length) %}
+                        <tr><td>Día {{ datos['x'][i] }}</td><td>{{ datos['y'][i] }} Bs</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="mt-auto">
+                    <label for="x_input" class="form-label fw-bold">Interpolar para el Día (\(x\)):</label>
+                    <div class="input-group">
+                        <input type="number" id="x_input" class="form-control" value="12" min="1" max="30">
+                        <button class="btn btn-primary" id="btn-simular">Simular Día</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card p-4 bg-white h-100">
+                <h3>Comportamiento de la Curva de Precios</h3>
+                <div style="position: relative; height: 380px; width: 100%;">
+                    <canvas id="graficoPrecios"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="card p-4 bg-white mb-5 d-none" id="seccion-resultados">
+        <h2>2. Resolución Numérica y Memoria de Cálculo</h2>
+        <p class="text-muted">A continuación se expone el desglose algorítmico matemático resuelto en el servidor para el día seleccionado.</p>
+
+        <div class="row g-4 mt-2">
+            <div class="col-12">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white fw-bold">Método de Lagrange - Solución Explícita</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Resultado Estimado: <span id="res-lagrange" class="badge bg-success fs-6"></span></h5>
+                        <div id="exp-lagrange" class="math-block" style="max-height: 300px; overflow-y: auto; overflow-x: auto;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark fw-bold">Método de Newton (Diferencias Divididas)</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Resultado Estimado: <span id="res-newton" class="badge bg-success fs-6"></span></h5>
+                        <div id="exp-newton" class="math-block" style="max-height: 300px; overflow-y: auto; overflow-x: auto;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-dark fw-bold">Análisis Lineal Segmentado / Splines</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Resultado Estimado: <span id="res-spline" class="badge bg-success fs-6"></span></h5>
+                        <div id="exp-spline" class="math-block" style="max-height: 300px; overflow-y: auto; overflow-x: auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card p-4 bg-light border-0 mb-5" id="conclusiones-section">
+        <h2 class="mb-4">3. Conclusiones y Análisis del Escenario C</h2>
+        <p class="text-muted">Evaluación analítica del comportamiento de precios, confiabilidad de los modelos numéricos ante la crisis y respuestas al pliego de preguntas del desafío:</p>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 p-3 bg-white border-start border-primary border-4">
+                    <h6 class="fw-bold text-primary">¿Cuál sería el precio aproximado en un día sin dato?</h6>
+                    <p class="small text-muted mb-0">
+                        El precio se obtiene evaluando el valor del día deseado en cualquiera de los modelos de la plataforma. Por ejemplo, para el <strong>Día 12</strong> (segunda semana de bloqueo), los métodos globales de Lagrange y Newton estiman un precio aproximado de <strong>19.03 Bs/Kg</strong>, mientras que el análisis por Splines calcula un valor exacto de <strong>19.00 Bs/Kg</strong>. La aproximación es altamente consistente porque el día se encuentra confinado entre dos controles reales estables (Días 10 y 15).
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 p-3 bg-white border-start border-success border-4">
+                    <h6 class="fw-bold text-success">¿Cómo se comporta la curva de precios durante el mes?</h6>
+                    <p class="small text-muted mb-0">
+                        La curva de la carne de pollo presenta una <strong>tendencia alcista continua no lineal</strong>. Comienza con una tasa de incremento de 0.375 Bs/día en los primeros 5 días. Entre los días 5 y 15, el incremento se acelera críticamente a <strong>0.50 Bs/día</strong>, marcando el periodo más severo de escasez en los mercados. Hacia el final del mes (días 20 al 30), el ritmo de aumento disminuye a 0.20 Bs/día, reflejando una estabilización del precio en un techo alto debido a la pérdida de poder adquisitivo de los consumidores.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 p-3 bg-white border-start border-danger border-4">
+                    <h6 class="fw-bold text-danger">¿Qué producto tuvo mayor incremento?</h6>
+                    <p class="small text-muted mb-0">
+                        Tomando como base el análisis enfocado en la <strong>carne de pollo</strong>, este producto experimentó un incremento absoluto de <strong>10.50 Bs/Kg</strong>, elevando su costo desde un precio base normal de 14.00 Bs hasta los 24.50 Bs en el día 30. En términos relativos, esto equivale a un alarmante incremento del <strong>75%</strong> en el costo del kilo de pollo, impactando directamente la canasta básica familiar durante el conflicto logístico.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-2 col-xl-6">
+                <div class="card h-100 p-3 bg-white border-start border-warning border-4">
+                    <h6 class="fw-bold text-warning-emphasis">¿Qué tan confiable es la interpolación?</h6>
+                    <p class="small text-muted mb-0">
+                        La confiabilidad es <strong>excelente a nivel local por Splines Lineales</strong> ya que los datos de la crisis muestran una tendencia constante hacia arriba. Los polinomios globales (Lagrange y Newton) de grado 5 generan un trazado continuo muy elegante y cercano, pero sufren de ligeras curvaturas e imprecisiones numéricas artificiales en los extremos del dominio debido al acoplamiento de todos los nodos. Para el modelado económico de precios, el enfoque seccionado de Splines resulta más robusto y apegado a la oferta del día a día.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-2 col-xl-6">
+                <div class="card h-100 p-3 bg-white border-start border-info border-4">
+                    <h6 class="fw-bold text-info-emphasis">¿Qué pasa si los datos son muy dispersos?</h6>
+                    <p class="small text-muted mb-0">
+                        Si los precios del pollo fuesen extremadamente dispersos (por ejemplo, caídas drásticas por sobreoferta local en granjas alternadas con picos excesivos en mercados minoristas), los polinomios globales <strong>colapsarían visualmente</strong>, generando oscilaciones caóticas que podrían arrojar valores ilógicos o negativos. Ante una dispersión severa e impredecible generada por la especulación, la interpolación polinómica pierde utilidad real, requiriéndose la aplicación de algoritmos de <em>regresión lineal o cuadrática por mínimos cuadrados</em> para capturar la tendencia pura.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="{{ url_for('escenario_C.static', filename='js/simulacion.js') }}"></script>
+</body>
+</html>

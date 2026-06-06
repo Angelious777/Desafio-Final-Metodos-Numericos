@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div style="display: flex; flex-direction: column; gap: 20px; padding: 10px;">
+    
+    <div class="retro-window-header bg-win-active" style="color: #fff; border: 1px solid var(--border-dark); padding: 5px 10px; display: flex; justify-content: space-between; align-items: center;">
+        <span class="window-title" style="font-weight: bold; letter-spacing: 1px;">ESCENARIO D</span>
+    </div>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div class="retro-window" style="flex: 1 1 300px;">
+            <div class="retro-window-header">
+                <span class="window-title">Contexto_del_Problema.txt</span>
+                <div class="window-controls">   </div>
+            </div>
+            <div class="retro-window-body">
+                <h1 class="retro-main-title" style="font-size: 1.2em; margin-bottom: 5px;">Pérdida del Poder Adquisitivo</h1>
+                <h2 class="retro-sub-title" style="font-size: 1em; color: #555;">Modelado del impacto inflacionario familiar</h2>
+                <div class="retro-alert-box" style="margin: 15px 0; background: #fffbcc; border: 1px solid #e6c200; padding: 10px;">
+                    <p style="margin: 0;"><strong>Problema Real:</strong> El aumento progresivo de precios de alimentos básicos en contextos de crisis genera un gasto invisible acumulado.</p>
+                </div>
+                <div class="question-block">
+                    <div class="q-title" style="font-weight: bold; margin-bottom: 5px;">Objetivo del Modelo</div>
+                    <p class="q-text" style="margin: 0; font-size: 0.9em;">Estimar el gasto acumulado familiar mediante la integración numérica del área bajo la curva de precios diarios.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="retro-window" style="flex: 1 1 300px;">
+            <div class="retro-window-header">
+                <span class="window-title">Métodos_de_Integración.txt</span>
+                <div class="window-controls">   </div>
+            </div>
+            <div class="retro-window-body" style="font-size: 0.9em;">
+                <div class="q-title" style="font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 10px; padding-bottom: 5px;">Fundamentos de Integración</div>
+                <div id="metodo-info" style="margin-bottom: 15px; padding: 10px; background: #e8f4e8; border: 1px solid #4a7c4a; color: #333;">
+                    <em>Seleccione un método en el panel de control para ver su descripción...</em>
+                </div>
+                <ul style="padding-left: 20px; margin-bottom: 10px;">
+                    <li style="margin-bottom: 8px;"><strong>Regla del Trapecio:</strong> Aproxima el área mediante trapecios. <br><em style="font-size: 0.9em; color: #666;">Ventaja: Simple. Desventaja: Mayor error en curvas abruptas.</em></li>
+                    <li style="margin-bottom: 8px;"><strong>Simpson 1/3:</strong> Utiliza polinomios cuadráticos. <br><em style="font-size: 0.9em; color: #666;">Condición: Requiere un número de intervalos ($n$) par.</em></li>
+                    <li><strong>Simpson 3/8:</strong> Utiliza polinomios cúbicos. <br><em style="font-size: 0.9em; color: #666;">Condición: Requiere que $n$ sea múltiplo de 3.</em></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: stretch;">
+        
+        <div class="retro-window" style="flex: 1 1 300px; max-width: 400px;">
+            <div class="retro-window-header">
+                <span class="window-title">Ingreso_de_Datos.exe</span>
+            </div>
+            <div class="retro-window-body retro-control-panel" style="display: flex; flex-direction: column; gap: 15px; background: var(--bg-panel); padding: 15px;">
+                <div>
+                    <label class="retro-label" style="font-weight: bold;">Seleccionar Producto:</label>
+                    <select id="producto-select" class="retro-select">
+                        <option value="">Cargando productos...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="retro-label" style="font-weight: bold;">Método Matemático:</label>
+                    <select id="metodo-select" class="retro-select">
+                        <option value="trapecio">Regla del Trapecio</option>
+                        <option value="simpson13">Regla de Simpson 1/3</option>
+                        <option value="simpson38">Regla de Simpson 3/8</option>
+                    </select>
+                </div>
+                
+                <div id="panel-parametros" class="retro-metric-card" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div style="text-align: center; flex: 1;"><span class="label">Límite (a)</span><strong class="value" id="param-a">-</strong></div>
+                    <div style="text-align: center; flex: 1;"><span class="label">Límite (b)</span><strong class="value" id="param-b">-</strong></div>
+                    <div style="text-align: center; flex: 1;"><span class="label">Intervalos (n)</span><strong class="value" id="param-n">-</strong></div>
+                    <div style="text-align: center; flex: 1; border-left: 1px solid var(--border); padding-left: 10px;">
+                        <span class="label">Paso (h)</span><strong class="value" id="param-h" style="color: #000080;">-</strong>
+                    </div>
+                </div>
+
+                <div class="scroll-retro-container" style="max-height: 250px; overflow-y: auto; background: #fff; border: 2px inset #fff;">
+                    <table class="table-retro-style" style="width: 100%; text-align: center;" id="tabla-datos-entrada">
+                        <thead style="background: #e0e0e0; position: sticky; top: 0;">
+                            <tr>
+                                <th>i</th>
+                                <th>Día ($x_i$)</th>
+                                <th>Precio ($f(x_i)$)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="body-datos-entrada">
+                            <tr><td colspan="3" style="padding: 10px;">Cargando datos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button id="btn-calcular" class="retro-btn-execute" style="padding: 12px; width: 100%; font-weight: bold; background: #fcfcfc; color: rgb(102, 102, 102);">▶ EJECUTAR INTEGRACIÓN</button>
+            </div>
+        </div>
+
+        <div class="retro-window" style="flex: 2 1 550px;">
+            <div class="retro-window-header">
+                <span class="window-title">Visualizador_Matematico.exe</span>
+                <div class="window-controls"> </div>
+            </div>
+            <div class="retro-window-body" style="background: #fff; height: 100%; padding: 20px; overflow-y: auto; max-height: 600px;">
+                <h3 class="q-title" style="border-bottom: 2px solid #000; padding-bottom: 5px;">Desarrollo Matemático Paso a Paso</h3>
+                
+                <div id="math-paso1" style="margin-bottom: 20px;">
+                    <strong>[1] Definición del Problema</strong>
+                    <div id="math-integral" class="mathjax-latex" style="text-align: center; margin: 10px 0; font-size: 1.1em;">
+                        $$ \text{Gasto Acumulado} = \int_{a}^{b} f(x) \,dx $$
+                    </div>
+                </div>
+
+                <div id="math-paso2" style="margin-bottom: 20px;">
+                    <strong>[2] Verificación de Condiciones del Método</strong>
+                    <div id="math-verificacion" style="background: #fdfdfd; padding: 10px; border-left: 4px solid var(--border-dark); font-family: monospace; margin-top: 5px;">
+                        <em>Esperando selección de método...</em>
+                    </div>
+                </div>
+
+                <div id="math-paso3" style="margin-bottom: 20px;">
+                    <strong>[3] Construcción de Coeficientes</strong>
+                    <div style="font-size: 0.85em; color: #666; margin-bottom: 5px;">Distribución de pesos según el método numérico seleccionado.</div>
+                    <div class="scroll-retro-container" style="max-height: 180px; overflow-y: auto; border: 1px solid #ccc;">
+                        <table class="table-retro-style" style="width: 100%; text-align: center;" id="tabla-coeficientes">
+                            <thead style="background: #eee; position: sticky; top: 0;">
+                                <tr>
+                                    <th>Punto</th>
+                                    <th>Valor f(x_i)</th>
+                                    <th>Coeficiente</th>
+                                    <th>Producto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="body-coeficientes">
+                                <tr><td colspan="4">Ejecute para generar matriz de coeficientes.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="math-paso4" style="margin-bottom: 20px;">
+                    <strong>[4] Fórmula General y Sustitución Analítica</strong>
+                    
+                    <div style="margin-top: 10px; background: #fafaf7; padding: 15px; border: 1px dashed #aaa;">
+                        <div style="font-size: 0.9em; color: #555;">Fórmula del método:</div>
+                        <div id="math-formula-general" class="mathjax-latex" style="text-align: center; margin: 10px 0; overflow-x: auto;">
+                            $$ - $$
+                        </div>
+                        
+                        <div style="font-size: 0.9em; color: #555; margin-top: 15px;">Sustitución de datos:</div>
+                        <div id="math-formula-sustituida" class="mathjax-latex" style="text-align: center; margin: 10px 0; overflow-x: auto; color: #000080;">
+                            $$ - $$
+                        </div>
+
+                        <div style="font-size: 0.9em; color: #555; margin-top: 15px;">Operación Intermedia:</div>
+                        <div id="math-operacion-intermedia" class="mathjax-latex" style="text-align: center; margin: 10px 0; overflow-x: auto;">
+                            $$ - $$
+                        </div>
+                    </div>
+                </div>
+
+                <div id="math-paso5" style="margin-top: 20px;">
+                    <strong>[5] Evaluación Numérica Final</strong>
+                    <div id="math-resultado-final" style="text-align: center; margin: 15px 0; font-size: 1.3em; font-weight: bold; color: #62657c; background: #e6e6fa; padding: 10px; border: 1px solid #000080;">
+                        Área Calculada = 0.00 Bs
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        
+        <div class="retro-window" style="flex: 1 1 400px;">
+            <div class="retro-window-header">
+                <span class="window-title">Gráfico_Resultante.exe</span>
+            </div>
+            <div class="retro-window-body" style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="formula-container-retro" style="padding: 10px; border: 1px solid var(--border); background: #fff;">
+                    <div style="position: relative; height: 220px; width: 100%;">
+                        <canvas id="graficoPrecios"></canvas>
+                    </div>
+                </div>
+                
+                <div id="grafico-interpretacion" class="retro-alert-box" style="font-size: 0.85em; line-height: 1.5; color: #333;">
+                    <strong style="display: block; margin-bottom: 5px; color: #000;">Interpretación Gráfica y Económica:</strong>
+                    <ul style="padding-left: 15px; margin: 0;">
+                        <li>Cada punto coordenado $(x_i, y_i)$ representa un precio observado en un día específico.</li>
+                        <li>La pendiente positiva indica una tendencia inflacionaria durante el período de estudio.</li>
+                        <li>La línea segmentada representa el escenario ideal de <strong>precio constante</strong>.</li>
+                        <li>La región sombreada equivale a la integral numérica calculada: representa la <strong>pérdida progresiva y acumulada del poder adquisitivo</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="retro-window" style="flex: 1 1 400px;">
+            <div class="retro-window-header">
+                <span class="window-title">Conclusiones.pdf</span>
+            </div>
+            <div class="retro-window-body bg-light-gray" style="padding: 20px;">
+                <h3 class="q-title" style="color: #333; border-bottom: 2px solid #aaa; padding-bottom: 5px; margin-bottom: 15px;">Resultados de la Simulación</h3>
+                
+                <ul style="list-style-type: none; padding: 0; margin: 0; color: #333;">
+                    <li style="margin-bottom: 12px;">
+                        <strong>1. ¿Cuánto gastó una familia durante el mes?</strong>
+                        <div id="resp-gasto-real" style="margin-top: 3px; background: #fff; padding: 6px; border: 1px inset #ccc; font-family: monospace;">-</div>
+                    </li>
+                    <li style="margin-bottom: 12px;">
+                        <strong>2. ¿Cuánto hubiera gastado si los precios no subían?</strong>
+                        <div id="resp-gasto-ideal" style="margin-top: 3px; background: #fff; padding: 6px; border: 1px inset #ccc; font-family: monospace;">-</div>
+                    </li>
+                    <li style="margin-bottom: 12px;">
+                        <strong>3. ¿Cuál fue la pérdida aproximada del poder adquisitivo?</strong>
+                        <div id="resp-perdida" style="margin-top: 3px; background: #ffe6e6; padding: 6px; border: 1px solid var(--danger); color: var(--danger); font-weight: bold; font-family: monospace; font-size: 1.1em;">-</div>
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <strong>4. ¿Qué método de integración fue más preciso?</strong>
+                        <div style="margin-top: 5px; background: #fff; border: 1px solid #ccc;">
+                            <table class="table-retro-style" style="width: 100%; font-size: 0.85em;">
+                                <thead style="background: #eee;">
+                                    <tr>
+                                        <th>Método</th>
+                                        <th>Resultado (Bs)</th>
+                                        <th>Diferencia entre los demás Métodos</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="body-comparacion-metodos">
+                                    <tr><td>Trapecio</td><td id="comp-trap">-</td><td id="err-trap">-</td></tr>
+                                    <tr><td>Simpson 1/3</td><td id="comp-simp13">-</td><td id="err-simp13">-</td></tr>
+                                    <tr><td>Simpson 3/8</td><td id="comp-simp38">-</td><td id="err-simp38">-</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>5. ¿Qué producto afectó más al gasto mensual?</strong>
+                        <div style="margin-top: 5px;">
+                            <button id="btn-analisis" class="retro-btn-execute" style="width: 100%; padding: 8px; background: #2e4a3e; color: white;">▶ ABRIR HERRAMIENTA DE IMPACTO GLOBAL</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="retro-window" style="width: 100%;">
+        <div class="retro-window-header" style="background: #f3f3f3; color: #fff;">
+            <span class="window-title">Informe_de_Resolución.txt</span>
+            <div class="window-controls"><button class="win-btn-sm" style="background: #f5f5f5; color: white; border: none;">_</button><button class="win-btn-sm" style="background: #555; color: white; border: none;">□</button></div>
+        </div>
+        <div class="retro-window-body" style="padding: 0;">
+            <div id="bitacora-contenido" class="retro-code-box" style="font-family: 'JetBrains Mono', monospace; color: rgb(86, 90, 86); background: #ececec; padding: 15px; height: 200px; overflow-y: auto; font-size: 11px; margin: 0; border: none;">
+                [SISTEMA INICIADO] Esperando ejecución del usuario...
+            </div>
+        </div>
+    </div>
+
+    <div id="ventana-canasta" class="retro-window border-win-active" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 700px; z-index: 1000; box-shadow: 10px 10px 0px rgba(0,0,0,0.5); background: #c0c0c0;">
+    
+    <div class="retro-window-header bg-win-active" style="color: white; display: flex; justify-content: space-between; align-items: center; padding: 5px 10px; border-bottom: 2px solid #fff;">
+        <span class="window-title">Análisis_Producto.exe</span>
+        <button id="btn-cerrar-canasta" class="win-btn-sm" style="cursor: pointer;">X</button>
+    </div>
+
+    <div class="retro-window-body" style="padding: 15px;">
+        <h3 class="retro-sub-title" style="margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #888; color: #000;">
+            Ranking de Impacto y Sobrecosto
+        </h3>
+        
+        <div style="height: 200px; width: 100%; background: #fff; border: 2px inset #fff; margin-bottom: 15px; padding: 10px;">
+            <canvas id="graficoCanasta"></canvas>
+        </div>
+        
+        <div class="scroll-retro-container" style="max-height: 150px; overflow-y: auto; background: #fff; border: 2px inset #fff;">
+            <table class="table-retro-style" style="width: 100%; text-align: center;">
+                <thead style="background: #eee; position: sticky; top: 0;">
+                    <tr>
+                        <th>#</th>
+                        <th>Producto</th>
+                        <th>Gasto Real (Bs)</th>
+                        <th>Sobrecosto %</th>
+                    </tr>
+                </thead>
+                <tbody id="body-tabla-canasta"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('escenario_D.static', filename='js/charts.js') }}"></script>
+<script src="{{ url_for('escenario_D.static', filename='js/integration.js') }}"></script>
+{% endblock %}

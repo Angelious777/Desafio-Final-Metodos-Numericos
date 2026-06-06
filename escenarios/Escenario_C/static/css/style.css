@@ -1,0 +1,95 @@
+/* --- 1. Estilos Base (Manteniendo colores y letras del original) --- */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Georgia', serif;
+    color: #212529;
+}
+
+h1, h2, h3 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    color: #212529;
+}
+
+/* --- 2. Estilos de Cuadros y Bloques --- */
+.card {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    background-color: #ffffff;
+    border: 1px solid rgba(0,0,0,0.05);
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.math-block {
+    background-color: #f1f3f5;
+    padding: 15px;
+    border-left: 5px solid #0d6efd;
+    border-radius: 4px;
+    font-family: sans-serif;
+    overflow-x: auto;
+}
+
+/* --- 3. MODIFICACIÓN DE ANCHOS --- */
+
+.container {
+    width: 100%;
+    max-width: 100%; 
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+#graficoPrecios {
+    width: 100% !important;
+    max-height: 450px;
+}
+
+section {
+    width: 100%;
+}
+
+.text-center ,.text-primary ,.text-success ,.text-danger ,.text-warning-emphasis ,.text-info-emphasis ,.text-muted{
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* =========================================
+   SECCIÓN 3: CONCLUSIONES (LETRA GRANDE)
+   ========================================= */
+
+/* Contenedor de la sección de conclusiones */
+#conclusiones-section .card {
+    padding: 30px; /* Un poco más de espacio interno */
+}
+
+/* Títulos de las tarjetas en la sección de conclusiones */
+#conclusiones-section .card h6 {
+    font-size: 1.3rem;  /* Tamaño más grande para los títulos */
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+/* Párrafos de texto en la sección de conclusiones */
+#conclusiones-section .card p {
+    font-size: 1.1rem; /* Tamaño de letra más grande */
+    line-height: 1.7;  /* Mayor interlineado para mejor lectura */
+    color: #495057;
+}
+
+/* Labels de las tarjetas (el texto pequeño en negrita arriba) */
+#conclusiones-section .border-primary,
+#conclusiones-section .border-success,
+#conclusiones-section .border-danger,
+#conclusiones-section .border-warning,
+#conclusiones-section .border-info {
+    border-left-width: 6px; /* Un poco más gruesa la barra lateral */
+}
+
+#conclusiones-section .card {
+    min-height: 200px; /* Altura mínima para que se vean uniformes */
+}

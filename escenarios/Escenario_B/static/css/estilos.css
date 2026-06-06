@@ -1,0 +1,405 @@
+:root {
+    --primary-soft: #2c5282;
+    --secondary-soft: #4a5568;
+    --bg-light: #f8fafc;
+    --card-bg: #ffffff;
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --border-soft: #e2e8f0;
+    --accent-blue: #3182ce;
+}
+
+/* ============================================
+   ESTILOS GENERALES Y CONTENEDOR
+   ============================================ */
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text-primary);
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+/* Contenedor de ancho completo para PC */
+.container-custom {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* ============================================
+   ENCABEZADOS Y TIPOGRAFÍA
+   ============================================ */
+
+h1, .h1 { 
+    font-size: 3rem; 
+    font-weight: 600; 
+}
+
+h2, .h2 { 
+    font-size: 2.4rem; 
+    font-weight: 600; 
+}
+
+h3, .h3 { 
+    font-size: 2rem; 
+    font-weight: 500; 
+}
+
+h4, .h4 { 
+    font-size: 1.6rem; 
+    font-weight: 500; 
+}
+
+h5, .h5 { 
+    font-size: 1.35rem; 
+    font-weight: 500; 
+}
+
+.display-5 { 
+    font-size: 3.2rem; 
+}
+
+.fw-bold {
+    font-weight: 600 !important;
+}
+
+.text-primary {
+    color: var(--primary-soft) !important;
+}
+
+/* ============================================
+   TARJETAS (CARDS)
+   ============================================ */
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    background-color: #edf2f7;
+    border-bottom: 1px solid var(--border-soft);
+    padding: 18px 24px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.card-header.bg-dark {
+    background-color: var(--primary-soft) !important;
+    color: white;
+}
+
+.card-header.bg-primary {
+    background-color: var(--accent-blue) !important;
+    color: white;
+}
+
+.card-header.bg-secondary {
+    background-color: var(--secondary-soft) !important;
+    color: white;
+}
+
+.card-body {
+    padding: 24px 28px;
+}
+
+/* ============================================
+   TEXTOS Y ETIQUETAS
+   ============================================ */
+
+.text-muted {
+    color: var(--text-secondary) !important;
+    font-size: 15px;
+}
+
+p {
+    font-size: 17px;
+    color: var(--text-secondary);
+}
+
+.lead {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   FORMULARIOS
+   ============================================ */
+
+.form-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.form-control {
+    font-size: 16px;
+    padding: 12px 16px;
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    background-color: #fafafa;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+    background-color: #fff;
+}
+
+.form-control:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+.form-check-label {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   BOTONES
+   ============================================ */
+
+.btn {
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+.btn-primary:hover {
+    background-color: #2c5282;
+    border-color: #2c5282;
+}
+
+/* ============================================
+   TABLAS
+   ============================================ */
+
+.table {
+    font-size: 15px;
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background-color: #edf2f7;
+    color: var(--text-primary);
+    font-weight: 600;
+    padding: 14px 12px;
+    border-bottom: 2px solid var(--border-soft);
+}
+
+.table tbody td {
+    padding: 12px;
+    vertical-align: middle;
+    color: var(--text-secondary);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #f8fafc;
+}
+
+.table-dark {
+    background-color: var(--primary-soft);
+    color: white;
+}
+
+/* Colores para texto en tablas */
+.text-danger {
+    color: #e53e3e !important;
+}
+
+.text-primary {
+    color: var(--accent-blue) !important;
+}
+
+.text-success {
+    color: #38a169 !important;
+}
+
+/* ============================================
+   NAV TABS
+   ============================================ */
+
+.nav-tabs .nav-link {
+    font-size: 15px;
+    padding: 14px 20px;
+    color: var(--text-secondary);
+    border: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--accent-blue);
+    border-bottom-color: var(--accent-blue);
+    background-color: transparent;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: transparent;
+    border-bottom-color: #cbd5e0;
+}
+
+.tab-content {
+    background-color: white;
+    border: 1px solid var(--border-soft);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+}
+
+/* ============================================
+   ALERTAS
+   ============================================ */
+
+.alert {
+    font-size: 17px;
+    padding: 18px 22px;
+    border-radius: 6px;
+    border: none;
+}
+
+.alert-primary {
+    background-color: #bee3f8;
+    color: #2c5282;
+}
+
+.alert-success {
+    background-color: #c6f6d5;
+    color: #22543d;
+}
+
+.alert-warning {
+    background-color: #fefcbf;
+    color: #744210;
+}
+
+.alert-danger {
+    background-color: #fed7d7;
+    color: #822727;
+}
+
+.alert-secondary {
+    background-color: #e2e8f0;
+    color: #4a5568;
+}
+
+/* ============================================
+   CANVAS GRÁFICO
+   ============================================ */
+
+#graficoReservas {
+    max-height: 500px;
+    width: 100%;
+}
+
+/* ============================================
+   UTILIDADES Y ESPACIADOS
+   ============================================ */
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.mb-5 { 
+    margin-bottom: 3rem !important; 
+}
+
+.mt-4 { 
+    margin-top: 2rem !important; 
+}
+
+.py-5 { 
+    padding-top: 3rem !important; 
+    padding-bottom: 3rem !important; 
+}
+
+.gap-4 {
+    gap: 1.5rem;
+}
+
+/* Box para fórmulas matemáticas */
+.formula-box {
+    background-color: #f8fafc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Color de bordes para análisis */
+.border-primary {
+    border-color: var(--accent-blue) !important;
+}
+
+.border-secondary {
+    border-color: var(--secondary-soft) !important;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 992px) {
+    .container-custom {
+        padding: 0 20px;
+    }
+    
+    h1, .display-5 {
+        font-size: 2.4rem;
+    }
+    
+    h2, .h2 {
+        font-size: 2rem;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+    
+    h1, .display-5 {
+        font-size: 2rem;
+    }
+    
+    .table {
+        font-size: 14px;
+    }
+    
+    .table thead th,
+    .table tbody td {
+        padding: 8px;
+    }
+}

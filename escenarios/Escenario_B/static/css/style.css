@@ -1,0 +1,152 @@
+/* ==========================================
+   VARIABLES GLOBALES
+========================================== */
+
+:root{
+    --bg-desktop:#ecece6;
+    --bg-window:#f8f8f3;
+    --bg-panel:#f4f4ee;
+    --border:#cfcfc6;
+    --border-dark:#b8b8af;
+    --text:#44443f;
+    --text-light:#77776f;
+    --title:#2f2f2b;
+    --green-soft:#cdd8c7;
+    --green-medium:#a9b8a2;
+    --blue-soft:#d8e1ea;
+    --danger:#d67c7c;
+    --white:#ffffff;
+}
+
+
+/* ==========================================
+   RESET
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--bg-desktop);
+    color:var(--text);
+    font-family:
+    Tahoma,
+    Verdana,
+    sans-serif;
+    font-size:15px;
+    line-height:1.6;
+    letter-spacing:.2px;
+}
+
+
+/* ==========================================
+   TIPOGRAFÍA
+========================================== */
+
+h1,h2,h3,h4,h5,h6{
+
+    font-weight:normal;
+
+    color:var(--title);
+
+    margin-bottom:.7rem;
+}
+
+h1{
+    font-size:18px;
+}
+
+h2{
+     font-size:15px;
+}
+
+h3{
+    font-size:15px;
+}
+
+h4{
+    font-size:12px;
+}
+
+p{
+    margin-bottom:.8rem;
+}
+
+small{
+    color:var(--text-light);
+}
+
+strong{
+    font-weight:bold;
+}
+
+a{
+    color:#4f6f85;
+    text-decoration:none;
+}
+
+a:hover{
+    text-decoration:underline;
+}
+
+.svg-icon{
+    display:inline-block;
+    width:1em;
+    height:1em;
+    vertical-align:middle;
+    margin-right:0.35rem;
+    fill:currentColor;
+}
+
+
+/* ==========================================
+   MONOESPACIADA
+========================================== */
+
+.font-monospace,
+pre,
+code{
+
+    font-family:
+    "JetBrains Mono",
+    monospace;
+}
+
+
+/* ==========================================
+   SCROLLBAR
+========================================== */
+
+::-webkit-scrollbar{
+    width:10px;
+    height:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:#efefe9;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#cfcfc6;
+    border:1px solid #bdbdb3;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:#bcbcb2;
+}
+
+
+/* ==========================================
+   SELECCIÓN
+========================================== */
+
+::selection{
+    background:#d6e1e7;
+}

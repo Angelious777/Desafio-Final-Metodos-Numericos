@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación Numérica - Escenario F</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">    
+    <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.24.1/plotly.min.js"></script>
+    
+    <link rel="stylesheet" href="static/css/style.css">
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$','$'], ['\\$','\\$']], 
+                displayMath: [['$$','$$'], ['\\$','\\$']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<div class="container-fluid py-5">
+    <div class="header-section text-center mb-5">
+        <span class="text-muted-header">Desafío Final - Métodos Numéricos</span>
+        <h1 class="display-5 fw-light">Escenario F: Rumores de Desabastecimiento y Pánico en la Red</h1>
+    </div>
+
+    <div class="card p-4">
+        <h2 class="h4 mb-4">1. Fundamentación Matemática</h2>
+        <div class="row">
+            <div class="col-12">
+                <p class="text-secondary">
+                    El modelado a través de <strong>Sistemas de Ecuaciones Lineales</strong> de la forma $Ax = b$ permite analizar cómo interactúan múltiples variables simultáneamente. Evaluando la <strong>estabilidad y el condicionamiento del sistema</strong> ($\kappa(A)$), podemos entender por qué pequeñas variaciones en la demanda provocan un colapso repentino de inventarios.
+                </p>
+                <h6 class="mt-4 mb-2 text-uppercase text-muted" style="font-size: 0.8rem; letter-spacing: 1px;">Método Numérico: Descomposición LU</h6>
+                <div class="bg-light p-3 rounded mb-2">
+                    $$1. \quad Ly = b \quad \text{(Sustitución hacia adelante)}$$
+                    $$2. \quad Ux = y \quad \text{(Sustitución hacia atrás)}$$
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-4 mb-4">
+            <div class="card p-4 h-100">
+                <h2 class="h4 mb-4">2. Parámetros del Sistema</h2>
+                
+                <form id="simulation-form">
+                    <div class="mb-4">
+                        <h6 class="text-muted small mb-2">MATRIZ DE CONECTIVIDAD ($A$)</h6>
+                        <div class="matrix-wrapper">
+                            <span class="matrix-bracket-open">[</span>
+                            <div class="matrix-inputs">
+                                <input type="number" step="any" name="a00" class="form-control" value="1.0">
+                                <input type="number" step="any" name="a01" class="form-control" value="1.0">
+                                <input type="number" step="any" name="a02" class="form-control" value="1.0">
+                                <input type="number" step="any" name="a10" class="form-control" value="1.0">
+                                <input type="number" step="any" name="a11" class="form-control" value="1.005">
+                                <input type="number" step="any" name="a12" class="form-control" value="0.995">
+                                <input type="number" step="any" name="a20" class="form-control" value="0.995">
+                                <input type="number" step="any" name="a21" class="form-control" value="1.0">
+                                <input type="number" step="any" name="a22" class="form-control" value="1.005">
+                            </div>
+                            <span class="matrix-bracket-close">]</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-muted small mb-2">DEMANDAS BASE ($b$)</h6>
+                        <div class="vector-inputs">
+                            <div class="text-center">
+                                <label class="d-block small text-muted">Merc. A</label>
+                                <input type="number" step="any" name="b0" class="form-control" value="360">
+                            </div>
+                            <div class="text-center">
+                                <label class="d-block small text-muted">Merc. B</label>
+                                <input type="number" step="any" name="b1" class="form-control" value="360">
+                            </div>
+                            <div class="text-center">
+                                <label class="d-block small text-muted">Merc. C</label>
+                                <input type="number" step="any" name="b2" class="form-control" value="360">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-muted small mb-2">FACTOR RUMOR (%)</h6>
+                        <label class="form-label">
+                            Alteración: <span id="rumorVal" class="fw-bold">0</span>%
+                        </label>
+                        <input type="range" class="form-range" min="0" max="50" step="1" id="rumor" name="rumor" value="0">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Calcular Sistema</button>
+                </form>
+                
+                <div id="error-container" class="alert alert-danger mt-3 small d-none"></div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 mb-4">
+            <div class="card p-4 h-100">
+                <h2 class="h4 mb-4">3. Resultados y Análisis Comparativo</h2>
+                
+                <div class="p-3 rounded mb-4 bg-light border-start border-4 border-success" id="state-card-wrapper">
+                    <div>
+                        <span class="d-block text-muted small fw-bold">ESTADO DEL SISTEMA</span>
+                        <span id="analysis-text" class="fw-medium">Sistema stable. Rutas balanceadas.</span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted small mb-2">MATRIZ INFERIOR ($L$)</h6>
+                        <div id="matrix-L" class="result-box bg-light p-3 rounded font-monospace" style="display: flex; flex-direction: column; gap: 5px;">-</div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted small mb-2">MATRIZ SUPERIOR ($U$)</h6>
+                        <div id="matrix-U" class="result-box bg-light p-3 rounded font-monospace" style="display: flex; flex-direction: column; gap: 5px;">-</div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6 border-end">
+                        <div class="text-center py-2 rounded mb-3 fw-bold" style="background:#f8f9fa; color:#2e7d32;">
+                            Escenario Oficial (Sin Rumor)
+                        </div>
+                        <div class="d-flex justify-content-around text-center">
+                            <div>
+                                <span class="small text-muted d-block">$b$</span>
+                                <div id="vector-b-base" class="p-2 border rounded bg-white"></div>
+                            </div>
+                            <div>
+                                <span class="small text-muted d-block">$y$</span>
+                                <div id="vector-y-base" class="p-2 border rounded bg-white"></div>
+                            </div>
+                            <div>
+                                <span class="small text-muted d-block">$x$</span>
+                                <div id="vector-x-base" class="p-2 border rounded bg-white text-success fw-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="text-center py-2 rounded mb-3 fw-bold" style="background:#f8f9fa; color:#c62828;">
+                            Escenario Alterado (Con Rumor)
+                        </div>
+                        <div class="d-flex justify-content-around text-center">
+                            <div>
+                                <span class="small text-muted d-block">$b$</span>
+                                <div id="vector-b-rumor" class="p-2 border rounded bg-white"></div>
+                            </div>
+                            <div>
+                                <span class="small text-muted d-block">$y$</span>
+                                <div id="vector-y-rumor" class="p-2 border rounded bg-white"></div>
+                            </div>
+                            <div>
+                                <span class="small text-muted d-block">$x$</span>
+                                <div id="vector-x-rumor" class="p-2 border rounded bg-white text-danger fw-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info mb-0">
+                    <strong>Análisis:</strong> Compare la asignación verde (ideal) contra la asignación roja (distorsionada por pánico). En sistemas mal condicionados, el vector rojo se descontrolará.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-6 mb-4">
+            <div class="card p-3 bg-light border-0 shadow-sm">
+                <h6 class="text-muted small text-center text-uppercase fw-bold mb-3" id="titulo-oficial">Espacio 3D: Escenario Oficial</h6>
+                <div id="chartOficial" style="height: 380px;"></div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card p-3 bg-light border-0 shadow-sm">
+                <h6 class="text-muted small text-center text-uppercase fw-bold mb-3" id="titulo-rumor">Espacio 3D: Escenario con Rumor</h6>
+                <div id="chartRumor" style="height: 380px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4 border-primary shadow-sm">
+        <h2 class="h4 text-primary mb-3">
+            <i class="bi bi-calculator"></i> Verificación Paso a Paso: Número de Condición ($\kappa_2$)
+        </h2>
+        <p class="text-secondary">
+            A continuación se detalla el procedimiento analítico utilizando la <strong>Norma 2 (Espectral)</strong> para comprobar el resultado que arroja el servidor en tiempo real.
+        </p>
+        
+        <div class="row">
+            <div class="col-md-7 border-end">
+                <ol class="list-group list-group-numbered list-group-flush">
+                    <li class="list-group-item bg-transparent">
+                        <strong>Calcular la norma de la matriz original $\|A\|_2$:</strong><br>
+                        <span class="text-muted small">Se obtiene mediante la raíz cuadrada del autovalor máximo de $A^T A$ (el valor singular máximo $\sigma_{max}$).</span>
+                        <div class="mt-1 fw-mono text-dark bg-light p-2 rounded">
+                            $\|A\|_2 =$ <span id="step-norma-A" class="fw-bold">-</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <strong>Calcular la matriz inversa $A^{-1}$:</strong><br>
+                        <span class="text-muted small">Se resuelve el sistema algebraico para encontrar la matriz que cumple $A \cdot A^{-1} = I$.</span>
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <strong>Calcular la norma de la inversa $\|A^{-1}\|_2$:</strong><br>
+                        <span class="text-muted small">Equivale a $1 / \sigma_{min}$, donde $\sigma_{min}$ es el valor singular más pequeño de la matriz original.</span>
+                        <div class="mt-1 fw-mono text-dark bg-light p-2 rounded">
+                            $\|A^{-1}\|_2 =$ <span id="step-norma-A-inv" class="fw-bold">-</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <strong>Multiplicar ambas normas:</strong><br>
+                        <span class="text-muted small">El producto matemático final define la sensibilidad y el error máximo propagado.</span>
+                        <div class="mt-1 text-primary bg-light p-2 rounded fw-bold text-center" id="step-formula-final">
+                            -
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="col-md-5 d-flex flex-column justify-content-center align-items-center bg-light rounded p-4 text-center">
+                <span class="text-uppercase text-muted small fw-bold mb-2">Resultado Computacional</span>
+                <div class="display-3 fw-bold text-success mb-2" id="step-kappa-display">-</div>
+                <div class="badge bg-opacity-10 text-success bg-success p-2 px-3 uppercase fw-bold border border-success" id="step-status-badge">
+                    Sistema Estable
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('simulation-form');
+    const rumorSlider = document.getElementById('rumor');
+    const rumorVal = document.getElementById('rumorVal');
+
+    // Genera una malla 2D exacta (Meshgrid) para que Plotly pinte superficies tridimensionales sólidas
+    function generarDatosPlano(coeficientes, b) {
+        const xVal = [];
+        const yVal = [];
+        
+        for (let i = -5; i <= 25; i += 2) xVal.push(i);
+        for (let j = -5; j <= 25; j += 2) yVal.push(j);
+
+        const xGrid = [];
+        const yGrid = [];
+        const zGrid = [];
+
+        for (let i = 0; i < xVal.length; i++) {
+            const filaX = [];
+            const filaY = [];
+            const filaZ = [];
+            for (let j = 0; j < yVal.length; j++) {
+                filaX.push(xVal[i]);
+                filaY.push(yVal[j]);
+                
+                if (coeficientes[2] !== 0) {
+                    const z = (b - (coeficientes[0] * xVal[i]) - (coeficientes[1] * yVal[j])) / coeficientes[2];
+                    filaZ.push(z);
+                } else {
+                    filaZ.push(0); 
+                }
+            }
+            xGrid.push(filaX);
+            yGrid.push(filaY);
+            zGrid.push(filaZ);
+        }
+        return { x: xGrid, y: yGrid, z: zGrid };
+    }
+
+    // Renderiza los planos y el punto solución exacto mediante hardware acelerado (WebGL)
+    function crearGrafico3D(divId, A, b, xSol) {
+        const plano1 = generarDatosPlano(A[0], b[0]);
+        const plano2 = generarDatosPlano(A[1], b[1]);
+        const plano3 = generarDatosPlano(A[2], b[2]);
+
+        const data = [
+            {
+                type: 'surface', x: plano1.x, y: plano1.y, z: plano1.z,
+                opacity: 0.55, colorscale: 'Blues', showscale: false, name: 'Ecuación 1'
+            },
+            {
+                type: 'surface', x: plano2.x, y: plano2.y, z: plano2.z,
+                opacity: 0.55, colorscale: 'Greens', showscale: false, name: 'Ecuación 2'
+            },
+            {
+                type: 'surface', x: plano3.x, y: plano3.y, z: plano3.z,
+                opacity: 0.55, colorscale: 'Oranges', showscale: false, name: 'Ecuación 3'
+            },
+            {
+                type: 'scatter3d',
+                x: [xSol[0]], y: [xSol[1]], z: [xSol[2]],
+                mode: 'markers',
+                marker: { 
+                    size: 7, 
+                    color: '#000000', 
+                    line: { color: '#ffffff', width: 2 } 
+                },
+                name: 'Solución Exacta'
+            }
+        ];
+
+        const layout = {
+            margin: { l: 0, r: 0, b: 0, t: 0 },
+            scene: {
+                xaxis: { title: 'X₁ (Merc. A)' },
+                yaxis: { title: 'X₂ (Merc. B)' },
+                zaxis: { title: 'X₃ (Merc. C)' }
+            },
+            showlegend: false
+        };
+
+        Plotly.react(divId, data, layout);
+    }
+
+    async function actualizarSimulacion() {
+        rumorVal.innerText = rumorSlider.value;
+        const formData = new FormData(form);
+        
+        try {
+            const response = await fetch('/calcular', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            const errorContainer = document.getElementById('error-container');
+            
+            if (!response.ok) {
+                errorContainer.innerText = data.error;
+                errorContainer.classList.remove('d-none');
+                return;
+            }
+            
+            errorContainer.classList.add('d-none');
+            
+            const A = [
+                [float(formData.get('a00')), float(formData.get('a01')), float(formData.get('a02'))],
+                [float(formData.get('a10')), float(formData.get('a11')), float(formData.get('a12'))],
+                [float(formData.get('a20')), float(formData.get('a21')), float(formData.get('a22'))]
+            ];
+
+            // 1. Renderizar Estado del Sistema
+            const analysisText = document.getElementById('analysis-text');
+            const stateWrapper = document.getElementById('state-card-wrapper');
+            
+            if (data.num_cond > 100) {
+                stateWrapper.className = "p-3 rounded mb-4 bg-light border-start border-4 border-danger";
+                analysisText.innerHTML = "<strong>Sistema inestable:</strong> Cambios mínimos en demanda generarán caos.";
+            } else {
+                stateWrapper.className = "p-3 rounded mb-4 bg-light border-start border-4 border-success";
+                analysisText.innerHTML = "<strong>Sistema estable:</strong> Rutas balanceadas, absorbe el pánico.";
+            }
+
+            // 2. Renderizar Matrices L y U en formato de cuadrícula exacta
+            document.getElementById('matrix-L').innerHTML = data.L.map(row => 
+                `<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">${row.map(v => `<div style="width: 70px; text-align: right; font-family: monospace;">${v.toFixed(4)}</div>`).join('')}</div>`
+            ).join('');
+            
+            document.getElementById('matrix-U').innerHTML = data.U.map(row => 
+                `<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">${row.map(v => `<div style="width: 70px; text-align: right; font-family: monospace;">${v.toFixed(4)}</div>`).join('')}</div>`
+            ).join('');
+
+            // 3. Renderizar Vectores numéricos escritos
+            document.getElementById('vector-b-base').innerHTML = data.base.b.map(v => `<div>${v}</div>`).join('');
+            document.getElementById('vector-y-base').innerHTML = data.base.y.map(v => `<div>${v}</div>`).join('');
+            document.getElementById('vector-x-base').innerHTML = data.base.x.map(v => `<div>${v}</div>`).join('');
+
+            document.getElementById('vector-b-rumor').innerHTML = data.dinamico.b.map(v => `<div>${v}</div>`).join('');
+            document.getElementById('vector-y-rumor').innerHTML = data.dinamico.y.map(v => `<div>${v}</div>`).join('');
+            document.getElementById('vector-x-rumor').innerHTML = data.dinamico.x.map(v => `<div>${v}</div>`).join('');
+
+            // 4. Renderizado e Inyección Dinámica del número de condición en Gráficos 3D
+            document.getElementById('titulo-oficial').innerText = `Espacio 3D: Escenario Oficial (κ₂ = ${data.num_cond})`;
+            document.getElementById('titulo-rumor').innerText = `Espacio 3D: Escenario con Rumor (κ₂ = ${data.num_cond})`;
+
+            crearGrafico3D('chartOficial', A, data.base.b, data.base.x);
+            crearGrafico3D('chartRumor', A, data.dinamico.b, data.dinamico.x);
+
+            // 5. Actualización del cuadro analítico inferior paso a paso
+            document.getElementById('step-norma-A').innerText = data.norma_A;
+            document.getElementById('step-norma-A-inv').innerText = data.norma_A_inv;
+            document.getElementById('step-kappa-display').innerText = data.num_cond;
+            
+            const formulaFinalContainer = document.getElementById('step-formula-final');
+            formulaFinalContainer.innerHTML = `$\\kappa_2(A) = \\|A\\|_2 \\times \\|A^{-1}\\|_2 = ${data.norma_A} \\times ${data.norma_A_inv} = ${data.num_cond}$`;
+
+            const stepBadge = document.getElementById('step-status-badge');
+            const stepKappa = document.getElementById('step-kappa-display');
+            if (data.num_cond > 100) {
+                stepBadge.className = "badge bg-opacity-10 text-danger bg-danger p-2 px-3 fw-bold border border-danger";
+                stepBadge.innerText = "Sistema Inestable / Mal Condicionado";
+                stepKappa.className = "display-3 fw-bold text-danger";
+            } else {
+                stepBadge.className = "badge bg-opacity-10 text-success bg-success p-2 px-3 fw-bold border border-success";
+                stepBadge.innerText = "Sistema Estable / Bien Condicionado";
+                stepKappa.className = "display-3 fw-bold text-success";
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([formulaFinalContainer]);
+            }
+
+        } catch (err) {
+            console.error("Error actualizando la interfaz: ", err);
+        }
+    }
+
+    function float(val) {
+        return parseFloat(val) || 0.0;
+    }
+
+    form.addEventListener('submit', (e) => { e.preventDefault(); actualizarSimulacion(); });
+    rumorSlider.addEventListener('input', actualizarSimulacion);
+    window.addEventListener('DOMContentLoaded', actualizarSimulacion);
+</script>
+
+</body>
+</html>

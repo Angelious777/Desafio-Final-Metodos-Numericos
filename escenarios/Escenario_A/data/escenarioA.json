@@ -1,0 +1,57 @@
+{
+  "descripcion": "Simulación Numérica de Abastecimiento de Carburantes en el Departamento de La Paz durante una situación de restricciones logísticas y alta demanda.",
+
+  "A": [
+    [950, -140, -90],
+    [-120, 880, -150],
+    [-80, -110, 720]
+  ],
+
+  "b": [
+    820,
+    760,
+    610
+  ],
+
+  "costos_transporte": [
+    1.8,
+    2.5,
+    3.2
+  ],
+
+  "capacidad_rutas": [
+    900,
+    800,
+    650
+  ],
+
+  "demanda_minima": [
+    750,
+    700,
+    550
+  ],
+
+  "restricciones": {
+    "bloqueo_zona_centro": 0.35,
+    "reduccion_ruta_sur": 0.20
+  },
+
+  "etiquetas_filas": [
+    "Planta Senkata (El Alto)",
+    "Centro Logístico Viacha",
+    "Planta Achocalla"
+  ],
+
+  "etiquetas_columnas": [
+    "Zona Norte (Periférica y Miraflores)",
+    "Zona Central (San Pedro y Sopocachi)",
+    "Zona Sur (Obrajes, Calacoto y Mallasa)"
+  ],
+
+  "analisis_estres": {
+    "zona_mas_afectada": "Zona Centro",
+    "causa_afectacion": "La Zona Centro concentra gran parte de la actividad económica, administrativa y del transporte urbano. Durante periodos de escasez, la demanda aumenta mientras que las rutas de ingreso presentan mayores restricciones operativas.",
+    "efecto_bloqueo": "Si una de las rutas principales hacia la Zona Centro reduce significativamente su capacidad, el sistema requiere redistribuir combustible desde otras plantas. Esto incrementa la sensibilidad de la solución y provoca mayores tiempos de abastecimiento.",
+    "interpretacion_matematica": "La matriz mantiene dominancia diagonal, permitiendo la convergencia de Jacobi, Gauss-Seidel y SOR. Sin embargo, al incrementar las restricciones de transporte, la dominancia disminuye y el sistema se vuelve más sensible a pequeñas perturbaciones."
+  }
+}

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafío Métodos Numéricos - Escenario E</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}?v=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}?v=1">
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: '.*' 
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+</head>
+<body class="tex2jax_process retro-os-environment">
+
+    <header class="main-header container-custom" style="margin-top: 20px; margin-bottom: 20px;">
+        <span class="q-text small" style="text-transform: uppercase; font-weight: bold; color: var(--text-light);">Laboratorio de Modelado Matemático</span>
+        <h1 class="q-title" style="font-size: 24px; padding-bottom: 8px; margin-bottom: 4px;">Simulación Numérica de Abastecimiento, Precios y Conflicto Social</h1>
+        <p class="q-text">Escenario E: Umbrales Críticos y Raíces de Ecuaciones</p>
+    </header>
+
+    <main class="container-custom">
+        
+        <section class="retro-window" style="margin-bottom: 25px;">
+            <div class="retro-window-header">
+                <span class="window-title">Fundamentos del Modelo No Lineal</span>
+                <span class="window-title" style="opacity: 0.5;">[?]</span>
+            </div>
+            <div class="retro-window-body">
+                <h3 class="q-title" style="font-size: 14px;">Introducción: ¿Por qué recurrir a Funciones No Lineales?</h3>
+                <p class="q-text">
+                    En el análisis de sistemas complejos —sean económicos, logísticos o sociológicos— las relaciones puramente proporcionales (lineales) son insuficientes para capturar la realidad. Los fenómenos críticos no se desarrollan de manera uniforme; presentan aceleraciones, saturaciones y cambios bruscos de comportamiento conocidos como <strong>puntos de inflexión</strong> o <strong>umbrales críticos</strong>.
+                </p>
+                <p class="q-text">
+                    Para resolver los problemas de este simulador, es estrictamente necesario plantear las ecuaciones en la forma clásica $f(x) = 0$ (búsqueda de raíces) por las siguientes razones analíticas:
+                </p>
+                <ul class="q-text" style="margin-left: 20px; margin-bottom: 20px; list-style-type: square;">
+                    <li><strong>Dinámicas de Saturación y Exponenciales:</strong> El crecimiento de los precios por inflación acumulada o el desabastecimiento por pánico social no avanzan en línea recta. Requieren funciones exponenciales o logísticas que reflejen límites físicos e interacciones multiplicativas.</li>
+                    <li><strong>Imposibilidad de Despeje Analítico Directo:</strong> Al cruzar una fuerza lineal (como un ingreso fijo) con una fuerza exponencial (como el costo de vida), la variable independiente queda atrapada tanto en la base como en el exponente. Esto genera una ecuación trascendente imposible de resolver mediante álgebra tradicional, obligando al uso de aproximaciones numéricas.</li>
+                    <li><strong>Sistemas Convergentes:</strong> Al transformar el problema en la búsqueda de un cero analítico ($f(x)=0$), permitimos que algoritmos iterativos como Bisección, Newton-Raphson y la Secante barran el dominio numérico y localicen con precisión milimétrica el instante exacto del cambio de estado o colapso.</li>
+                </ul>
+
+                <hr style="border: 0; border-top: 1px dashed var(--border); margin: 20px 0;">
+
+                <h3 class="q-title" style="font-size: 14px;">Modelado Matemático de los Fenómenos del Sistema</h3>
+                <p class="q-text" style="margin-bottom: 15px;">
+                    Estas son las tres funciones no lineales que gobiernan el motor analítico de esta simulación:
+                </p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border); padding: 15px; border-radius: 2px;">
+                        <h4 style="font-weight: bold; color: var(--title); margin-bottom: 6px; font-size: 12px;">1. Umbral de Costo vs Ingreso</h4>
+                        <p class="q-text small" style="min-height: 55px;">Evalúa el instante exacto en que el costo inflacionario acumulado de la canasta básica supera la capacidad financiera real del núcleo familiar.</p>
+                        <div class="formula-container-retro" style="text-align: center; font-size: 11.5px; padding: 6px; background: #fff; border: 1px solid var(--border);">
+                            $$f(t) = C_0 e^{rt} - (I_f + \beta \cdot t)$$
+                        </div>
+                        <p class="q-text small" style="margin-top: 8px; font-size: 11px; color: var(--text-light);">
+                            <strong>Cero ($f(t)=0$):</strong> Punto de quiebre temporal. Si $f(t) > 0$, la población entra en déficit financiero crónico.
+                        </p>
+                    </div>
+
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border); padding: 15px; border-radius: 2px;">
+                        <h4 style="font-weight: bold; color: var(--title); margin-bottom: 6px; font-size: 12px;">2. Tasa de Reposición Logística</h4>
+                        <p class="q-text small" style="min-height: 55px;">Modela el balance en un nodo de distribución donde el desabastecimiento provoca compras de pánico, acelerando exponencialmente el consumo social.</p>
+                        <div class="formula-container-retro" style="text-align: center; font-size: 11.5px; padding: 6px; background: #fff; border: 1px solid var(--border);">
+                            $$f(R) = R - C_{max}(1 - e^{-kR}) - D$$
+                        </div>
+                        <p class="q-text small" style="margin-top: 8px; font-size: 11px; color: var(--text-light);">
+                            <strong>Cero ($f(R)=0$):</strong> Setea la tasa mínima de suministro para estabilizar reservas. Flujos menores provocan desabastecimiento crítico.
+                        </p>
+                    </div>
+
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border); padding: 15px; border-radius: 2px;">
+                        <h4 style="font-weight: bold; color: var(--title); margin-bottom: 6px; font-size: 12px;">3. Transición de Opinión Colectiva</h4>
+                        <p class="q-text small" style="min-height: 55px;">Basado en la teoría de catástrofes, modela cómo el descontento social o un rumor alcanza una masa crítica, detonando una movilización masiva.</p>
+                        <div class="formula-container-retro" style="text-align: center; font-size: 11.5px; padding: 6px; background: #fff; border: 1px solid var(--border);">
+                            $$f(x) = x^3 - 3x^2 + s \cdot x - 1$$
+                        </div>
+                        <p class="q-text small" style="margin-top: 8px; font-size: 11px; color: var(--text-light);">
+                            <strong>Cero ($f(x)=0$):</strong> Define los equilibrios de opinión. Valores críticos de conectividad ($s$) ramifican el sistema hacia el conflicto.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="retro-window">
+            <div class="retro-window-header">
+                <span class="window-title">Configuración del Modelo y Parámetros Operativos</span>
+                <span class="window-title" style="opacity: 0.5;">[■]</span>
+            </div>
+            
+            <div class="retro-window-body">
+                <p class="q-text" style="margin-bottom: 15px;">Seleccione el fenómeno social o logístico y defina las variables del entorno de simulación.</p>
+                
+                <form method="POST" action="/">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                        
+                        <div>
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label for="modelo" class="retro-label">Fenómeno a modelar</label>
+                                <select name="modelo" id="modelo" class="retro-input" onchange="toggleModelParams()" style="height: 34px;">
+                                    <option value="1" {% if inputs and inputs.get('modelo') == '1' %}selected{% endif %}>1. Umbral de Costo Acumulado vs Ingreso Familiar</option>
+                                    <option value="2" {% if inputs and inputs.get('modelo') == '2' %}selected{% endif %}>2. Tasa de Reposición Crítica de Carburante</option>
+                                    <option value="3" {% if inputs and inputs.get('modelo') == '3' %}selected{% endif %}>3. Umbral de Transición y Dinámica Social</option>
+                                </select>
+                            </div>
+
+                            <div id="params-modelo-1" class="model-params">
+                                <fieldset style="border: 1px solid var(--border); padding: 15px; border-radius: 2px;">
+                                    <legend class="retro-label" style="padding: 0 5px; background: #fafaf6;">Variables: Pérdida del Poder Adquisitivo</legend>
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                                        <div class="form-group">
+                                            <label class="retro-label">Costo Inicial ($C_0$):</label>
+                                            <input type="number" step="any" name="c0" class="retro-input" value="{{ inputs.c0 if posted else 150.0 }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="retro-label">Tasa Inflación ($r$):</label>
+                                            <input type="number" step="any" name="r" class="retro-input" value="{{ inputs.r if posted else 0.08 }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="retro-label">Ingreso Familiar ($I_f$):</label>
+                                            <input type="number" step="any" name="if" class="retro-input" value="{{ inputs.if if posted else 500.0 }}">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div id="params-modelo-2" class="model-params" style="display:none;">
+                                <fieldset style="border: 1px solid var(--border); padding: 15px; border-radius: 2px;">
+                                    <legend class="retro-label" style="padding: 0 5px; background: #fafaf6;">Variables: Red de Abastecimiento y Logística</legend>
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                                        <div class="form-group">
+                                            <label class="retro-label">Suministro Máx ($C_{max}$):</label>
+                                            <input type="number" name="c_max" step="any" class="retro-input" value="{{ inputs.c_max if posted else 800.0 }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="retro-label">Factor Estrés ($k$):</label>
+                                            <input type="number" name="k" step="any" class="retro-input" value="{{ inputs.k if posted else 0.002 }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="retro-label">Déficit Social ($D$):</label>
+                                            <input type="number" name="d" step="any" class="retro-input" value="{{ inputs.d if posted else 200.0 }}">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div id="params-modelo-3" class="model-params" style="display:none;">
+                                <fieldset style="border: 1px solid var(--border); padding: 15px; border-radius: 2px;">
+                                    <legend class="retro-label" style="padding: 0 5px; background: #fafaf6;">Variables: Inestabilidad Colectiva</legend>
+                                    <div class="form-group">
+                                        <label class="retro-label">Intensidad Rumor ($s$):</label>
+                                        <input type="number" step="any" name="s" class="retro-input" value="{{ inputs.s if posted else 0.4 }}">
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="q-title" style="margin-bottom: 10px;">Configuración de Algoritmos</h3>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;">
+                                <div style="background: var(--bg-panel); border: 1px solid var(--border); padding: 8px;">
+                                    <h4 style="font-weight: bold; font-size: 11px;">Bisección</h4>
+                                    <span class="q-text small" style="display:block; margin-bottom:4px;">Intervalo [a, b]</span>
+                                    <div class="form-group" style="margin-bottom: 4px;">
+                                        <input type="number" step="any" name="a_bis" id="a_bis" class="retro-input" value="{{ inputs.a_bis if posted else 0.0 }}" placeholder="a">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="number" step="any" name="b_bis" id="b_bis" class="retro-input" value="{{ inputs.b_bis if posted else 25.0 }}" placeholder="b">
+                                    </div>
+                                </div>
+                                
+                                <div style="background: var(--bg-panel); border: 1px solid var(--border); padding: 8px;">
+                                    <h4 style="font-weight: bold; font-size: 11px; color: var(--text);">Newton-Raphson</h4>
+                                    <span class="q-text small" style="display:block; margin-bottom:4px;">Semilla x0</span>
+                                    <div class="form-group">
+                                        <input type="number" step="any" name="x0_new" id="x0_new" class="retro-input" value="{{ inputs.x0_new if posted else 10.0 }}" placeholder="x0">
+                                    </div>
+                                </div>
+
+                                <div style="background: var(--bg-panel); border: 1px solid var(--border); padding: 8px;">
+                                    <h4 style="font-weight: bold; font-size: 11px;">Secante</h4>
+                                    <span class="q-text small" style="display:block; margin-bottom:4px;">Puntos x0, x1</span>
+                                    <div class="form-group" style="margin-bottom: 4px;">
+                                        <input type="number" step="any" name="x0_sec" id="x0_sec" class="retro-input" value="{{ inputs.x0_sec if posted else 5.0 }}" placeholder="x0">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="number" step="any" name="x1_sec" id="x1_sec" class="retro-input" value="{{ inputs.x1_sec if posted else 20.0 }}" placeholder="x1">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div class="form-group">
+                                    <label class="retro-label">Tolerancia Parada ($\epsilon$):</label>
+                                    <input type="number" step="0.000001" name="tol" class="retro-input" value="{{ inputs.tol if posted else 0.00001 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="retro-label">Iteraciones Máx:</label>
+                                    <input type="number" name="max_iter" class="retro-input" value="{{ inputs.max_iter if posted else 50 }}">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div style="text-align: right;">
+                        <button type="submit" class="retro-btn-execute">Ejecutar Simulación y Comparar Robustez</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        {% if error %}
+        <div class="retro-alert-box alert-danger-retro" role="alert" style="margin-bottom: 24px;">
+            <strong>Error de Configuración:</strong> {{ error }}
+        </div>
+        {% endif %}
+
+        {% if posted %}
+        <section class="retro-window">
+            <div class="retro-window-header">
+                <span class="window-title">Ecuación No Lineal Evaluada: {{ nombre_modelo }}</span>
+            </div>
+            <div class="retro-window-body">
+                <p class="q-text">El motor analítico evalúa el siguiente modelo dinámico de equilibrio en la caja de visualización analítica:</p>
+                
+                <div class="formula-container-retro" id="formula-display" style="margin-bottom: 15px; text-align: center;">
+                    {{ formula_latex | safe }}
+                </div>
+                
+                <div style="background: var(--bg-panel); border: 1px solid var(--border); padding: 12px; font-size: 12.5px;">
+                    {% if modelo_opt == '1' %}
+                    <p class="q-text"><strong>Fundamento Físico-Económico:</strong> Determina el instante exacto $t$ donde el costo acumulado de vida intersecta la frontera salarial. Derivada analítica inyectada en Newton-Raphson:</p>
+                    <div style="text-align: center; margin-top: 5px;">
+                        $$f'(t) = C_0 \cdot r \cdot e^{r \cdot t}$$
+                    </div>
+                    
+                    {% elif modelo_opt == '2' %}
+                    <p class="q-text"><strong>Fundamento Físico-Económico:</strong> Define la tasa logística crítica de ingreso de insumos para compensar el comportamiento de desabastecimiento social. Derivada analítica inyectada:</p>
+                    <div style="text-align: center; margin-top: 5px;">
+                        $$f'(R) = 1 - C_{max} \cdot k \cdot e^{-k \cdot R}$$
+                    </div>
+                    
+                    {% elif modelo_opt == '3' %}
+                    <p class="q-text"><strong>Fundamento Físico-Económico:</strong> Evalúa la masa crítica y los puntos de inflexión en la inestabilidad colectiva. Derivada analítica inyectada:</p>
+                    <div style="text-align: center; margin-top: 5px;">
+                        $$f'(x) = 3x^2 - 6x + 2.5$$
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <section class="retro-window">
+            <div class="retro-window-header">
+                <span class="window-title">Resolución Numérica Convergente (Desglose Paralelo)</span>
+            </div>
+            <div class="retro-window-body" style="display: flex; flex-direction: column; gap: 24px;">
+
+                <div>
+                    <h3 class="q-title">1. Algoritmo de Bisección (Intervalos Sucesivos)</h3>
+                    {% if err_bis %}
+                        <div class="retro-alert-box" style="border-left-color: var(--danger);">{{ err_bis }}</div>
+                    {% else %}
+                        <div class="scroll-retro-container">
+                            <table class="table-retro-style">
+                                <thead>
+                                    <tr>
+                                        <th>$k$</th>
+                                        <th>Extremo Inf ($a$)</th>
+                                        <th>Extremo Sup ($b$)</th>
+                                        <th>Punto Medio ($c$)</th>
+                                        <th>Evaluación $f(c)$</th>
+                                        <th>Error Intervalo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for it in res_bis %}
+                                    <tr>
+                                        <td>{{ it.iter }}</td>
+                                        <td>{{ it.a }}</td>
+                                        <td>{{ it.b }}</td>
+                                        <td style="font-weight: bold; background: #fffdf7;">{{ it.c }}</td>
+                                        <td>{{ it.fc }}</td>
+                                        <td>{{ it.error }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h3 class="q-title">2. Algoritmo de Newton-Raphson (Tangenciales)</h3>
+                    {% if err_new %}
+                        <div class="retro-alert-box" style="border-left-color: var(--danger);">{{ err_new }}</div>
+                    {% else %}
+                        <div class="scroll-retro-container">
+                            <table class="table-retro-style">
+                                <thead>
+                                    <tr>
+                                        <th>$k$</th>
+                                        <th>Aproximación $x_k$</th>
+                                        <th>$f(x_k)$</th>
+                                        <th>Derivada $f'(x_k)$</th>
+                                        <th>Siguiente $x_{k+1}$</th>
+                                        <th>Error Absoluto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for it in res_new %}
+                                    <tr>
+                                        <td>{{ it.iter }}</td>
+                                        <td>{{ it.x0 }}</td>
+                                        <td>{{ it.fx }}</td>
+                                        <td>{{ it.dfx }}</td>
+                                        <td style="font-weight: bold; background: #fffdf7;">{{ it.x1 }}</td>
+                                        <td>{{ it.error }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h3 class="q-title">3. Algoritmo de la Secante (Diferencias Finitas)</h3>
+                    {% if err_sec %}
+                        <div class="retro-alert-box" style="border-left-color: var(--danger);">{{ err_sec }}</div>
+                    {% else %}
+                        <div class="scroll-retro-container">
+                            <table class="table-retro-style">
+                                <thead>
+                                    <tr>
+                                        <th>$k$</th>
+                                        <th>$x_{k-1}$</th>
+                                        <th>$x_k$</th>
+                                        <th>$f(x_{k-1})$</th>
+                                        <th>$f(x_k)$</th>
+                                        <th>Siguiente $x_{k+1}$</th>
+                                        <th>Error Absoluto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for it in res_sec %}
+                                    <tr>
+                                        <td>{{ it.iter }}</td>
+                                        <td>{{ it.x0 }}</td>
+                                        <td>{{ it.x1 }}</td>
+                                        <td>{{ it.fx0 }}</td>
+                                        <td>{{ it.fx1 }}</td>
+                                        <td style="font-weight: bold; background: #fffdf7;">{{ it.x_next }}</td>
+                                        <td>{{ it.error }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </section>
+
+        <section class="retro-window">
+            <div class="retro-window-header">
+                <span class="window-title">Matriz de Robustez, Velocidad y Sensibilidad</span>
+            </div>
+            <div class="retro-window-body">
+                <p class="q-text" style="margin-bottom: 15px;">Comparativa de rendimiento y eficiencia de los estimadores matemáticos frente a la crisis del entorno.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border); padding: 15px; border-radius: 2px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h3 style="margin: 0; font-weight: bold;">Bisección</h3>
+                            <span class="retro-alert-box {% if analisis.biseccion.status == 'Éxito' %}alert-success-retro{% else %}alert-danger-retro{% endif %}" style="padding: 2px 8px; font-size: 11px; border: none !important;">
+                                {{ analisis.biseccion.status }}
+                            </span>
+                        </div>
+                        <ul style="list-style: none; font-size: 12px; margin-bottom: 10px; padding: 0;">
+                            <li style="margin-bottom: 4px;"><strong>Costo:</strong> {{ analisis.biseccion.iters }} ciclos</li>
+                            <li style="margin-bottom: 4px;"><strong>Raíz Óptima:</strong> <span class="font-monospace val-rk4">{{ analisis.biseccion.raiz if analisis.biseccion.raiz else 'N/A' }}</span></li>
+                            <li><strong>Orden Conv. ($p$):</strong> {{ analisis.biseccion.p }}</li>
+                        </ul>
+                        <p class="q-text small" style="margin: 0; border-top: 1px dashed var(--border); padding-top: 6px;">{{ analisis.biseccion.msg }}</p>
+                    </div>
+
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border); padding: 15px; border-radius: 2px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h3 style="margin: 0; font-weight: bold;">Newton-Raphson</h3>
+                            <span class="retro-alert-box {% if analisis.newton.status == 'Éxito' %}alert-success-retro{% else %}alert-danger-retro{% endif %}" style="padding: 2px 8px; font-size: 11px; border: none !important;">
+                                {{ analisis.newton.status }}
+                            </span>
+                        </div>
+                        <ul style="list-style: none; font-size: 12px; margin-bottom: 10px; padding: 0;">
+                            <li style="margin-bottom: 4px;"><strong>Costo:</strong> {{ analisis.newton.iters }} ciclos</li>
+                            <li style="margin-bottom: 4px;"><strong>Raíz Óptima:</strong> <span class="font-monospace val-heun">{{ analisis.newton.raiz if analisis.newton.raiz else 'N/A' }}</span></li>
+                            <li><strong>Orden Conv. ($p$):</strong> {{ analisis.newton.p }}</li>
+                        </ul>
+                        <p class="q-text small" style="margin: 0; border-top: 1px dashed var(--border); padding-top: 6px;">{{ analisis.newton.msg }}</p>
+                    </div>
+
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border); padding: 15px; border-radius: 2px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h3 style="margin: 0; font-weight: bold;">Secante</h3>
+                            <span class="retro-alert-box {% if analisis.secante.status == 'Éxito' %}alert-success-retro{% else %}alert-danger-retro{% endif %}" style="padding: 2px 8px; font-size: 11px; border: none !important;">
+                                {{ analisis.secante.status }}
+                            </span>
+                        </div>
+                        <ul style="list-style: none; font-size: 12px; margin-bottom: 10px; padding: 0;">
+                            <li style="margin-bottom: 4px;"><strong>Costo:</strong> {{ analisis.secante.iters }} ciclos</li>
+                            <li style="margin-bottom: 4px;"><strong>Raíz Óptima:</strong> <span class="font-monospace val-euler">{{ analisis.secante.raiz if analisis.secante.raiz else 'N/A' }}</span></li>
+                            <li><strong>Orden Conv. ($p$):</strong> {{ analisis.secante.p }}</li>
+                        </ul>
+                        <p class="q-text small" style="margin: 0; border-top: 1px dashed var(--border); padding-top: 6px;">{{ analisis.secante.msg }}</p>
+                    </div>
+                </div>
+
+                <div style="background: var(--white); border: 1px solid var(--border); padding: 20px; border-radius: 2px;">
+                    <h3 class="q-title" style="font-size: 14px;">Conclusiones Críticas para la Toma de Decisiones</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <h4 style="font-weight: bold; text-transform: uppercase; font-size: 11px; color: var(--text-light);">Robustez del Dominio</h4>
+                            <p class="q-text">El método de Bisección mantiene estabilidad absoluta ante fuertes asíntotas o derivadas discontinuas en entornos no lineales caóticos. Newton y Secante presentan riesgos de oscilación o divergencia si la aproximación no es óptima.</p>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: bold; text-transform: uppercase; font-size: 11px; color: var(--text-light);">Eficiencia Asintótica</h4>
+                            <p class="q-text">Newton-Raphson optimiza exponencialmente los ciclos computacionales gracias a su orden de convergencia cuadrático ($p \approx 2$), seguido por la aproximación superlineal del método de la Secante ($p \approx 1.62$).</p>
+                        </div>
+                    </div>
+                    
+                    <div class="retro-code-box" style="flex-direction: column; align-items: flex-start; justify-content: flex-start; padding: 15px;">
+                        <h4 style="font-weight: bold; font-size: 11px; margin-bottom: 8px; color: var(--text-light); text-transform: uppercase; width: 100%; border-bottom: 1px dashed var(--border); padding-bottom: 4px;">
+                            Resultados Consolidados del Escenario Activo:
+                        </h4>
+                        <pre style="width: 100%; margin: 0; font-size: 12px; white-space: pre-wrap; color: var(--text);">{% for linea in comparativa %}• {{ linea }}
+{% endfor %}</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <section class="retro-window">
+            <div class="retro-window-header">
+                <span class="window-title">Documentación Técnica: Análisis de Convergencia e Interpretación Gráfica</span>
+                <span class="window-title" style="opacity: 0.5;">[?]</span>
+            </div>
+            <div class="retro-window-body">
+                <h3 class="q-title" style="font-size: 14px;">El Concepto del Orden de Convergencia ($p$)</h3>
+                <p class="q-text">
+                    El <strong>orden de convergencia</strong> (denotado como $p$) es la métrica que determina la velocidad con la que el error absoluto ($e_k = |x_k - \alpha|$) se reduce al avanzar hacia la raíz exacta ($\alpha$). Matemáticamente, el comportamiento asintótico del error se rige por el límite:
+                </p>
+                <div class="formula-container-retro" style="text-align: center; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace;">
+                    $$\lim_{k \to \infty} \frac{e_{k+1}}{e_k^p} = C$$
+                </div>
+
+                <h3 class="q-title" style="font-size: 14px; margin-top: 20px;">Visualización Geométrica del Espacio de Soluciones</h3>
+                <p class="q-text" style="margin-bottom: 15px;">
+                    El siguiente esquema gráfico ilustra el comportamiento típico de los tres algoritmos buscando la raíz ($\alpha$) en una curva no lineal del sistema. Observa cómo Bisección acota, Newton usa la tangente local y la Secante traza una cuerda entre dos puntos:
+                </p>
+
+                <div style="display: flex; justify-content: center; background: #ffffff; border: 1px solid var(--border); padding: 15px; margin-bottom: 25px;">
+                    <canvas id="retroMethodCanvas" width="700" height="350" style="background: #fafaf6; border: 1px solid var(--border-dark); max-width: 100%;"></canvas>
+                </div>
+
+                <h3 class="q-title" style="font-size: 14px;">Matriz Comparativa de Comportamiento Dinámico</h3>
+                <div class="scroll-retro-container" style="max-height: none; overflow: visible; margin-bottom: 25px;">
+                    <table class="table-retro-style" style="font-size: 12px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">Criterio / Método</th>
+                                <th style="width: 25%;">Bisección</th>
+                                <th style="width: 28%;">Newton-Raphson</th>
+                                <th style="width: 27%;">Secante</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Orden ($p$)</strong></td>
+                                <td class="font-monospace val-rk4" style="font-weight: bold;">p = 1 (Lineal)</td>
+                                <td class="font-monospace val-heun" style="font-weight: bold;">p = 2 (Cuadrática)</td>
+                                <td class="font-monospace val-euler" style="font-weight: bold;">p ≈ 1.618 (Superlineal)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ecuación del Error</strong></td>
+                                <td class="font-monospace">$$e_{k+1} \approx 0.5 \cdot e_k$$</td>
+                                <td class="font-monospace">$$e_{k+1} \approx \left| \frac{f''(\alpha)}{2f'(\alpha)} \right| \cdot e_k^2$$</td>
+                                <td class="font-monospace">$$e_{k+1} \approx \left| \frac{f''(\alpha)}{2f'(\alpha)} \right|^{0.618} \cdot e_k \cdot e_{k-1}$$</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Velocidad Real</strong></td>
+                                <td class="q-text small">Lenta pero constante. Divide el intervalo estrictamente a la mitad por ciclo.</td>
+                                <td class="q-text small">Ultra rápida. El número de decimales correctos aproximadamente se duplica por ciclo.</td>
+                                <td class="q-text small">Rápida (Proporción Áurea). Excelente balance sin calcular derivadas directas.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Modelo 1<br><small>(Poder Adquisitivo)</small></strong></td>
+                                <td class="q-text small"><strong>Estabilidad garantizada:</strong> Al ser una función exponencial monótona, si hay cambio de signo, atrapa la raíz sin oscilaciones.</td>
+                                <td class="q-text small"><strong>Eficiencia óptima:</strong> Al no haber cambios bruscos de concavidad, converge en muy pocos pasos con una semilla $t_0 > 0$.</td>
+                                <td class="q-text small"><strong>Alto rendimiento:</strong> Encuentra el cruce temporal de la canasta con el ingreso familiar de manera fluida.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Modelo 2<br><small>(Carburante Logístico)</small></strong></td>
+                                <td class="q-text small"><strong>Eficaz en asíntotas:</strong> Ideal si los parámetros de estrés generan pendientes casi planas donde los métodos derivativos se pierden.</td>
+                                <td class="q-text small"><strong>Riesgo crítico:</strong> Si la tasa logística de reposición hace que $f'(R) \to 0$, el algoritmo puede disparar la aproximación al infinito.</td>
+                                <td class="q-text small"><strong>Estabilidad intermedia:</strong> Evita divisiones directas por cero al promediar la pendiente mediante diferencias finitas.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Modelo 3<br><small>(Inestabilidad Social)</small></strong></td>
+                                <td class="q-text small"><strong>Seguro para raíces aisladas:</strong> Útil para extraer una sola raíz del polinomio cúbico delimitando bien el intervalo.</td>
+                                <td class="q-text small"><strong>Sensibilidad extrema:</strong> Si la semilla cae cerca de un punto de inflexión donde la derivada es nula, el método oscilará indefinidamente.</td>
+                                <td class="q-text small"><strong>Sensibilidad moderada:</strong> Puede rebotar entre zonas cóncavas y convexas si los puntos de arranque atrapan crestas del polinomio.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="retro-alert-box" style="font-size: 12px; border-left: 4px solid var(--border-dark); background: #fbfbf8; padding: 15px;">
+                    <strong>Nota de Simulación Hospitalaria / Logística:</strong> Observa las fórmulas de error para <strong>Newton-Raphson</strong> y <strong>Secante</strong>. Ambas dependen críticamente del divisor $f'(\alpha)$. Si la derivada de tu modelo se aplana (tiende a cero), la constante del error crece exponencialmente, explicando por qué algunos escenarios del simulador exigen una rigurosa selección de semillas iniciales para no romper la convergencia.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/grafico-retro.js') }}"></script>
+</body>
+</html>

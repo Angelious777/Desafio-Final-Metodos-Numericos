@@ -1,0 +1,549 @@
+{% extends 'base.html' %}
+
+{% block title %}Estación de Control: Centro de Monitoreo de Dinámica Social (Modelo N-M-D){% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --bg-desktop: #ecece6;
+        --bg-window: #f8f8f3;
+        --bg-panel: #f4f4ee;
+        --border: #cfcfc6;
+        --border-dark: #b8b8af;
+        --text: #44443f;
+        --text-light: #77776f;
+        --title: #2f2f2b;
+        --green-soft: #cdd8c7;
+        --green-medium: #a9b8a2;
+        --blue-soft: #d8e1ea;
+        --danger: #d67c7c;
+        --white: #ffffff;
+        
+        /* Nuevas variables para destacar la solución core */
+        --neon-gold: #f39c12;
+        --core-highlight: #fffdf0;
+        --terminal-green: #2ecc71;
+    }
+
+    .retro-container-global {
+        font-family: monospace;
+        font-size: 14px;
+        color: var(--text);
+    }
+
+    .window-title-main {
+        font-size: 15px !important;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+    }
+
+    .win-btn-sm {
+        background-color: var(--blue-soft) !important;
+        color: var(--title) !important;
+        border: 2px solid var(--border-dark) !important;
+        padding: 5px 10px !important;
+        font-family: monospace;
+        font-size: 13px !important;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: inset -1px -1px 0px rgba(0,0,0,0.2), inset 1px 1px 0px var(--white);
+        transition: background 0.1s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .win-btn-sm:hover {
+        background-color: var(--green-soft) !important;
+    }
+
+    .win-btn-sm:active, .border-win-active {
+        background-color: var(--border) !important;
+        border-style: inset !important;
+        box-shadow: inset 2px 2px 3px rgba(0,0,0,0.15) !important;
+        color: var(--text) !important;
+    }
+
+    .btn-execute-main {
+        background-color: var(--green-medium) !important;
+        color: var(--title) !important;
+        border: 2px solid var(--border-dark) !important;
+        padding: 10px 15px !important;
+        font-size: 14px !important;
+        font-weight: bold;
+        font-family: monospace;
+        cursor: pointer;
+        box-shadow: inset -1px -1px 2px rgba(0,0,0,0.3), inset 1px 1px 1px var(--white);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-execute-main:hover {
+        background-color: var(--green-soft) !important;
+    }
+
+    .btn-execute-main:active {
+        background-color: var(--border-dark) !important;
+        box-shadow: inset 3px 3px 5px rgba(0,0,0,0.3) !important;
+        transform: translate(1px, 1px);
+    }
+
+    .btn-reset-main {
+        background-color: var(--danger) !important;
+        color: var(--white) !important;
+        border: 2px solid var(--border-dark) !important;
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+        font-weight: bold;
+        font-family: monospace;
+        cursor: pointer;
+        box-shadow: inset -1px -1px 2px rgba(0,0,0,0.3), inset 1px 1px 1px rgba(255,255,255,0.4);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-reset-main:hover {
+        filter: brightness(1.08);
+    }
+
+    .btn-reset-main:active {
+        background-color: #b56262 !important;
+        box-shadow: inset 3px 3px 5px rgba(0,0,0,0.4) !important;
+        transform: translate(1px, 1px);
+    }
+
+    .calc-table th, .calc-table td {
+        border: 1px solid var(--border-dark);
+        padding: 6px 8px;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Clase especial para REMARCAR de forma elegante tu solución core */
+    .window-core-highlight {
+        border: 2px solid var(--neon-gold) !important;
+        box-shadow: 0 0 12px rgba(243, 156, 18, 0.2), inset 0 0 6px rgba(243, 156, 18, 0.05) !important;
+    }
+    
+    .window-core-highlight .retro-window-header {
+        background: linear-gradient(90deg, #d35400, var(--neon-gold)) !important;
+        color: white !important;
+    }
+
+    .core-badge {
+        background: #f39c12;
+        color: #fff;
+        padding: 2px 6px;
+        font-size: 10px;
+        font-weight: bold;
+        border-radius: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+</style>
+
+<div class="retro-container-global" style="display: flex; flex-direction: column; gap: 20px;">
+    
+    <div class="retro-window-header bg-win-active" style="color: var(--white); border: 1px solid var(--border-dark); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: inset -1px -1px #555, inset 1px 1px #fff;">
+        <span class="window-title-main">
+            [SISTEMA CORE] CORE_RECON_V1.1.0 // MONITOR DE CONFLICTIVIDAD URBANA
+        </span>
+        <span id="reloj-sistema" style="font-size: 13px; color: var(--white);">SISTEMA ACTIVO // LA PAZ</span>
+    </div>
+
+    <div class="retro-window" style="width: 100%;">
+        <div class="retro-window-header">
+            <span class="window-title" style="font-size: 14px;">Contexto_Del_Sistema.txt</span>
+        </div>
+        <div class="retro-window-body" style="background: var(--bg-window); padding: 15px; line-height: 1.6; border: 1px inset #fff;">
+            <p style="margin: 0 0 12px 0; font-weight: bold; color: var(--title); font-size: 15px; display: flex; align-items: center; gap: 6px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22s1-1 1-5c0-4.3 3.7-8 8-8s8 3.7 8 8c0 4-1 5-1 5"></path><path d="M5 12a7 7 0 0 1 14 0"></path><circle cx="12" cy="17" r="1"></circle></svg>
+                CENTRO DE MONITOREO DE DINÁMICAS SOCIALES - DEPARTAMENTO DE LA PAZ
+            </p>
+            <p style="margin: 0; font-size: 13px; text-align: justify;">
+                El sistema simula la cinética y propagación del descontento colectivo en entornos urbanos y rurales de La Paz. 
+                Para mapear matemáticamente la evolución del conflicto, la población total estimada se segmenta en tres grupos dinámicos interactuantes:
+            </p>
+            <ul style="margin: 12px 0 0 0; padding-left: 20px; font-size: 13px; display: flex; flex-direction: column; gap: 6px;">
+                <li><strong style="color: #2980b9;">N(t) [Ciudadanos Neutrales]:</strong> Población pasiva que actúa como masa susceptible al contagio ideológico o malestar social.</li>
+                <li><strong style="color: #c0392b;">M(t) [Manifestantes Activos]:</strong> Masa crítica movilizada que participa activamente en protestas, marchas o bloqueos urbanos.</li>
+                <li><strong style="color: #27ae60;">D(t) [Mediadores de Diálogo]:</strong> Fuerzas de contención pacífica o defensores sociales desplegados para mitigar el descontento.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: stretch;">
+        
+        <div class="retro-window" style="flex: 1 1 390px; max-width: 430px; display: flex; flex-direction: column;">
+            <div class="retro-window-header">
+                <span class="window-title" style="font-size: 14px;">Configuracion_Poblacional.exe</span>
+            </div>
+            <div class="retro-window-body retro-control-panel" style="background: var(--bg-panel); display: flex; flex-direction: column; gap: 15px; flex-grow: 1; padding: 14px;">
+                
+                <div style="border: 1px dashed var(--border-dark); padding: 10px; background: var(--bg-window);">
+                    <span style="font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 4px; margin-bottom: 8px; color: var(--title);">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        [COMPARAR ESCENARIOS PREESTABLECIDOS]
+                    </span>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                        <button type="button" id="btn-caso-base" class="win-btn-sm" title="Parámetros base">Caso Base (La Paz)</button>
+                        <button type="button" id="btn-alto-dialogo" class="win-btn-sm" title="Efectividad del diálogo (c ↑)">Alto Diálogo</button>
+                        <button type="button" id="btn-sin-mediadores" class="win-btn-sm" title="Sin fuerza inicial (D0 = 0)">Sin Mediadores</button>
+                        <button type="button" id="btn-alta-propagacion" class="win-btn-sm" title="Contagio social rápido (a ↑)">Alta Propagación</button>
+                    </div>
+                </div>
+
+                <div style="border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                    <span style="font-weight: bold; font-size: 12px; display: block; margin-bottom: 10px; color: var(--title);">
+                        [Configuración Inicial de la Población (P ≈ 1000 habs)]
+                    </span>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div>
+                            <label class="retro-label" style="font-weight: bold; font-size: 13px;">Ciudadanos Neutrales (N₀):</label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="range" id="slide-N0" min="500" max="1000" value="950" style="flex-grow: 1;" oninput="document.getElementById('inp-N0').value = this.value">
+                                <input type="number" id="inp-N0" class="retro-input" value="950" style="width: 75px; font-size: 13px;" oninput="document.getElementById('slide-N0').value = this.value">
+                                <span style="font-size: 12px; width: 65px; text-align: right; color: var(--text-light);">Habs</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="retro-label" style="font-weight: bold; font-size: 13px;">Manifestantes Activos (M₀):</label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="range" id="slide-M0" min="0" max="200" value="50" style="flex-grow: 1;" oninput="document.getElementById('inp-M0').value = this.value">
+                                <input type="number" id="inp-M0" class="retro-input" value="50" style="width: 75px; font-size: 13px;" oninput="document.getElementById('slide-M0').value = this.value">
+                                <span style="font-size: 12px; width: 65px; text-align: right; color: var(--text-light);">Habs</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="retro-label" style="font-weight: bold; font-size: 13px;">Mediadores de Diálogo (D₀):</label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="range" id="slide-D0" min="0" max="50" value="5" style="flex-grow: 1;" oninput="document.getElementById('inp-D0').value = this.value">
+                                <input type="number" id="inp-D0" class="retro-input" value="5" style="width: 75px; font-size: 13px;" oninput="document.getElementById('slide-D0').value = this.value">
+                                <span style="font-size: 12px; width: 65px; text-align: right; color: var(--text-light);">Habs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <span style="font-weight: bold; font-size: 12px; display: block; color: var(--title);">[Constantes Dinámicas del Modelo]</span>
+                    <div>
+                        <label class="retro-label" style="font-size: 13px;">Tasa de Contagio del Descontento (a):</label>
+                        <input type="number" id="inp-a" class="retro-input" value="0.002" step="0.0001" style="font-size: 13px;">
+                    </div>
+                    <div>
+                        <label class="retro-label" style="font-size: 13px;">Tasa de Retorno a Neutralidad (b):</label>
+                        <input type="number" id="inp-b" class="retro-input" value="0.05" step="0.01" style="font-size: 13px;">
+                    </div>
+                    <div>
+                        <label class="retro-label" style="font-size: 13px;">Efectividad Real del Diálogo (c):</label>
+                        <input type="number" id="inp-c" class="retro-input" value="0.04" step="0.01" style="font-size: 13px;">
+                    </div>
+                    <div>
+                        <label class="retro-label" style="font-size: 13px;">Velocidad de Reacción Inst. (k):</label>
+                        <input type="number" id="inp-k" class="retro-input" value="0.03" step="0.01" style="font-size: 13px;">
+                    </div>
+                    <div>
+                        <label class="retro-label" style="font-size: 13px;">Coeficiente de Desgaste Mediador (r):</label>
+                        <input type="number" id="inp-r" class="retro-input" value="0.1" step="0.01" style="font-size: 13px;">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px;">
+                        <div>
+                            <label class="retro-label" style="font-size: 13px;">Horizonte (t_max):</label>
+                            <input type="number" id="inp-tmax" class="retro-input" value="80" style="font-size: 13px;">
+                        </div>
+                        <div>
+                            <label class="retro-label" style="font-size: 13px;">Método numérico:</label>
+                            <select id="sel-metodo" class="retro-select" style="font-size: 13px;">
+                                <option value="rk4">Runge-Kutta (RK4)</option>
+                                <option value="heun">Heun (RK2)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding-top: 10px;">
+                    <button id="btn-calcular" class="btn-execute-main">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        EJECUTAR SIMULACIÓN DINÁMICA
+                    </button>
+                    <button id="btn-reset" class="btn-reset-main">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                        RESTABLECER VALORES DE FÁBRICA
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="retro-window" style="flex: 2 1 650px; display: flex; flex-direction: column;">
+            <div class="retro-window-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="window-title" style="font-size: 14px;">Visualizador_Analitico_Social.sys</span>
+                
+                <div class="tab-retro-container" style="display: flex; gap: 4px;">
+                    <button type="button" id="tab-evolucion" class="win-btn-sm border-win-active">Evolución Temporal</button>
+                    <button type="button" id="tab-mapa" class="win-btn-sm" style="border-color: #e67e22 !important;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                        📍 Mapa Social La Paz
+                    </button>
+                    <button type="button" id="tab-fase" class="win-btn-sm">Plano de Fase</button>
+                    <button type="button" id="tab-crisis" class="win-btn-sm">Índice Tensión</button>
+                    <button type="button" id="tab-derivadas" class="win-btn-sm">Derivadas</button>
+                </div>
+            </div>
+            
+            <div class="retro-window-body" style="background: var(--white); flex-grow: 1; display: flex; flex-direction: column; justify-content: center; padding: 12px;">
+                <div class="formula-container-retro" style="padding: 5px; border: 1px solid var(--border); background: var(--white); height: 100%;">
+                    
+                    <div id="wrapper-evolucion" style="position: relative; height: 440px; width: 100%;">
+                        <canvas id="graficoEvolucion"></canvas>
+                    </div>
+
+                    <div id="wrapper-mapa" style="position: relative; height: 440px; width: 100%; display: none; background: #22252a; border: 2px solid var(--border-dark); overflow: hidden;">
+                        <div style="position: absolute; top: 8px; left: 8px; background: rgba(34, 37, 42, 0.9); color: #2ecc71; padding: 8px; font-size: 11px; border: 1px solid #2ecc71; z-index: 10; font-family: monospace; box-shadow: 0 0 8px rgba(46,204,113,0.3);">
+                            <strong>🛰️ VECTORIZACIÓN GEOSOCIAL DE LA PAZ</strong><br>
+                            <span style="color:#fff;">Simulación espacial activa en Canvas 2D.</span><br>
+                            • Círculos rojos = Focos de manifestantes activos.<br>
+                            • Ondas verdes = Mitigación por mediadores.
+                        </div>
+                        <canvas id="canvasMapaLaPaz" style="width: 100%; height: 100%; display: block;"></canvas>
+                    </div>
+                    
+                    <div id="wrapper-fase" style="position: relative; height: 440px; width: 100%; display: none;">
+                        <canvas id="graficoFase"></canvas>
+                    </div>
+
+                    <div id="wrapper-crisis" style="position: relative; height: 440px; width: 100%; display: none;">
+                        <canvas id="graficoCrisis"></canvas>
+                    </div>
+                    
+                    <div id="wrapper-derivadas" style="position: relative; height: 440px; width: 100%; display: none;">
+                        <canvas id="graficoDerivadas"></canvas>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="retro-window window-core-highlight" style="width: 100%;">
+        <div class="retro-window-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="window-title" style="font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
+                Solucion_Numerica_Estructural.sys [NUCLEO DEL MODELO MATEMÁTICO]
+            </span>
+            <span class="core-badge">Propuesta Principal</span>
+        </div>
+        <div class="retro-window-body" style="background: var(--core-highlight); padding: 14px; display: flex; flex-direction: column; gap: 12px;">
+            
+            <div style="background: var(--white); border: 1px solid var(--neon-gold); padding: 12px; display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 12px; border-left: 6px solid var(--neon-gold); box-shadow: 2px 2px 5px rgba(0,0,0,0.05);">
+                <div style="font-size: 13px; font-weight: bold; color: #d35400;">SISTEMA DIFERENCIAL PROPUESTO E INTEGRADO:</div>
+                <div style="font-size: 14px; font-weight: bold; background: #eef2f7; padding: 6px 14px; border: 1px solid #cbd5e1; border-radius: 3px;">N'(t) = -a·N·M + b·D</div>
+                <div style="font-size: 14px; font-weight: bold; background: #fdeede; padding: 6px 14px; border: 1px solid #fecaca; border-radius: 3px; color: #c0392b;">M'(t) = a·N·M - c·M·D</div>
+                <div style="font-size: 14px; font-weight: bold; background: #edf9f0; padding: 6px 14px; border: 1px solid #bbf7d0; border-radius: 3px; color: #27ae60;">D'(t) = k·M - r·D</div>
+            </div>
+
+            <div style="background: #1e1e1e; border: 2px solid var(--neon-gold); padding: 15px; border-radius: 4px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 4px 8px rgba(243, 156, 18, 0.15);">
+                <div style="color: var(--neon-gold); font-size: 13px; font-weight: bold; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Solución Final Calculada (Vector en t = <span id="val-t-final">--</span>)
+                    </div>
+                    <span style="font-size: 10px; color: #888; background: #333; padding: 2px 6px; border-radius: 3px;">ESTADO DE SALIDA</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
+                    <div style="background: rgba(41, 128, 185, 0.15); border: 1px solid #2980b9; padding: 12px; border-radius: 3px;">
+                        <div style="color: #6eb7e8; font-size: 11px; font-weight: bold; margin-bottom: 5px;">N(t) Final - Neutrales</div>
+                        <div id="res-final-n" style="color: #fff; font-size: 26px; font-weight: bold; font-family: monospace;">--</div>
+                    </div>
+                    <div style="background: rgba(192, 57, 43, 0.15); border: 1px solid #c0392b; padding: 12px; border-radius: 3px;">
+                        <div style="color: #e87b71; font-size: 11px; font-weight: bold; margin-bottom: 5px;">M(t) Final - Manifestantes</div>
+                        <div id="res-final-m" style="color: #fff; font-size: 26px; font-weight: bold; font-family: monospace;">--</div>
+                    </div>
+                    <div style="background: rgba(39, 174, 96, 0.15); border: 1px solid #27ae60; padding: 12px; border-radius: 3px;">
+                        <div style="color: #5ed68e; font-size: 11px; font-weight: bold; margin-bottom: 5px;">D(t) Final - Mediadores</div>
+                        <div id="res-final-d" style="color: #fff; font-size: 26px; font-weight: bold; font-family: monospace;">--</div>
+                    </div>
+                </div>
+            </div>
+            <div style="font-size: 13px; color: var(--text); display: flex; gap: 25px; padding-left: 5px; background: rgba(243, 156, 18, 0.08); padding: 6px; border-radius: 3px;">
+                <span><strong>🧠 Motor de Integración Estructural:</strong> <span id="lbl-motor-metodo" style="color: #d35400; font-weight: bold;">RK4</span></span>
+                <span><strong>📐 Paso Diferencial (h):</strong> <code style="font-weight: bold;">0.10</code></span>
+                <span><strong>🔢 Iteraciones Calculadas:</strong> <span id="lbl-motor-pasos" style="font-weight: bold;">800</span></span>
+            </div>
+
+            <div style="border: 1px solid var(--border-dark); background: var(--white); max-height: 280px; overflow-y: auto; box-shadow: inset 1px 1px 4px rgba(0,0,0,0.1);">
+                <table class="calc-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                    <thead style="background: var(--border); position: sticky; top: 0; z-index: 20;">
+                        
+                        <tr>
+                            <th rowspan="2" style="text-align:center;">#</th>
+                            <th rowspan="2" style="text-align:center;">t</th>
+
+                            <th colspan="4" style="text-align:center; background:#e2ebf5;">
+                                Estados del Sistema (N, M, D)
+                            </th>
+
+                            <th colspan="4" id="th-dinamico-metodo" style="text-align:center; background:#fcf1df;">
+                                Componentes del Método Numérico (Heun / RK4)
+                            </th>
+                        </tr>
+
+                        <tr>
+                            <th style="background:#eef4fa;">Neutrales N</th>
+                            <th style="background:#eef4fa;">Manifestantes M</th>
+                            <th style="background:#eef4fa;">Mediadores D</th>
+                            <th style="background:#eef4fa;">P</th>
+
+                            <th id="col-aux-1">k1 / f1</th>
+                            <th id="col-aux-2">k2 / pred</th>
+                            <th id="col-aux-3">k3 / corr</th>
+                            <th id="col-aux-4">k4 / final</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="tabla-estructural-body">
+                        <tr>
+                            <td colspan="9" style="text-align:center; padding:20px;">
+                                Ejecuta la simulación para visualizar la evolución del sistema
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: right; font-size: 12px; color: var(--text-light); margin-top: -4px;">
+                *Despliegue estructural optimizado por algoritmo matemático dinámico. En modo Heun mostrará componentes del predictor/corrector; en modo RK4 desglosará las sub-pendientes de M.
+            </div>
+        </div>
+    </div>
+
+    <div class="retro-window" style="width: 100%;">
+        <div class="retro-window-header">
+            <span class="window-title" style="font-size: 14px;">Evaluacion_Critica_del_Conflicto.txt</span>
+            
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;">
+                <span style="font-weight: bold; color: var(--text-light);">SEMÁFORO DE RIESGO:</span>
+                <div id="semaforo-alerta" class="retro-alert-box" style="padding: 3px 14px; font-weight: bold; border: 1px solid var(--border-dark); background: var(--bg-desktop);">
+                    INICIALIZANDO VECTORES...
+                </div>
+            </div>
+        </div>
+        
+        <div class="retro-window-body" style="background: var(--bg-panel); padding: 15px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 15px;">
+                
+                <div class="retro-metric-card" style="background: var(--white); padding: 12px; border-left: 4px solid var(--border-dark);">
+                    <span class="label" style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">¿El conflicto tiende a estabilizarse?</span>
+                    <strong class="value" id="ans-estabiliza" style="font-size: 13px;">Esperando análisis de convergencia...</strong>
+                </div>
+                
+                <div class="retro-metric-card" style="background: var(--white); padding: 12px; border-left: 4px solid var(--danger);">
+                    <span class="label" style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">Evolución de la masa crítica de manifestantes</span>
+                    <strong class="value" id="ans-tendencia" style="font-size: 13px;">Esperando análisis...</strong>
+                </div>
+                
+                <div class="retro-metric-card" style="background: var(--white); padding: 12px; border-left: 4px solid var(--green-medium);">
+                    <span class="label" style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">[Punto Crítico Geométrico Detectado]</span>
+                    <div style="margin-top: 4px; font-size: 13px;">
+                        Pico Máx M: <span id="val-pico-m" style="font-weight: bold; color: #c0392b;">--</span> habs. 
+                        en t = <span id="val-pico-t" style="font-weight: bold;">--</span>
+                    </div>
+                </div>
+                
+                <div class="retro-metric-card" style="background: var(--white); padding: 12px; border-left: 4px solid var(--blue-soft);">
+                    <span class="label" style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">Evaluación Analítica de Contención</span>
+                    <strong class="value" id="ans-riesgo" style="font-size: 12px;">Esperando trazas numéricas...</strong>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="retro-window" style="width: 100%;">
+        <div class="retro-window-header">
+            <span class="window-title" style="font-size: 14px;">Informe_Resolucion_EDO.log</span>
+        </div>
+        <div class="retro-window-body" style="padding: 0;">
+            <div id="bitacora" class="retro-code-box" style="min-height: 80px; height: 80px; line-height: 1.5; font-size: 13px; border-radius: 0; padding: 10px; background: #1e1e1e; color: #d4d4d4; overflow-y: auto;">
+                [SISTEMA OPERATIVO]: Estación de control de dinámicas sociales cargada correctamente en t = 0.0. Listo para recibir vectores diferenciales.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const tabs = {
+            'tab-evolucion': 'wrapper-evolucion',
+            'tab-mapa': 'wrapper-mapa',
+            'tab-fase': 'wrapper-fase',
+            'tab-crisis': 'wrapper-crisis',
+            'tab-derivadas': 'wrapper-derivadas'
+        };
+
+        Object.keys(tabs).forEach(tabId => {
+            const boton = document.getElementById(tabId);
+            if (!boton) return;
+
+            boton.addEventListener('click', function() {
+                Object.keys(tabs).forEach(id => {
+                    const otroBoton = document.getElementById(id);
+                    const otroPanel = document.getElementById(tabs[id]);
+                    if (otroBoton) otroBoton.classList.remove('border-win-active');
+                    if (otroPanel) otroPanel.style.display = 'none';
+                });
+                this.classList.add('border-win-active');
+                const panel = document.getElementById(tabs[tabId]);
+                if (panel) panel.style.display = 'block';
+
+                if (tabId === 'tab-mapa' && window.renderizarMapaSocial) {
+                    window.renderizarMapaSocial(window.ultimoResultadoSimulacion || null);
+                }
+                window.dispatchEvent(new Event('resize'));
+            });
+        });
+
+        const selectorMetodo = document.getElementById('sel-metodo');
+        if(selectorMetodo) {
+            selectorMetodo.addEventListener('change', function () {
+                const metodo = this.value;
+
+                const thDinamico = document.getElementById('th-dinamico-metodo');
+
+                const col1 = document.getElementById('col-aux-1');
+                const col2 = document.getElementById('col-aux-2');
+                const col3 = document.getElementById('col-aux-3');
+                const col4 = document.getElementById('col-aux-4');
+
+                if (metodo === 'heun') {
+                    thDinamico.innerText = "Método de Heun (Predictor-Corrector)";
+
+                    col1.innerText = "f(t, M)";
+                    col2.innerText = "M pred (Euler)";
+                    col3.innerText = "f(t+h, Mpred)";
+                    col4.innerText = "M final";
+
+                } else {
+                    thDinamico.innerText = "Runge-Kutta 4 (RK4)";
+
+                    col1.innerText = "k1";
+                    col2.innerText = "k2";
+                    col3.innerText = "k3";
+                    col4.innerText = "k4";
+                }
+            });
+        }
+        document.getElementById('wrapper-evolucion').style.display = 'block';
+    });
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/simulacion.js') }}"></script>
+{% endblock %}

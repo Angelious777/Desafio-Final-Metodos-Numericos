@@ -1,0 +1,206 @@
+/* ==========================================
+   BOTONES
+========================================== */
+.retro-btn-execute {
+    background: linear-gradient(180deg, #a9b8a2 0%, #7c8e74 100%); /* Verde Retro Militar Destacado */
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #ffffff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.1s ease;
+    border-width: 0;
+}
+
+.retro-btn-execute:hover {
+    background: #6b7d64;
+    border-color: #1c3028;
+    color: #ffffff;
+}
+
+.retro-btn-execute:active {
+    transform: translateY(2px);
+}
+
+.val-euler {
+    color: #b52b2b !important;
+}
+
+.val-heun {
+    color: #00529b !important;
+}
+
+.val-rk4 {
+    color: #1e6b36 !important;
+}
+
+/* ==========================================
+   INPUTS Y FORMULARIOS
+========================================== */
+.retro-input {
+    width: 100%;
+    border: 1px solid var(--border-dark);
+    background: var(--white);
+    color: var(--text);
+    padding: 6px 10px;
+    font-size: 13px;
+    font-family: "JetBrains Mono", monospace;
+    outline: none;
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
+}
+
+.retro-input:focus {
+    border-color: var(--text);
+    background-color: #fffdf7;
+}
+
+.retro-input:disabled {
+    background: #f0f0eb;
+    color: #a0a095;
+    border-color: var(--border);
+    cursor: not-allowed;
+}
+
+.retro-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* ==========================================
+   TABLAS NUMÉRICAS
+========================================== */
+.table-retro-style {
+    width: 100%;
+    margin-bottom: 0;
+    font-size: 12px;
+    font-family: "JetBrains Mono", monospace;
+    border-collapse: collapse;
+}
+
+.table-retro-style th {
+    background: #ecece6;
+    color: var(--title);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 11px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border: 1px solid var(--border);
+    padding: 8px;
+}
+
+.table-retro-style td {
+    border: 1px solid var(--border);
+    padding: 6px 8px;
+    background: var(--white);
+}
+
+.table-retro-style tbody tr:nth-child(even) td {
+    background: #fbfbf9;
+}
+
+/* ==========================================
+   FÓRMULAS Y BLOQUES DE CÓDIGO
+========================================== */
+.formula-container-retro {
+    background: #f4f4ee;
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: 2px;
+}
+
+#formula-display {
+    border: 1px solid var(--border-dark);
+    background: var(--white);
+    padding: 14px !important;
+}
+
+.retro-code-box {
+    background: #fbfbf8;
+    border: 1px solid var(--border);
+    color: #444;
+    padding: 12px;
+    overflow-x: auto;
+    /* Reducido de 280px a un comportamiento compacto ideal para las EDOs */
+    min-height: 90px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ==========================================
+   ALERTAS Y DIAGNÓSTICOS
+========================================== */
+.retro-alert-box {
+    border-left: 4px solid #4f6f85;
+    background: var(--blue-soft);
+    padding: 12px;
+    font-size: 13px;
+    color: #2f3f4f;
+}
+
+.alert-danger-retro {
+    background-color: #f8d7da !important;
+    border: 2px solid #dc3545 !important;
+    border-left: 6px solid #bd2130 !important;
+    color: #721c24 !important;
+    font-size: 15px;
+    animation: pulse-border 2s infinite;
+}
+
+/* Alerta Buena / Estable */
+.alert-success-retro {
+    background-color: #d4edda !important;
+    border: 1px solid #c3e6cb !important;
+    border-left: 6px solid #28a745 !important;
+    color: #155724 !important;
+    font-size: 15px;
+}
+
+@keyframes pulse-border {
+    0% { border-color: #dc3545; }
+    50% { border-color: #721c24; }
+    100% { border-color: #dc3545; }
+}
+
+/* ==========================================
+   ADAPTACIÓN RETRO DE PESTAÑAS (BOOTSTRAP TABS)
+========================================== */
+.nav-tabs {
+    border-bottom: 1px solid var(--border-dark) !important;
+}
+
+.nav-tabs .nav-link {
+    font-size: 12px;
+    color: var(--text-light) !important;
+    background: #ecece6;
+    border: 1px solid var(--border) !important;
+    border-bottom: none !important;
+    margin-right: 4px;
+    border-radius: 4px 4px 0 0;
+    padding: 8px 16px;
+}
+
+.nav-tabs .nav-link:hover {
+    background: #f4f4ee;
+    color: var(--text) !important;
+}
+
+.nav-tabs .nav-link.active {
+    background: #fafaf6 !important;
+    color: var(--title) !important;
+    font-weight: bold;
+    border-color: var(--border-dark) var(--border-dark) #fafaf6 !important;
+    position: relative;
+    top: 1px;
+    z-index: 5;
+}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafío Numérico - Escenario D</title>
+    
+    <link rel="stylesheet" href="{{ url_for('escenario_D.static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('escenario_D.static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('escenario_D.static', filename='css/components.css') }}">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="retro-os-environment">
+        <div class="desktop-area" style="padding: 20px;">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('escenario_D.static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

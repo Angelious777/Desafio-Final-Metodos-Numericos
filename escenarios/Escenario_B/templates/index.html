@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="retro-main-title text-center mb-4">
+    <h1>Simulación Numérica de Vaciado Crítico de Reservas</h1>
+    <p class="retro-sub-title">Modelado matemático para la toma de decisiones estratégicas ante crisis de abastecimiento</p>
+</div>
+
+<div class="retro-window mb-4">
+    <div class="retro-window-header">
+        <span class="window-title">Introducción y Sustento Teórico del Modelo</span>
+    </div>
+    <div class="retro-window-body">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="q-title mb-2">Contexto del Problema y Utilidad de la Aplicación</div>
+                <p class="q-text mb-3">
+                    El almacenamiento y distribución de carburantes es una infraestructura crítica para la estabilidad económica y social de cualquier región. Ante situaciones de huelgas, bloqueos logísticos, desastres naturales o picos inesperados de demanda, las plantas de almacenamiento experimentan un desfase peligroso entre el combustible que ingresa y el que se despacha.
+                </p>
+                <p class="q-text">
+                    Esta aplicación funciona como una herramienta de simulación predictiva en escenarios de crisis. Permite a los analistas logísticos prever con precisión matemática el momento exacto en que los tanques caerán por debajo del **umbral crítico operativo (20%)**, otorgando una ventana de tiempo vital para activar planes de racionamiento, desviar convoyes de suministro y mitigar las compras de pánico en las estaciones de servicio.
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <div class="q-title mb-2">¿Cómo Funciona el Modelo Basado en Derivadas?</div>
+                <p class="q-text mb-2">
+                    En física y economía, los cambios no ocurren de forma estática; se desarrollan en tiempo continuo. Aquí es donde el cálculo diferencial se vuelve indispensable. La derivada $\frac{dR}{dt}$ representa la **razón de cambio instantánea** del volumen de la reserva ($R$) con respecto al tiempo ($t$).
+                </p>
+                <p class="q-text mb-3">
+                    El comportamiento del sistema se rige por la ecuación diferencial:
+                    $$\frac{dR}{dt} = E(t) - C(t)$$
+                </p>
+                <ul class="q-text plan-list standard-prose mb-0">
+                    <li><strong>$R(t)$ (Reserva Colectiva):</strong> El volumen total de carburante disponible en la planta en el día $t$.</li>
+                    <li><strong>$E(t)$ (Función de Entrada/Abastecimiento):</strong> El flujo de combustible que llega a la planta mediante ductos o cisternas. En crisis dinámicas, este valor decrece debido a las interrupciones.</li>
+                    <li><strong>$C(t)$ (Función de Consumo/Demanda):</strong> El flujo de carburante despachado hacia el mercado. En situaciones de pánico social, tiende a aumentar lineal o exponencialmente.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-7">
+        <div class="retro-window h-100">
+            <div class="retro-window-header">
+                <span class="window-title">Sustento Matemático y Métodos Utilizados</span>
+            </div>
+            <div class="retro-window-body">
+                <p class="q-text mb-3">El vaciado de plantas de carburantes se modela mediante la siguiente Ecuación Diferencial Ordinaria (EDO):</p>
+                
+                <div class="formula-container-retro p-3 mb-3">
+                    <div id="formula-display" class="p-2 text-center">
+                        $$\frac{dR}{dt} = E(t) - C(t) = f(t, R)$$
+                    </div>
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="q-title">1. Euler</div>
+                        <p class="q-text small">Un solo paso basado en la pendiente inicial:</p>
+                        <div class="retro-code-box">
+                            $$R_{i+1} = R_i + h \cdot f$$
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-5">
+                        <div class="q-title">2. Heun</div>
+                        <p class="q-text small">Promedio predictor-corrector:</p>
+                        <div class="retro-code-box" style="flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; font-size: 11px;">
+                            <div>$$R^0_{i+1} = R_i + h \cdot f$$</div>
+                            <div>$$R_{i+1} = R_i + \frac{h}{2} [ f_i + f_{i+1} ]$$</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="q-title">3. RK4</div>
+                        <p class="q-text small">Alta precisión (4 pendientes):</p>
+                        <div class="retro-code-box">
+                            $$R_{i+1} = R_i + \frac{h}{6}\sum w_i k_i$$
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="retro-window h-100">
+            <div class="retro-window-header">
+                <span class="window-title">Variables del Escenario de Crisis</span>
+            </div>
+            <div class="retro-window-body">
+                <form method="POST" class="h-100 d-flex flex-column justify-content-between">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="retro-label">Reserva Inicial ($R_0$)</label>
+                            <input type="number" step="any" class="retro-input" name="R0" value="{{ inputs.R0 if inputs else 10000 }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="retro-label">Días de Simulación</label>
+                            <input type="number" step="any" class="retro-input" name="dias" value="{{ inputs.dias if inputs else 10 }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="retro-label">Entrada Base</label>
+                            <input type="number" step="any" class="retro-input" name="entrada" value="{{ inputs.entrada if inputs else 1200 }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="retro-label">Consumo Base</label>
+                            <input type="number" step="any" class="retro-input" name="consumo" value="{{ inputs.consumo if inputs else 1500 }}" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="retro-label">Tamaño de Paso ($h$)</label>
+                            <input type="number" step="any" class="retro-input" name="h" value="{{ inputs.h if inputs else 0.1 }}" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="retro-label mb-2">Comportamiento del Escenario:</label>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tipo_flujo" id="flujoConstante" value="constante" {% if not inputs or inputs.tipo_flujo == 'constante' %}checked{% endif %} onclick="conmutarFlujo()">
+                                    <label class="form-check-label" for="flujoConstante">Estático (Constante)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tipo_flujo" id="flujoVariable" value="variable" {% if inputs and inputs.tipo_flujo == 'variable' %}checked{% endif %} onclick="conmutarFlujo()">
+                                    <label class="form-check-label" for="flujoVariable">Dinámico (Variable)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 campos-variables">
+                            <label class="retro-label text-muted" id="label_var_entrada">Disminución Entrada (%)</label>
+                            <input type="number" step="any" class="retro-input" name="var_entrada" id="input_var_entrada" value="{{ inputs.var_entrada if inputs else 0 }}" disabled>
+                        </div>
+                        <div class="col-md-6 campos-variables">
+                            <label class="retro-label text-muted" id="label_var_consumo">Incremento Consumo (%)</label>
+                            <input type="number" step="any" class="retro-input" name="var_consumo" id="input_var_consumo" value="{{ inputs.var_consumo if inputs else 0 }}" disabled>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="retro-btn-execute w-100">Simular Desabastecimiento</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if resultados and analisis %}
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="retro-window h-100">
+            <div class="retro-window-header">
+                <span class="window-title">Resultados Numéricos</span>
+            </div>
+            <div class="retro-window-body d-flex flex-column" style="height: calc(100% - 34px);">
+                <ul class="nav nav-tabs mb-0" id="metodosTabs" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active" id="euler-tab" data-bs-toggle="tab" data-bs-target="#euler-panel" type="button" role="tab">Euler</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="heun-tab" data-bs-toggle="tab" data-bs-target="#heun-panel" type="button" role="tab">Heun</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="rk4-tab" data-bs-toggle="tab" data-bs-target="#rk4-panel" type="button" role="tab">RK4</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content bg-white p-2 border border-top-0 scroll-retro-container flex-grow-1" style="max-height: 400px;">
+                    <div class="tab-pane fade show active" id="euler-panel" role="tabpanel">
+                        <table class="table-retro-style w-100">
+                            <thead>
+                                <tr><th>$i$</th><th>$t_i$</th><th>Reserva ($R_i$)</th><th>$k_1$</th></tr>
+                            </thead>
+                            <tbody>
+                                {% for fila in resultados.euler %}
+                                <tr>
+                                    <td>{{ fila.i }}</td>
+                                    <td>{{ fila.t }}</td>
+                                    <td class="fw-bold val-euler">{{ fila.R }}</td>
+                                    <td>{{ fila.k1 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="tab-pane fade" id="heun-panel" role="tabpanel">
+                        <table class="table-retro-style w-100">
+                            <thead>
+                                <tr><th>$i$</th><th>$t_i$</th><th>Reserva ($R_i$)</th><th>$k_1$</th><th>$k_2$</th></tr>
+                            </thead>
+                            <tbody>
+                                {% for fila in resultados.heun %}
+                                <tr>
+                                    <td>{{ fila.i }}</td>
+                                    <td>{{ fila.t }}</td>
+                                    <td class="fw-bold val-heun">{{ fila.R }}</td>
+                                    <td>{{ fila.k1 }}</td>
+                                    <td>{{ fila.k2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="tab-pane fade" id="rk4-panel" role="tabpanel">
+                        <table class="table-retro-style w-100">
+                            <thead>
+                                <tr><th>$i$</th><th>$t_i$</th><th>Reserva ($R_i$)</th><th>$k_1$</th><th>$k_2$</th></tr>
+                            </thead>
+                            <tbody>
+                                {% for fila in resultados.rk4 %}
+                                <tr>
+                                    <td>{{ fila.i }}</td>
+                                    <td>{{ fila.t }}</td>
+                                    <td class="fw-bold val-rk4">{{ fila.R }}</td>
+                                    <td>{{ fila.k1 }}</td>
+                                    <td>{{ fila.k2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="retro-window h-100">
+            <div class="retro-window-header">
+                <span class="window-title">Comportamiento Matemático de la Reserva vs Tiempo</span>
+            </div>
+            <div class="retro-window-body d-flex align-items-center justify-content-center">
+                <canvas id="graficoReservas" style="max-height: 400px; width: 100%;"
+                    data-tiempo="[{% for f in resultados.rk4 %}{{ f.t }}{% if not loop.last %},{% endif %}{% endfor %}]"
+                    data-euler="[{% for f in resultados.euler %}{{ f.R }}{% if not loop.last %},{% endif %}{% endfor %}]"
+                    data-heun="[{% for f in resultados.heun %}{{ f.R }}{% if not loop.last %},{% endif %}{% endfor %}]"
+                    data-rk4="[{% for f in resultados.rk4 %}{{ f.R }}{% if not loop.last %},{% endif %}{% endfor %}]"
+                    data-umbral="{{ analisis.umbral }}">
+                </canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="retro-window mb-4">
+    <div class="retro-window-header">
+        <span class="window-title">Análisis Automatizado de la Planta y Logística de Crisis</span>
+    </div>
+    <div class="retro-window-body">
+        <div class="retro-alert-box mb-4 {% if 'CRÍTICO' in analisis.diagnostico or 'DESABASTECIMIENTO' in analisis.diagnostico or 'ALERTA' in analisis.diagnostico %}alert-danger-retro{% else %}alert-success-retro{% endif %}">
+            <strong>ESTADO DEL DIAGNÓSTICO: {{ analisis.diagnostico }}</strong>
+        </div>
+        
+        <div class="row g-3">
+            <div class="col-md-6 col-xl-3">
+                <div class="q-title">1. Comportamiento de Reservas</div>
+                <p class="q-text">
+                    {{ analisis.interpretacion_reserva }} 
+                    <small class="d-block mt-1">Umbral crítico operativo: 20% ({{ analisis.umbral }} u).</small>
+                </p>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="q-title">2. Ventana de Alerta Logística</div>
+                <p class="q-text">{{ analisis.ventana_alerta }}</p>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="q-title">3. Mitigación de Pánico Social</div>
+                <p class="q-text">{{ analisis.mitigacion_panico }}</p>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="q-title">4. Optimización y Divergencia</div>
+                <p class="q-text">{{ analisis.optimizacion_logistica }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="retro-window mb-4">
+    <div class="retro-window-header">
+        <span class="window-title">Análisis del Escenario Logístico Evaluado</span>
+    </div>
+    <div class="retro-window-body">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <span class="fw-bold d-block text-dark">¿En cuántos días la reserva llega a un nivel crítico?</span>
+                    <span class="q-text d-block border-start border-3 border-danger ps-2 py-1 bg-light mt-1">
+                        Según la proyección actual del modelo de alta precisión, la planta cruzará el umbral crítico del 20% (<strong>{{ analisis.umbral }} u.</strong>) en el <strong>día {{ analisis.dias_criticos }}</strong>.
+                    </span>
+                </div>
+                <div class="mb-3">
+                    <span class="fw-bold d-block text-dark">¿Qué pasa si aumenta el consumo diario ($C(t)$)?</span>
+                    <span class="q-text d-block border-start border-3 border-secondary ps-2 py-1 bg-light mt-1">
+                        Un incremento de la demanda (compras de pánico o sobreabastecimiento preventivo de estaciones) incrementa la magnitud negativa de la pendiente $\frac{dR}{dt}$. Esto acelera la tasa de vaciado de los tanques de forma lineal o exponencial, encogiendo dramáticamente el margen de maniobra logístico de las autoridades.
+                    </span>
+                </div>
+                <div>
+                    <span class="fw-bold d-block text-dark">¿Qué pasa si se reduce el abastecimiento ($E(t)$)?</span>
+                    <span class="q-text d-block border-start border-3 border-secondary ps-2 py-1 bg-light mt-1">
+                        Al disminuir el flujo de entrada $E(t)$, la planta pierde su capacidad de compensación. La derivada se vuelve crónicamente negativa, y aun manteniendo el consumo en niveles mínimos normales, las reservas se agotan inexorablemente al depender exclusivamente del inventario estático inicial ($R_0$).
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <span class="fw-bold d-block text-dark">¿Qué método da una aproximación más estable?</span>
+                    <span class="q-text d-block border-start border-3 border-primary ps-2 py-1 bg-light mt-1">
+                        El método de <strong>Runge-Kutta de 4to Orden (RK4)</strong> ofrece la aproximación más robusta y estable. Minimiza el error de truncamiento global acumulado y previene la divergencia numérica artificial, especialmente crucial si seleccionas el escenario dinámico con variaciones porcentuales abruptas.
+                    </span>
+                </div>
+                <div>
+                    <span class="fw-bold d-block text-dark">¿Cuál es la diferencia técnica entre Euler, Heun y RK4?</span>
+                    <div class="q-text bg-light p-2 border rounded-1 mt-1" style="font-size: 11px;">
+                        <ul class="mb-0 ps-3">
+                            <li class="mb-1"><strong>Euler (1er Orden):</strong> Proyecta linealmente usando solo la pendiente inicial del intervalo ($k_1$). Su acumulación de error es alta ($O(h)$), tendiendo a subestimar o sobreestimar la velocidad de vaciado real.</li>
+                            <li class="mb-1"><strong>Heun (2do Orden):</strong> Implementa un esquema predictor-corrector. Calcula la pendiente al inicio y estima la pendiente al final del paso, usando el promedio de ambas ($O(h^2)$) para suavizar la trayectoria.</li>
+                            <li><strong>RK4 (4to Orden):</strong> Evalúa cuatro pendientes distribuidas estratégicamente (inicio, dos puntos medios simulados y final del intervalo). Aplica un promedio ponderado basado en la regla de Simpson ($O(h^4)$), neutralizando errores y ajustándose perfectamente a curvas dinámicas no lineales.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+<script src="{{ url_for('escenario_B.static', filename='js/main.js') }}"></script>
+{% if resultados %}
+    <script src="{{ url_for('escenario_B.static', filename='js/grafico.js') }}"></script>
+{% endif %}
+
+{% endblock %}

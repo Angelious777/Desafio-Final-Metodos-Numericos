@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="retro-os-environment p-3">
+    <div class="desktop-area">
+        
+        <header class="retro-window mb-4 border-win-active">
+            <div class="retro-window-header bg-win-active">
+                <span class="window-title text-white"><strong>Simulador Logístico de Hidrocarburos</strong> - Sistema de Ecuaciones Lineales</span>
+                <div>
+                    <span class="win-btn-sm text-dark">_</span>
+                    <span class="win-btn-sm text-dark">X</span>
+                </div>
+            </div>
+            <div class="retro-window-body bg-light-gray">
+                <h1 class="retro-main-title">ESCENARIO A</h1>
+                <p class="retro-sub-title">Motor algorítmico adaptativo para el análisis estocástico-lineal de contingencias operativas de transporte referente a la distribución de combustible.</p>
+            </div>
+        </header>
+
+        <div class="row g-3">
+            <div class="col-xl-4 col-lg-5 border-end-retro">
+                
+                <div class="retro-window mb-3">
+                    <div class="retro-window-header">
+                        <span class="window-title">Planteamiento_Problema.txt</span>
+                    </div>
+                    <div class="retro-window-body text-justify">
+                        <div class="question-block">
+                            <h4 class="q-title">■ Dimensión del Conflicto de Distribución</h4>
+                            <p class="q-text small mb-2">
+                                En contextos de alta complejidad socioeconómica y crisis de carburantes, las redes logísticas de un país sufren disrupciones críticas. Este simulador modela matemáticamente el equilibrio de flujos mediante sistemas de ecuaciones lineales de la forma <strong>Ax = b</strong>.
+                            </p>
+                            <p class="q-text small mb-0">
+                                Las variables determinan el volumen físico asignado desde los centros estratégicos de almacenamiento hacia los nodos de demanda urbana (Zonas Norte, Centro y Sur). El modelo evalúa cómo las perturbaciones externas (bloqueos de carreteras, cuellos de botella de infraestructura y fluctuaciones de precios o especulación de la demanda) alteran la convergencia, consistencia y estabilidad del suministro nacional.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="retro-window mb-3">
+                    <div class="retro-window-header">
+                        <span class="window-title">Ingreso_Datos.exe</span>
+                    </div>
+                    <div class="retro-window-body">
+                        <form id="form-simulador">
+                            
+                            <h3 class="mb-2 font-monospace text-muted small-title">■ CAPACIDAD DE SUMINISTRO DE PLANTAS (Miles Lts)</h3>
+                            <div class="row mb-3">
+                                <div class="col-4">
+                                    <label class="retro-label">Planta 1</label>
+                                    <input type="number" class="retro-input" id="p1-cap" value="120" min="0">
+                                </div>
+                                <div class="col-4">
+                                    <label class="retro-label">Planta 2</label>
+                                    <input type="number" class="retro-input" id="p2-cap" value="100" min="0">
+                                </div>
+                                <div class="col-4">
+                                    <label class="retro-label">Planta 3</label>
+                                    <input type="number" class="retro-input" id="p3-cap" value="80" min="0">
+                                </div>
+                            </div>
+
+                            <h3 class="mb-2 font-monospace text-muted small-title">■ DEMANDA TEÓRICA REQUERIDA (Miles Lts)</h3>
+                            <div class="row mb-3">
+                                <div class="col-4">
+                                    <label class="retro-label">Zona Norte</label>
+                                    <input type="number" class="retro-input" id="demand-norte" value="90" min="0">
+                                </div>
+                                <div class="col-4">
+                                    <label class="retro-label">Zona Centro</label>
+                                    <input type="number" class="retro-input" id="demand-centro" value="110" min="0">
+                                </div>
+                                <div class="col-4">
+                                    <label class="retro-label">Zona Sur</label>
+                                    <input type="number" class="retro-input" id="demand-sur" value="100" min="0">
+                                </div>
+                            </div>
+
+                            <h3 class="mb-2 font-monospace text-muted small-title">■ COEFICIENTE DE DISPONIBILIDAD / FACTOR BLOQUEO</h3>
+                            <div class="table-responsive scroll-retro-container mb-3">
+                                <table class="table table-bordered table-retro-style w-100 text-center small">
+                                    <thead>
+                                        <tr>
+                                            <th>Origen</th>
+                                            <th>Z. Norte</th>
+                                            <th>Z. Centro</th>
+                                            <th>Z. Sur</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>P1</strong></td>
+                                            <td><select class="retro-select" id="r-p1-n"><option value="1.0">1.0 Normal</option><option value="0.5">0.5 Alerta</option><option value="0.0">0.0 Bloqueo</option></select></td>
+                                            <td><select class="retro-select" id="r-p1-c"><option value="1.0">1.0 Normal</option><option value="0.5">0.5 Alerta</option><option value="0.0">0.0 Bloqueo</option></select></td>
+                                            <td><select class="retro-select" id="r-p1-s"><option value="1.0">1.0 Normal</option><option value="0.5" selected>0.5 Alerta</option><option value="0.0">0.0 Bloqueo</option></select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>P2</strong></td>
+                                            <td><select class="retro-select" id="r-p2-n"><option value="1.0" selected>1.0 Normal</option><option value="0.5">0.5 Alerta</option><option value="0.0">0.0 Bloqueo</option></select></td>
+                                            <td><select class="retro-select" id="r-p2-c"><option value="1.0">1.0 Normal</option><option value="0.5">0.5 Alerta</option><option value="0.0">0.0 Bloqueo</option></select></td>
+                                            <td><select class="retro-select" id="r-p2-s"><option value="1.0">1.0 Normal</option><option value="0.5">0.5 Alerta</option><option value="0.0">0.0 Bloqueo</option></select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>P3</strong></td>
+                                            <td><select class="retro-select" id="r-p3-n"><option value="1.0">1.0 Normal</option><option value="0.5" selected>0.5 Alerta</option><option value="0.0">0.0 Bloqueo</option></select></td>
+                                            <td><select class="retro-select" id="r-p3-c"><option value="1.0">1.0 Normal</option><option value="0.5">0.5 Alerta</option><option value="0.0">0.0 Bloqueo</option></select></td>
+                                            <td><select class="retro-select" id="r-p3-s"><option value="1.0">1.0 Normal</option><option value="0.5">0.5 Alerta</option><option value="0.0">0.0 Bloqueo</option></select></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h3 class="mb-2 font-monospace text-muted small-title">■ PROCESADOR Y MÉTODOS NUMÉRICOS</h3>
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-12">
+                                    <label class="retro-label">Algoritmo Numérico</label>
+                                    <select class="retro-select" id="select-metodo">
+                                        <option value="jacobi">Iterativo: Jacobi</option>
+                                        <option value="gauss_seidel">Iterativo: Gauss-Seidel</option>
+                                        <option value="sor">Iterativo: SOR (Sobre-Relajación)</option>
+                                        <option value="lu">Directo: Factorización LU (Doolittle)</option>
+                                        <option value="gradiente_conjugado">Optimización: Gradiente Conjugado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="retro-label">Tolerancia</label>
+                                    <input type="text" class="retro-input" id="param-tol" value="0.000001">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="retro-label">Iteraciones Máx.</label>
+                                    <input type="number" class="retro-input" id="param-maxiter" value="100">
+                                </div>
+                            </div>
+                            <div class="row g-2 mb-3 d-none" id="sor-param-wrapper">
+                                <div class="col-12">
+                                    <label class="retro-label">Factor Omega (ω)</label>
+                                    <input type="number" class="retro-input" id="param-omega" value="1.1" step="0.1" min="0.1" max="1.9">
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2 justify-content-end mt-4">
+                                <button type="button" class="retro-btn-reset" id="btn-reiniciar">Limpiar</button>
+                                <button type="submit" class="retro-btn-execute">⚡ Ejecutar Simulación</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xl-8 col-lg-7">
+                
+                <div class="retro-window" id="placeholder-results">
+                    <div class="retro-window-body text-center text-muted p-5">
+                        <i class="font-monospace d-block mb-2">[SISTEMA OPERATIVO MATEMÁTICO EN REPOSO]</i>
+                        <p class="small mb-0">Configure las variables del escenario logístico a la izquierda y presione "Ejecutar Simulación" para compilar los tensores matriciales y renderizar el espacio topológico de la red.</p>
+                    </div>
+                </div>
+
+                <div id="panel-resultados-dinamicos" class="d-none">
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-7">
+                            <div class="retro-window h-100">
+                                <div class="retro-window-header"><span class="window-title">Matriz_Compilada_A_b.dat</span></div>
+                                <div class="retro-window-body bg-retro-panel">
+                                    <label class="retro-label fw-bold mb-2">Ecuaciones Simultáneas de Flujo Equivalente:</label>
+                                    <div class="table-responsive">
+                                        <table class="table table-retro-style w-100 text-center font-monospace small" id="tabla-matriz-generada"></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="retro-window h-100">
+                                <div class="retro-window-header"><span class="window-title">Métricas_Diagnósticas.sys</span></div>
+                                <div class="retro-window-body d-flex flex-column gap-2 justify-content-between">
+                                        <div class="retro-metric-card">
+                                        <span class="label">NÚMERO DE CONDICIÓN (κ)</span>
+                                        <span class="value font-monospace text-primary" id="metric-condicion">0.00</span>
+                                        <small id="metric-condicion-estado" class="fw-bold">[Diagnóstico]</small>
+                                    </div>
+                                    <div class="retro-metric-card">
+                                        <span class="label">ERROR RESIDUAL DE CONVERGENCIA</span>
+                                        <span class="value font-monospace text-danger" id="metric-error">0.0000e-00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="retro-window h-100">
+                                <div class="retro-window-header d-flex justify-content-between align-items-center">
+                                    <span class="window-title">Red_Topológica_Flujos_3D.sys</span>
+                                    <span class="badge bg-dark text-white font-monospace" style="font-size:9px;">INTERACTIVO</span>
+                                </div>
+                                <div class="retro-window-body p-1 bg-gray" style="min-height: 250px;">
+                                    <div class="retro-canvas-frame w-100 h-100" id="canvas-three-container" style="min-height: 240px; position: relative;">
+                                        <canvas id="canvas-2d-network" style="position:absolute; inset:0; width:100%; height:100%; display:block; pointer-events:none;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="retro-window h-100">
+                                <div class="retro-window-header"><span class="window-title">Gráfico_Balance_Demanda.exe</span></div>
+                                <div class="retro-window-body bg-white p-2" style="min-height: 250px; overflow-y: auto;">
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <h6 class="text-center small fw-bold text-dark mb-1">■ Tendencia de Convergencia</h6>
+                                            <div style="position: relative; height: 180px; width: 100%;">
+                                                <canvas id="grafico-convergencia"></canvas>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="text-center small fw-bold text-dark mb-1">■ Balance de Demanda</h6>
+                                            <div style="position: relative; height: 180px; width: 100%;">
+                                                <canvas id="grafico-demanda"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="retro-window h-100">
+                                <div class="retro-window-header"><span class="window-title">Distribución_Final.out</span></div>
+                                <div class="retro-window-body relative-position">
+                                    <table class="table table-retro-style w-100 font-monospace small" id="tabla-solucion-final"></table>
+                                    <div class="retro-circle-result">
+                                        <span class="circle-label">ITERACIONES</span>
+                                        <span class="circle-val font-monospace text-success" id="metric-iteraciones">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="retro-window h-100">
+                                <div class="retro-window-header"><span class="window-title">Análisis_Dominancia.log</span></div>
+                                <div class="retro-window-body">
+                                    <table class="table table-retro-style w-100 text-center font-monospace small" id="tabla-dominancia-diagonal">
+                                        <thead>
+                                            <tr>
+                                                <th>Fila</th>
+                                                <th>|Diagonal|</th>
+                                                <th>∑ Resto</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        
+                        <div class="col-md-6" id="bloque-iterativo">
+                            <div class="retro-window h-100">
+                                <div class="retro-window-header"><span class="window-title">Historial_Iteraciones_Error.log</span></div>
+                                <div class="retro-window-body">
+                                    <label class="retro-label fw-bold mb-2">Registro analítico de convergencia:</label>
+                                    <div class="table-responsive" style="max-height: 180px; overflow-y: auto;">
+                                        <table class="table table-retro-style w-100 text-center font-monospace small">
+                                            <thead class="sticky-top bg-light">
+                                                <tr>
+                                                    <th>Iteración (k)</th>
+                                                    <th>Aproximación</th>
+                                                    <th>Error Absoluto</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tabla-iteraciones-body">
+                                                <tr><td colspan="3" class="text-muted small">[Ejecute un método iterativo]</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6" id="bloque-lu">
+                            <div class="retro-window h-100">
+                                <div class="retro-window-header"><span class="window-title">Desglose_Descomposicion_LU.dat</span></div>
+                                <div class="retro-window-body bg-retro-panel text-center">
+                                    <label class="retro-label fw-bold mb-2 d-block text-start">Matrices L, U y Vector Solución Directo:</label>
+                                    <div class="d-flex justify-content-around align-items-center flex-wrap gap-2 small font-monospace">
+                                        <div>
+                                            <span class="fw-bold d-block text-muted" style="font-size: 11px;">Matriz L</span>
+                                            <div id="contenedor-matriz-l" class="matriz-estilo"></div>
+                                        </div>
+                                        <div>
+                                            <span class="fw-bold d-block text-muted" style="font-size: 11px;">Matriz U</span>
+                                            <div id="contenedor-matriz-u" class="matriz-estilo"></div>
+                                        </div>
+                                        <div>
+                                            <span class="fw-bold d-block text-success" style="font-size: 11px;">Vector X</span>
+                                            <div id="contenedor-vector-x" class="matriz-estilo"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+                    <div class="retro-window mb-3 border-win-analysis">
+                        <div class="retro-window-header bg-win-analysis">
+                            <span class="window-title text-gray">Reporte_Interpretación_Socio_Económica.doc</span>
+                        </div>
+                        <div class="retro-window-body bg-light-gray">
+                            <label class="retro-label fw-bold mb-2 text-dark">■ Interpretación Técnica del Motor Experto:</label>
+                            <div class="retro-interpretation-text-box p-3 font-monospace mb-4" id="box-interpretacion"></div>
+
+                            <label class="retro-label fw-bold text-dark mb-2">■ Cuestionario Analítico Estratégico (Factores Numéricos):</label>
+                            <div class="row g-3">
+                                
+                                <div class="col-12">
+                                    <div class="card p-2 border-retro-flat bg-white font-monospace small">
+                                        <strong>1. ¿Cuánto debe enviarse a cada zona?</strong>
+                                        <p class="text-muted mt-1 mb-0" id="cuestion-1">
+                                            *Calculando vectores de asignación real...* (Ver tabla de resultados 'Distribución_Final.out' para observar los litros exactos asignados según la matriz acoplada).
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="card p-2 border-retro-flat bg-white font-monospace small h-100">
+                                        <strong>2. ¿Qué pasa si una ruta se bloquea?</strong>
+                                        <p class="text-muted mt-1 mb-0" id="cuestion-2">
+                                            [Esperando simulación]
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="card p-2 border-retro-flat bg-white font-monospace small h-100">
+                                        <strong>3. ¿Qué zona queda más afectada?</strong>
+                                        <p class="text-muted mt-1 mb-0" id="cuestion-3">
+                                            [Esperando simulación]
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="card p-2 border-retro-flat bg-white font-monospace small h-100">
+                                        <strong>4. ¿El sistema es estable o sensible a cambios?</strong>
+                                        <p class="text-muted mt-1 mb-0" id="cuestion-4">
+                                            [Esperando simulación]
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="card p-2 border-retro-flat bg-white font-monospace small h-100">
+                                        <strong>5. ¿La solución cambia mucho si la demanda aumenta?</strong>
+                                        <p class="text-muted mt-1 mb-0" id="cuestion-5">
+                                            [Esperando simulación]
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="retro-window mb-3">
+                        <div class="retro-window-header"><span class="window-title">Fundamento_Algorítmico.src</span></div>
+                        <div class="retro-window-body">
+                            <div class="formula-container-retro p-2 mb-2 border text-center font-monospace" id="formula-display"></div>
+                            <pre class="retro-code-box"><code id="box-codigo-algoritmo"></code></pre>
+                        </div>
+                    </div>
+
+                </div> 
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('escenario_A.static', filename='js/matrix.js') }}"></script>
+<script src="{{ url_for('escenario_A.static', filename='js/charts.js') }}"></script>
+<script src="{{ url_for('escenario_A.static', filename='js/visualization3d.js') }}"></script>
+<script src="{{ url_for('escenario_A.static', filename='js/main.js') }}"></script>
+{% endblock %}
