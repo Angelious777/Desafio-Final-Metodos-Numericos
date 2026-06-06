@@ -29,7 +29,7 @@ app.register_blueprint(
 
 
 # Ruta para la página principal (index.html)
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
     return render_template('index.html')
 
