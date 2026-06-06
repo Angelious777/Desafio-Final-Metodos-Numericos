@@ -2,15 +2,16 @@ from flask import Blueprint ,render_template, request
 import math
 
 escenario_B_bp = Blueprint(
-    'escenario_B',
-    __name__,
+    'escenario_B', 
+    __name__, 
+    url_prefix='/Escenario_B',
     template_folder='templates',
     static_folder='static'
 )
 
-@escenario_B_bp.route("/escenario-b")
+@escenario_B_bp.route("/")
 def inicio():
-    return render_template("index.html")
+    return render_template("escenario_b.html")
 
 def f(t, R, entrada_base, consumo_base, tipo_flujo, var_entrada, var_consumo):
     """
