@@ -9,11 +9,11 @@ let chartInstances = {
 window.ultimoResultadoSimulacion = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Enlace seguro de disparadores para los Escenarios Preestablecidos
-    asociarEventoSeguro('btn-caso-base', 'click', function() { resetearTabsVisuales(this); cargarEscenario('base'); });
-    asociarEventoSeguro('btn-alto-dialogo', 'click', function() { resetearTabsVisuales(this); cargarEscenario('dialogo'); });
-    asociarEventoSeguro('btn-sin-mediadores', 'click', function() { resetearTabsVisuales(this); cargarEscenario('sin_mediadores'); });
-    asociarEventoSeguro('btn-alta-propagacion', 'click', function() { resetearTabsVisuales(this); cargarEscenario('propagacion'); });
+    // 1. Enlace seguro de disparadores para los Escenarios Preestablecidos con comportamiento Toggle
+    asociarEventoSeguro('btn-caso-base', 'click', function() { conmutarTab(this, 'base'); });
+    asociarEventoSeguro('btn-alto-dialogo', 'click', function() { conmutarTab(this, 'dialogo'); });
+    asociarEventoSeguro('btn-sin-mediadores', 'click', function() { conmutarTab(this, 'sin_mediadores'); });
+    asociarEventoSeguro('btn-alta-propagacion', 'click', function() { conmutarTab(this, 'propagacion'); });
     
     // 2. Eventos ejecutores principales del panel manual y restablecimiento
     asociarEventoSeguro('btn-calcular', 'click', lanzarSimulacion);
@@ -22,6 +22,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Simulación inicial automática
     lanzarSimulacion();
 });
+
+/**
+ * Gestiona la selección y deselección (toggle) de las pestañas de escenarios
+ */
+function conmutarTab(elemento, tipoEscenario) {
+    const estabaActivo = elemento.classList.contains('border-win-active');
+    
+    // Limpiamos la selección visual de absolutamente todos los botones primero
+    resetearTabsVisuales(null);
+    
+    if (estabaActivo) {
+        // Si ya estaba activo, el segundo clic lo libera pasando a control manual puro
+        logBitacora("Preajuste liberado. El sistema permanece en modo de edición manual.");
+    } else {
+        // Si no estaba activo, lo encendemos y cargamos sus parámetros analíticos
+        elemento.classList.add('border-win-active');
+        cargarEscenario(tipoEscenario);
+    }
+}
 
 /**
  * Helper para resetear estilos visuales inconsistentes en las tabs
@@ -82,7 +101,6 @@ function cargarEscenario(tipo) {
  * Restablece todos los controles y sliders del DOM a sus condiciones de fábrica
  */
 function restablecerValores() {
-    // Definición de las condiciones iniciales del escenario base
     const valoresFabrica = {
         'inp-N0': 950,
         'inp-M0': 50,
@@ -96,20 +114,17 @@ function restablecerValores() {
         'inp-h': 0.10
     };
 
-    // Modificar los inputs numéricos del formulario manual
     Object.keys(valoresFabrica).forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = valoresFabrica[id];
     });
 
-    // Sincronizar sliders paralelos en la UI en caso de estar mapeados
     const sliders = { 'slide-N0': 950, 'slide-M0': 50, 'slide-D0': 5 };
     Object.keys(sliders).forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = sliders[id];
     });
 
-    // Remover bordes activos de pestañas de escenarios guardados al volver a manual puro
     resetearTabsVisuales(null);
 
     logBitacora("Valores de fábrica restablecidos con éxito. Reiniciando simulación base...");
