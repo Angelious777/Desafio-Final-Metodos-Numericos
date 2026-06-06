@@ -303,3 +303,62 @@ def index():
                                inputs=inputs_built)
                                
     return render_template('escenario_e.html', posted=False)
+
+@escenario_E_bp.route('/calcular', methods=['POST'])
+def calcular():
+    modelo_opt = request.form.get('modelo')
+    kwargs = {}
+    
+    # 1. Selección y Configuración de parámetros según el modelo
+    if modelo_opt == '1':
+        f, df = f1, df1
+        nombre_modelo = "Umbral de Costo Acumulado vs Ingreso Familiar"
+        formula_latex = r"$$f(t) = C_0 \cdot e^{r \cdot t} - I_f = 0$$"
+        kwargs.update({'C0': float(request.form.get('c0') or 150.0),
+                       'r': float(request.form.get('r') or 0.08),
+                       'I_f': float(request.form.get('if') or 500.0)})
+    elif modelo_opt == '2':
+        f, df = f2, df2
+        nombre_modelo = "Tasa de Reposición Crítica de Carburante"
+        formula_latex = r"$$f(R) = R - C_{max} \cdot (1 - e^{-k \cdot R}) - D = 0$$"
+        kwargs.update({'C_max': float(request.form.get('c_max') or 800.0),
+                       'k': float(request.form.get('k') or 0.002),
+                       'D': float(request.form.get('d') or 200.0)})
+    else:
+        f, df = f3, df3
+        nombre_modelo = "Umbral de Transición y Conflicto Social"
+        formula_latex = r"$$f(x) = x^3 - 3x^2 + 2.5x - s = 0$$"
+        kwargs['s'] = float(request.form.get('s') or 0.4)
+
+    # 2. Captura de parámetros numéricos generales
+    try:
+        a_bis = float(request.form.get('a_bis', 0.0))
+        b_bis = float(request.form.get('b_bis', 25.0))
+        x0_new = float(request.form.get('x0_new', 10.0))
+        x0_sec = float(request.form.get('x0_sec', 5.0))
+        x1_sec = float(request.form.get('x1_sec', 20.0))
+        tol = float(request.form.get('tol', 0.00001))
+        max_iter = int(request.form.get('max_iter', 50))
+    except (TypeError, ValueError):
+        return render_template('escenario_e.html', error="Error: Ingrese valores numéricos válidos.")
+
+    # 3. Ejecución de algoritmos
+    res_bis, err_bis = biseccion(f, a_bis, b_bis, tol, max_iter, **kwargs)
+    res_new, err_new = newton_raphson(f, df, x0_new, tol, max_iter, **kwargs)
+    res_sec, err_sec = secante(f, x0_sec, x1_sec, tol, max_iter, **kwargs)
+
+    # 4. Formateo de resultados para la interfaz
+    analisis = {
+        'biseccion': {'status': "Éxito" if not err_bis else "Fallo", 'msg': err_bis or "Convergencia garantizada.", 'iters': len(res_bis or []), 'raiz': res_bis[-1]['c'] if res_bis else None, 'p': estimar_orden_convergencia(res_bis, 'biseccion')},
+        'newton': {'status': "Éxito" if not err_new else "Fallo", 'msg': err_new or "Velocidad cuadrática.", 'iters': len(res_new or []), 'raiz': res_new[-1]['x1'] if res_new else None, 'p': estimar_orden_convergencia(res_new, 'newton')},
+        'secante': {'status': "Éxito" if not err_sec else "Fallo", 'msg': err_sec or "Convergencia superlineal.", 'iters': len(res_sec or []), 'raiz': res_sec[-1]['x_next'] if res_sec else None, 'p': estimar_orden_convergencia(res_sec, 'secante')}
+    }
+
+    # 5. Retorno al template
+    return render_template('escenario_e.html', 
+                           posted=True,
+                           nombre_modelo=nombre_modelo,
+                           formula_latex=formula_latex,
+                           res_bis=res_bis, res_new=res_new, res_sec=res_sec,
+                           analisis=analisis,
+                           inputs=request.form)
