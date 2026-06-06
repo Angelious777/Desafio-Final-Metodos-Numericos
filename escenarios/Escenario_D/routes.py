@@ -17,9 +17,9 @@ escenario_D_bp = Blueprint(
     static_folder='static'
 )
 
-@escenario_D_bp.route('/')
-def index():
-    return render_template('index.html')
+@escenario_D_bp.route("/escenario-d")
+def inicio():
+    return render_template("index.html")
 
 @escenario_D_bp.route('/api/calcular_gasto', methods=['POST'])
 def calcular_gasto():

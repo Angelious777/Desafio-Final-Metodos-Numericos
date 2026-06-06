@@ -7,6 +7,9 @@ escenario_C_bp = Blueprint(
     static_folder='static'
 )
 
+@escenario_C_bp.route("/escenario-c")
+def inicio():
+    return render_template("index.html")
 # Datos reales adaptados al caso de la carne de pollo (Bs/Kg)
 DATOS_POLLO = {
     "x": [1, 5, 10, 15, 20, 30],

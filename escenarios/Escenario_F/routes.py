@@ -8,6 +8,10 @@ escenario_F_bp = Blueprint(
     static_folder='static'
 )
 
+@escenario_F_bp.route("/escenario-f")
+def inicio():
+    return render_template("index.html")
+
 def descomposicion_lu_paso_a_paso(A, b):
     n = len(A)
     L = np.zeros((n, n))

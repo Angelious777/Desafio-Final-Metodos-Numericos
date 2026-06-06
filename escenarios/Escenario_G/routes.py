@@ -8,10 +8,9 @@ escenario_G_bp = Blueprint(
     static_folder='static'
 )
 
-
-@escenario_G_bp.route('/')
-def index():
-    return render_template('index.html')
+@escenario_G_bp.route("/escenario-g")
+def inicio():
+    return render_template("index.html")
 
 @escenario_G_bp.route('/api/simular', methods=['POST'])
 def api_simular():

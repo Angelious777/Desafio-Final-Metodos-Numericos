@@ -18,9 +18,8 @@ escenario_A_bp = Blueprint(
 )
 
 
-@escenario_A_bp.route("/")
-def index():
-    # Renderiza la interfaz base.html / index.html
+@escenario_A_bp.route("/escenario-a")
+def inicio():
     return render_template("index.html")
 
 @escenario_A_bp.route("/resolver", methods=["POST"])
