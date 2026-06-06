@@ -302,4 +302,4 @@ def index():
                                comparativa=comparativa,
                                inputs=inputs_built)
                                
-    return render_template('index.html', posted=False)
+    return render_template('escenario_e.html', posted=False)

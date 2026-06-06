@@ -104,7 +104,7 @@ function ejecutarSimulacion() {
 
     const xVal = parseFloat(xInput.value);
 
-    fetch('/calcular', {
+    fetch('/Escenario_C/calcular', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ x_val: xVal })
