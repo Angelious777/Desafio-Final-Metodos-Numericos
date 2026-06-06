@@ -17,10 +17,11 @@ escenario_A_bp = Blueprint(
     static_folder='static'
 )
 
+escenario_A_bp = Blueprint('escenario_A_bp', __name__, url_prefix='/Escenario_A')
 
-@escenario_A_bp.route("/escenario-a")
+@escenario_A_bp.route("/") # Esto hace que la ruta final sea /Escenario_A/
 def inicio():
-    return render_template("index.html")
+    return render_template("escenario_a.html")
 
 @escenario_A_bp.route("/resolver", methods=["POST"])
 def resolver():

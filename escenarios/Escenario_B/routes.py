@@ -8,6 +8,9 @@ escenario_B_bp = Blueprint(
     static_folder='static'
 )
 
+@escenario_B_bp.route("/escenario-b")
+def inicio():
+    return render_template("index.html")
 
 def f(t, R, entrada_base, consumo_base, tipo_flujo, var_entrada, var_consumo):
     """
