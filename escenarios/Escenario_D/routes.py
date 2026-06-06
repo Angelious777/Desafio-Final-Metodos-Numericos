@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, request, jsonify
 import json
-from numerical.validator import validar_datos
-from numerical.trapecio import aplicar_trapecio
-from numerical.simpson13 import aplicar_simpson13
-from numerical.simpson38 import aplicar_simpson38
-from numerical.economic_analysis import (
+from escenarios.Escenario_D.numerical.validator import validar_datos
+from escenarios.Escenario_D.numerical.trapecio import aplicar_trapecio
+from escenarios.Escenario_D.numerical.simpson13 import aplicar_simpson13
+from escenarios.Escenario_D.numerical.simpson38 import aplicar_simpson38
+from escenarios.Escenario_D.numerical.economic_analysis import (
     calcular_gasto_sin_inflacion, 
     calcular_perdida_poder_adquisitivo, 
     evaluar_impacto_productos
