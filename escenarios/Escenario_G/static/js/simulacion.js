@@ -9,11 +9,11 @@ let chartInstances = {
 window.ultimoResultadoSimulacion = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Enlace seguro de disparadores para los Escenarios Preestablecidos con comportamiento Toggle
-    asociarEventoSeguro('btn-caso-base', 'click', function() { conmutarTab(this, 'base'); });
-    asociarEventoSeguro('btn-alto-dialogo', 'click', function() { conmutarTab(this, 'dialogo'); });
-    asociarEventoSeguro('btn-sin-mediadores', 'click', function() { conmutarTab(this, 'sin_mediadores'); });
-    asociarEventoSeguro('btn-alta-propagacion', 'click', function() { conmutarTab(this, 'propagacion'); });
+    // 1. Enlace seguro de disparadores para los Escenarios con comportamiento Multiselección (Toggle Libre)
+    asociarEventoSeguro('btn-caso-base', 'click', function() { conmutarTab(this); });
+    asociarEventoSeguro('btn-alto-dialogo', 'click', function() { conmutarTab(this); });
+    asociarEventoSeguro('btn-sin-mediadores', 'click', function() { conmutarTab(this); });
+    asociarEventoSeguro('btn-alta-propagacion', 'click', function() { conmutarTab(this); });
     
     // 2. Eventos ejecutores principales del panel manual y restablecimiento
     asociarEventoSeguro('btn-calcular', 'click', lanzarSimulacion);
@@ -24,42 +24,82 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Gestiona la selección y deselección (toggle) de las pestañas de escenarios
+ * Gestiona la activación/desactivación libre e independiente de cada botón
  */
-function conmutarTab(elemento, tipoEscenario) {
-    const estabaActivo = elemento.classList.contains('border-win-active');
+function conmutarTab(elemento) {
+    // Conmutamos las clases de estado activo de forma independiente
+    elemento.classList.toggle('border-win-active');
+    elemento.classList.toggle('active'); 
     
-    // Limpiamos la selección visual de absolutamente todos los botones primero
-    resetearTabsVisuales();
-    
-    if (estabaActivo) {
-        // Si ya estaba activo, el segundo clic lo libera pasando a control manual puro
-        logBitacora("Preajuste liberado. El sistema permanece en modo de edición manual.");
-    } else {
-        // Si no estaba activo, lo encendemos y cargamos sus parámetros analíticos
-        elemento.classList.add('border-win-active');
-        cargarEscenario(tipoEscenario);
-    }
+    // Calculamos la fusión de todos los preajustes que se encuentren encendidos
+    actualizarEscenariosCombinados();
 }
 
 /**
- * LIMPIEZA BLINDADA: Remueve los estilos activos apuntando directamente a cada ID
- * para evitar fallos si no comparten la misma clase CSS en el HTML.
+ * FUSIÓN INTELIGENTE DE PARÁMETROS
+ * Escanea qué botones están encendidos y superpone sus capas analíticas ordenadamente
+ */
+function actualizarEscenariosCombinados() {
+    // Inicializamos con los coeficientes estructurales del Caso Base
+    let params = { N0: 950, M0: 50, D0: 5, a: 0.002, b: 0.05, c: 0.04, k: 0.03, r: 0.10 };
+    
+    const baseActivo = document.getElementById('btn-caso-base')?.classList.contains('border-win-active');
+    const dialogoActivo = document.getElementById('btn-alto-dialogo')?.classList.contains('border-win-active');
+    const sinMediadoresActivo = document.getElementById('btn-sin-mediadores')?.classList.contains('border-win-active');
+    const propagacionActivo = document.getElementById('btn-alta-propagacion')?.classList.contains('border-win-active');
+    
+    // Si el usuario deselecciona absolutamente todos, se libera el panel para edición manual pura
+    if (!baseActivo && !dialogoActivo && !sinMediadoresActivo && !propagacionActivo) {
+        logBitacora("Todos los preajustes liberados. El sistema permanece en modo de edición manual.");
+        return;
+    }
+    
+    // --- Capa de Modificación: ALTO DIÁLOGO ---
+    if (dialogoActivo) {
+        params.c = 0.18;
+        params.r = 0.05;
+    }
+    
+    // --- Capa de Modificación: ALTA PROPAGACIÓN ---
+    if (propagacionActivo) {
+        params.a = 0.007;
+        params.b = 0.02;
+        params.k = 0.02;
+        if (!dialogoActivo) params.r = 0.12;
+    }
+    
+    // --- Capa de Modificación: SIN MEDIADORES ---
+    if (sinMediadoresActivo) {
+        params.N0 = 995;
+        params.D0 = 0;
+        params.k = 0.00;
+        params.r = 0.20;
+        // Si hay diálogo activo pero no hay mediadores en terreno, la tasa 'c' decae a un punto intermedio de resistencia
+        params.c = dialogoActivo ? 0.06 : 0.00;
+    }
+    
+    // Reinyectar el resultado de la fusión directamente en las casillas del DOM
+    const variables = ['N0', 'M0', 'D0', 'a', 'b', 'c', 'k', 'r'];
+    variables.forEach(v => {
+        const el = document.getElementById(`inp-${v}`);
+        if (el) el.value = params[v];
+    });
+    
+    logBitacora("Matrices combinadas con éxito. Actualizando proyección de vectores...");
+    lanzarSimulacion();
+}
+
+/**
+ * Limpia los estilos activos apuntando directamente a cada ID de forma blindada
  */
 function resetearTabsVisuales() {
     const idsBotones = ['btn-caso-base', 'btn-alto-dialogo', 'btn-sin-mediadores', 'btn-alta-propagacion'];
-    
     idsBotones.forEach(id => {
         const btn = document.getElementById(id);
         if (btn) {
             btn.classList.remove('border-win-active');
-            btn.classList.remove('active'); // Remoción de respaldo por si acaso
+            btn.classList.remove('active');
         }
-    });
-
-    // Mantenemos el selector genérico por si también se usa en otras partes
-    document.querySelectorAll('.btn-tab').forEach(btn => {
-        btn.classList.remove('border-win-active');
     });
 }
 
@@ -82,30 +122,6 @@ function logBitacora(mensaje) {
     } else {
         console.log(`[Bitácora]: ${mensaje}`);
     }
-}
-
-/**
- * Modifica los inputs del DOM basándose en el escenario analítico seleccionado
- */
-function cargarEscenario(tipo) {
-    const valores = {
-        base:           { N0: 950, M0: 50, D0: 5,  a: 0.002,  b: 0.05, c: 0.04, k: 0.03, r: 0.10 },
-        dialogo:        { N0: 950, M0: 50, D0: 5,  a: 0.002,  b: 0.05, c: 0.18, k: 0.03, r: 0.05 },
-        sin_mediadores: { N0: 995, M0: 50, D0: 0,  a: 0.0025, b: 0.03, c: 0.00, k: 0.00, r: 0.20 },
-        propagacion:    { N0: 950, M0: 50, D0: 5,  a: 0.007,  b: 0.02, c: 0.04, k: 0.02, r: 0.12 }
-    };
-
-    const esc = valores[tipo];
-    if (!esc) return;
-
-    const inputs = ['N0', 'M0', 'D0', 'a', 'b', 'c', 'k', 'r'];
-    inputs.forEach(p => {
-        const el = document.getElementById(`inp-${p}`);
-        if (el) el.value = esc[p];
-    });
-
-    logBitacora(`Preajuste cargado: [Escenario ${tipo.toUpperCase()}]. Reinyectando vectores...`);
-    lanzarSimulacion();
 }
 
 /**
@@ -136,7 +152,7 @@ function restablecerValores() {
         if (el) el.value = sliders[id];
     });
 
-    // Ahora sí limpiará los botones por ID de forma infalible
+    // Apaga de forma efectiva todos los botones
     resetearTabsVisuales();
 
     logBitacora("Valores de fábrica restablecidos con éxito. Reiniciando simulación base...");
@@ -592,7 +608,7 @@ function ejecutarLogicaAutomatizada(data) {
     // 3. ¿QUÉ PASA SI MEJORA LA TASA DE DIÁLOGO?
     asignarTextoSeguro(
         "ans-dialogo",
-        "Un incremento de la tasa de diálogo (c) acelera la reducción de manifestantes y favorsce la estabilización del sistema."
+        "Un incremento de la tasa de diálogo (c) acelera la reducción de manifestantes y favorece la estabilización del sistema."
     );
 
     // 4. ¿QUÉ PASA SI NO EXISTEN MEDIADORES?
