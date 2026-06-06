@@ -284,10 +284,6 @@
                 
                 <div class="tab-retro-container" style="display: flex; gap: 4px;">
                     <button type="button" id="tab-evolucion" class="win-btn-sm border-win-active">Evolución Temporal</button>
-                    <button type="button" id="tab-mapa" class="win-btn-sm" style="border-color: #e67e22 !important;">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
-                        📍 Mapa Social La Paz
-                    </button>
                     <button type="button" id="tab-fase" class="win-btn-sm">Plano de Fase</button>
                     <button type="button" id="tab-crisis" class="win-btn-sm">Índice Tensión</button>
                     <button type="button" id="tab-derivadas" class="win-btn-sm">Derivadas</button>
@@ -302,7 +298,7 @@
                     </div>
 
                     <div id="wrapper-mapa" style="position: relative; height: 440px; width: 100%; display: none; background: #22252a; border: 2px solid var(--border-dark); overflow: hidden;">
-                        <div style="position: absolute; top: 8px; left: 8px; background: rgba(34, 37, 42, 0.9); color: #2ecc71; padding: 8px; font-size: 11px; border: 1px solid #2ecc71; z-index: 10; font-family: monospace; box-shadow: 0 0 8px rgba(46,204,113,0.3);">
+                        <div style="position: absolute; top: 8px; left: 8px; background: rgba(252, 252, 252, 0.9); color: #9bc2ab; padding: 8px; font-size: 11px; border: 1px solid #9cc2ac; z-index: 10; font-family: monospace; box-shadow: 0 0 8px rgba(85, 129, 103, 0.3);">
                             <strong>🛰️ VECTORIZACIÓN GEOSOCIAL DE LA PAZ</strong><br>
                             <span style="color:#fff;">Simulación espacial activa en Canvas 2D.</span><br>
                             • Círculos rojos = Focos de manifestantes activos.<br>
@@ -329,24 +325,40 @@
 
     </div>
 
-    <div class="retro-window window-core-highlight" style="width: 100%;">
-        <div class="retro-window-header" style="display: flex; justify-content: space-between; align-items: center;">
-            <span class="window-title" style="font-size: 14px; display: flex; align-items: center; gap: 6px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
-                Solucion_Numerica_Estructural.sys [NUCLEO DEL MODELO MATEMÁTICO]
+    <div class="retro-window " style="width: 100%;">
+        <div class="retro-window-header"
+            style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; color:#6b6b6b; border-bottom:1px solid #e5e5e5;">
+            
+            <span class="window-title"
+                style="font-size:14px; display:flex; align-items:center; gap:6px; color:#6b6b6b;">
+                
+                <svg width="14" height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#6b6b6b"
+                    stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                </svg>
+
+                Solucion_Numerica_Estructural.exe
             </span>
-            <span class="core-badge">Propuesta Principal</span>
+
+            <span class="core-badge" style="background:#eaeaea; color:#666;">
+                Propuesta Principal
+            </span>
         </div>
         <div class="retro-window-body" style="background: var(--core-highlight); padding: 14px; display: flex; flex-direction: column; gap: 12px;">
             
             <div style="background: var(--white); border: 1px solid var(--neon-gold); padding: 12px; display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 12px; border-left: 6px solid var(--neon-gold); box-shadow: 2px 2px 5px rgba(0,0,0,0.05);">
-                <div style="font-size: 13px; font-weight: bold; color: #d35400;">SISTEMA DIFERENCIAL PROPUESTO E INTEGRADO:</div>
+                <div style="font-size: 13px; font-weight: bold; color: #c7906c;">SISTEMA DIFERENCIAL PROPUESTO E INTEGRADO:</div>
                 <div style="font-size: 14px; font-weight: bold; background: #eef2f7; padding: 6px 14px; border: 1px solid #cbd5e1; border-radius: 3px;">N'(t) = -a·N·M + b·D</div>
-                <div style="font-size: 14px; font-weight: bold; background: #fdeede; padding: 6px 14px; border: 1px solid #fecaca; border-radius: 3px; color: #c0392b;">M'(t) = a·N·M - c·M·D</div>
-                <div style="font-size: 14px; font-weight: bold; background: #edf9f0; padding: 6px 14px; border: 1px solid #bbf7d0; border-radius: 3px; color: #27ae60;">D'(t) = k·M - r·D</div>
+                <div style="font-size: 14px; font-weight: bold; background: #fdeede; padding: 6px 14px; border: 1px solid #fecaca; border-radius: 3px; color: #c57f77;">M'(t) = a·N·M - c·M·D</div>
+                <div style="font-size: 14px; font-weight: bold; background: #edf9f0; padding: 6px 14px; border: 1px solid #bbf7d0; border-radius: 3px; color: #76b690;">D'(t) = k·M - r·D</div>
             </div>
 
-            <div style="background: #1e1e1e; border: 2px solid var(--neon-gold); padding: 15px; border-radius: 4px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 4px 8px rgba(243, 156, 18, 0.15);">
+            <div style="background: #ddd9d9; border: 2px solid var(--neon-gold); padding: 15px; border-radius: 4px; box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.8), 0 4px 8px rgba(243, 156, 18, 0.15);">
                 <div style="color: var(--neon-gold); font-size: 13px; font-weight: bold; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -355,24 +367,24 @@
                     <span style="font-size: 10px; color: #888; background: #333; padding: 2px 6px; border-radius: 3px;">ESTADO DE SALIDA</span>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
-                    <div style="background: rgba(41, 128, 185, 0.15); border: 1px solid #2980b9; padding: 12px; border-radius: 3px;">
+                    <div style="background: rgba(41, 128, 185, 0.15); border: 1px solid #94b9d1; padding: 12px; border-radius: 3px;">
                         <div style="color: #6eb7e8; font-size: 11px; font-weight: bold; margin-bottom: 5px;">N(t) Final - Neutrales</div>
                         <div id="res-final-n" style="color: #fff; font-size: 26px; font-weight: bold; font-family: monospace;">--</div>
                     </div>
-                    <div style="background: rgba(192, 57, 43, 0.15); border: 1px solid #c0392b; padding: 12px; border-radius: 3px;">
+                    <div style="background: rgba(192, 57, 43, 0.15); border: 1px solid #e27f74; padding: 12px; border-radius: 3px;">
                         <div style="color: #e87b71; font-size: 11px; font-weight: bold; margin-bottom: 5px;">M(t) Final - Manifestantes</div>
                         <div id="res-final-m" style="color: #fff; font-size: 26px; font-weight: bold; font-family: monospace;">--</div>
                     </div>
-                    <div style="background: rgba(39, 174, 96, 0.15); border: 1px solid #27ae60; padding: 12px; border-radius: 3px;">
+                    <div style="background: rgba(39, 174, 96, 0.15); border: 1px solid #64a881; padding: 12px; border-radius: 3px;">
                         <div style="color: #5ed68e; font-size: 11px; font-weight: bold; margin-bottom: 5px;">D(t) Final - Mediadores</div>
                         <div id="res-final-d" style="color: #fff; font-size: 26px; font-weight: bold; font-family: monospace;">--</div>
                     </div>
                 </div>
             </div>
             <div style="font-size: 13px; color: var(--text); display: flex; gap: 25px; padding-left: 5px; background: rgba(243, 156, 18, 0.08); padding: 6px; border-radius: 3px;">
-                <span><strong>🧠 Motor de Integración Estructural:</strong> <span id="lbl-motor-metodo" style="color: #d35400; font-weight: bold;">RK4</span></span>
-                <span><strong>📐 Paso Diferencial (h):</strong> <code style="font-weight: bold;">0.10</code></span>
-                <span><strong>🔢 Iteraciones Calculadas:</strong> <span id="lbl-motor-pasos" style="font-weight: bold;">800</span></span>
+                <span><strong>Motor de Integración Estructural:</strong> <span id="lbl-motor-metodo" style="color: #dfa57e; font-weight: bold;">RK4</span></span>
+                <span><strong>Paso Diferencial (h):</strong> <code style="font-weight: bold;">0.10</code></span>
+                <span><strong>Iteraciones Calculadas:</strong> <span id="lbl-motor-pasos" style="font-weight: bold;">800</span></span>
             </div>
 
             <div style="border: 1px solid var(--border-dark); background: var(--white); max-height: 280px; overflow-y: auto; box-shadow: inset 1px 1px 4px rgba(0,0,0,0.1);">
@@ -424,52 +436,74 @@
     <div class="retro-window" style="width: 100%;">
         <div class="retro-window-header">
             <span class="window-title" style="font-size: 14px;">Evaluacion_Critica_del_Conflicto.txt</span>
-            
+
             <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;">
                 <span style="font-weight: bold; color: var(--text-light);">SEMÁFORO DE RIESGO:</span>
-                <div id="semaforo-alerta" class="retro-alert-box" style="padding: 3px 14px; font-weight: bold; border: 1px solid var(--border-dark); background: var(--bg-desktop);">
+                <div id="semaforo-alerta" class="retro-alert-box"
+                    style="padding: 3px 14px; font-weight: bold; border: 1px solid var(--border-dark); background: var(--bg-desktop);">
                     INICIALIZANDO VECTORES...
                 </div>
             </div>
         </div>
-        
+
         <div class="retro-window-body" style="background: var(--bg-panel); padding: 15px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 15px;">
-                
-                <div class="retro-metric-card" style="background: var(--white); padding: 12px; border-left: 4px solid var(--border-dark);">
-                    <span class="label" style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">¿El conflicto tiende a estabilizarse?</span>
-                    <strong class="value" id="ans-estabiliza" style="font-size: 13px;">Esperando análisis de convergencia...</strong>
-                </div>
-                
-                <div class="retro-metric-card" style="background: var(--white); padding: 12px; border-left: 4px solid var(--danger);">
-                    <span class="label" style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">Evolución de la masa crítica de manifestantes</span>
-                    <strong class="value" id="ans-tendencia" style="font-size: 13px;">Esperando análisis...</strong>
-                </div>
-                
-                <div class="retro-metric-card" style="background: var(--white); padding: 12px; border-left: 4px solid var(--green-medium);">
-                    <span class="label" style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">[Punto Crítico Geométrico Detectado]</span>
-                    <div style="margin-top: 4px; font-size: 13px;">
-                        Pico Máx M: <span id="val-pico-m" style="font-weight: bold; color: #c0392b;">--</span> habs. 
-                        en t = <span id="val-pico-t" style="font-weight: bold;">--</span>
-                    </div>
-                </div>
-                
-                <div class="retro-metric-card" style="background: var(--white); padding: 12px; border-left: 4px solid var(--blue-soft);">
-                    <span class="label" style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">Evaluación Analítica de Contención</span>
-                    <strong class="value" id="ans-riesgo" style="font-size: 12px;">Esperando trazas numéricas...</strong>
-                </div>
-                
-            </div>
-        </div>
-    </div>
 
-    <div class="retro-window" style="width: 100%;">
-        <div class="retro-window-header">
-            <span class="window-title" style="font-size: 14px;">Informe_Resolucion_EDO.log</span>
-        </div>
-        <div class="retro-window-body" style="padding: 0;">
-            <div id="bitacora" class="retro-code-box" style="min-height: 80px; height: 80px; line-height: 1.5; font-size: 13px; border-radius: 0; padding: 10px; background: #1e1e1e; color: #d4d4d4; overflow-y: auto;">
-                [SISTEMA OPERATIVO]: Estación de control de dinámicas sociales cargada correctamente en t = 0.0. Listo para recibir vectores diferenciales.
+                <div class="retro-metric-card"
+                    style="background: var(--white); padding: 12px; border-left: 4px solid var(--border-dark);">
+                    <span class="label"
+                        style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">
+                        ¿El conflicto tiende a estabilizarse?
+                    </span>
+                    <strong class="value" id="ans-estabiliza" style="font-size: 13px;">
+                        Esperando simulación...
+                    </strong>
+                </div>
+
+                <div class="retro-metric-card"
+                    style="background: var(--white); padding: 12px; border-left: 4px solid var(--danger);">
+                    <span class="label"
+                        style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">
+                        ¿El número de manifestantes aumenta o disminuye?
+                    </span>
+                    <strong class="value" id="ans-tendencia" style="font-size: 13px;">
+                        Esperando simulación...
+                    </strong>
+                </div>
+
+                <div class="retro-metric-card"
+                    style="background: var(--white); padding: 12px; border-left: 4px solid var(--green-medium);">
+                    <span class="label"
+                        style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">
+                        ¿Qué pasa si mejora la tasa de diálogo?
+                    </span>
+                    <strong class="value" id="ans-dialogo" style="font-size: 13px;">
+                        Esperando simulación...
+                    </strong>
+                </div>
+
+                <div class="retro-metric-card"
+                    style="background: var(--white); padding: 12px; border-left: 4px solid #f39c12;">
+                    <span class="label"
+                        style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">
+                        ¿Qué pasa si no existen mediadores?
+                    </span>
+                    <strong class="value" id="ans-sin-mediadores" style="font-size: 13px;">
+                        Esperando simulación...
+                    </strong>
+                </div>
+
+                <div class="retro-metric-card"
+                    style="background: var(--white); padding: 12px; border-left: 4px solid #2980b9;">
+                    <span class="label"
+                        style="display: block; font-size: 12px; color: var(--text-light); margin-bottom: 6px;">
+                        ¿Qué parámetros hacen que el conflicto se masifique?
+                    </span>
+                    <strong class="value" id="ans-masificacion" style="font-size: 13px;">
+                        Esperando simulación...
+                    </strong>
+                </div>
+
             </div>
         </div>
     </div>
@@ -545,5 +579,5 @@
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="{{ url_for('static', filename='js/simulacion.js') }}"></script>
+<script src="{{ url_for('escenario_G.static', filename='js/simulacion.js') }}"></script>
 {% endblock %}

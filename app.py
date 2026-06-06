@@ -6,6 +6,9 @@ from escenarios.Escenario_A.routes import escenario_A_bp
 from escenarios.Escenario_B.routes import escenario_B_bp
 from escenarios.Escenario_C.routes import escenario_C_bp
 from escenarios.Escenario_D.routes import escenario_D_bp
+from escenarios.Escenario_E.routes import escenario_E_bp
+from escenarios.Escenario_F.routes import escenario_F_bp
+from escenarios.Escenario_G.routes import escenario_G_bp
 
 app.register_blueprint(
     escenario_A_bp, 
@@ -25,6 +28,21 @@ app.register_blueprint(
 app.register_blueprint(
     escenario_D_bp, 
     url_prefix='/escenario_D'
+)
+
+app.register_blueprint(
+    escenario_E_bp, 
+    url_prefix='/escenario_E'
+)
+
+app.register_blueprint(
+    escenario_F_bp, 
+    url_prefix='/escenario_F'
+)
+
+app.register_blueprint(
+    escenario_G_bp, 
+    url_prefix='/escenario_G'
 )
 
 

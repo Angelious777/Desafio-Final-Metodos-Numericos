@@ -502,63 +502,151 @@ function obtenerOpcionesBase(titulo, xTitle, yTitle, esScatter = false) {
  */
 function ejecutarLogicaAutomatizada(data) {
     if (!data || !data.M || data.M.length === 0) {
-        logBitacora("Alerta: Datos insuficientes para el sistema experto cognitivo.");
         return;
     }
 
-    const M = data.M;
-    const t = data.t;
-    const totalPoblacion = data.N[0] + data.M[0] + data.D[0];
-
-    let maxM = -1; let indicePico = 0;
-    for (let i = 0; i < M.length; i++) {
-        if (M[i] > maxM) { maxM = M[i]; indicePico = i; }
-    }
-    
     const asignarTextoSeguro = (id, texto) => {
         const el = document.getElementById(id);
         if (el) el.innerText = texto;
     };
 
-    asignarTextoSeguro('val-pico-m', maxM.toFixed(1));
-    asignarTextoSeguro('val-pico-t', t[indicePico].toFixed(1));
+    const N = data.N;
+    const M = data.M;
+    const D = data.D;
 
-    // Lógica del Semáforo
-    const porcMaxM = (maxM / totalPoblacion) * 100;
-    const semaforo = document.getElementById('semaforo-alerta');
-    let nivelRiesgo = "";
+    const MInicial = M[0];
+    const MFinal = M[M.length - 1];
+
+    const NInicial = N[0];
+    const DInicial = D[0];
+
+    const maxM = Math.max(...M);
+
+    // =====================================================
+    // 1. ¿EL CONFLICTO TIENDE A ESTABILIZARSE?
+    // =====================================================
+
+    const tramoFinal = M.slice(-15);
+
+    let estabiliza = false;
+
+    if (tramoFinal.length > 5) {
+        const variacion =
+            Math.abs(tramoFinal[tramoFinal.length - 1] - tramoFinal[0]);
+
+        estabiliza = variacion < 3;
+    }
+
+    asignarTextoSeguro(
+        "ans-estabiliza",
+        estabiliza
+            ? "Sí. El sistema converge hacia un estado relativamente estable."
+            : "No. El conflicto continúa mostrando cambios significativos."
+    );
+
+    // =====================================================
+    // 2. ¿AUMENTAN O DISMINUYEN LOS MANIFESTANTES?
+    // =====================================================
+
+    let tendencia = "";
+
+    if (MFinal > MInicial * 1.05) {
+        tendencia =
+            "Aumentan. La movilización social se expande durante la simulación.";
+    } else if (MFinal < MInicial * 0.95) {
+        tendencia =
+            "Disminuyen. El conflicto pierde intensidad con el tiempo.";
+    } else {
+        tendencia =
+            "Se mantienen relativamente constantes durante la simulación.";
+    }
+
+    asignarTextoSeguro("ans-tendencia", tendencia);
+
+    // =====================================================
+    // 3. ¿QUÉ PASA SI MEJORA LA TASA DE DIÁLOGO?
+    // =====================================================
+
+    asignarTextoSeguro(
+        "ans-dialogo",
+        "Un incremento de la tasa de diálogo (c) acelera la reducción de manifestantes y favorece la estabilización del sistema."
+    );
+
+    // =====================================================
+    // 4. ¿QUÉ PASA SI NO EXISTEN MEDIADORES?
+    // =====================================================
+
+    let sinMediadores = "";
+
+    if (DInicial === 0) {
+        sinMediadores =
+            "En este escenario no existen mediadores. La contención social es mínima y la conflictividad tiende a crecer con mayor facilidad.";
+    } else {
+        sinMediadores =
+            "Si D₀ = 0, la capacidad de contención disminuye y los manifestantes suelen alcanzar valores más altos.";
+    }
+
+    asignarTextoSeguro(
+        "ans-sin-mediadores",
+        sinMediadores
+    );
+
+    // =====================================================
+    // 5. ¿QUÉ PARÁMETROS MASIFICAN EL CONFLICTO?
+    // =====================================================
+
+    const respuestaMasificacion = [];
+
+    if (maxM > (NInicial + MInicial + DInicial) * 0.30) {
+        respuestaMasificacion.push(
+            "alta tasa de propagación (a)"
+        );
+    }
+
+    if (DInicial <= 1) {
+        respuestaMasificacion.push(
+            "escasez de mediadores"
+        );
+    }
+
+    if (MFinal > MInicial) {
+        respuestaMasificacion.push(
+            "baja efectividad del diálogo (c)"
+        );
+    }
+
+    asignarTextoSeguro(
+        "ans-masificacion",
+        respuestaMasificacion.length > 0
+            ? `Los factores más asociados a la masificación son: ${respuestaMasificacion.join(", ")}.`
+            : "No se observan condiciones fuertes de masificación en este escenario."
+    );
+
+    // =====================================================
+    // SEMÁFORO
+    // =====================================================
+
+    const total = NInicial + MInicial + DInicial;
+    const porcentajePico = (maxM / total) * 100;
+
+    const semaforo = document.getElementById("semaforo-alerta");
 
     if (semaforo) {
-        if (porcMaxM < 15) {
-            semaforo.innerText = "Bajo Riesgo"; semaforo.style.background = "#a9b8a2"; semaforo.style.color = "#2f2f2b";
-            nivelRiesgo = "Estable. Contención institucional eficiente sin desborde de malestar.";
-        } else if (porcMaxM >= 15 && porcMaxM < 40) {
-            semaforo.innerText = "Riesgo Moderado"; semaforo.style.background = "#cf9b6d"; semaforo.style.color = "#2f2f2b";
-            nivelRiesgo = "Alerta Media. Presencia de picos de tensión; requiere intervención focalizada.";
-        } else {
-            semaforo.innerText = "Crisis Crítica"; semaforo.style.background = "#d67c7c"; semaforo.style.color = "#ffffff";
-            nivelRiesgo = "Alto Riesgo. Masificación descontrolada con peligro latente de colapso institucional.";
+
+        if (porcentajePico < 15) {
+            semaforo.innerText = "BAJO";
+            semaforo.style.background = "#a9b8a2";
+            semaforo.style.color = "#222";
         }
-    }
-    asignarTextoSeguro('ans-riesgo', nivelRiesgo);
-
-    const ultimosPuntos = M.slice(-15);
-    
-    if (ultimosPuntos.length >= 2) {
-        const deltaFinal = Math.abs(ultimosPuntos[ultimosPuntos.length - 1] - ultimosPuntos[0]);
-        let respuestaEstabiliza = (deltaFinal < 3.0) 
-            ? (ultimosPuntos[ultimosPuntos.length - 1] < (totalPoblacion * 0.2) ? "Sí, converge hacia la pacificación sistémica." : "Sí, pero en estado crónico de alta tensión.")
-            : "No, el sistema presenta oscilaciones cíclicas o divergencia.";
-        asignarTextoSeguro('ans-estabiliza', respuestaEstabiliza);
-
-        const offsetTendencia = M.length >= 10 ? 10 : M.length - 1;
-        const diferenciaTendencia = M[M.length - 1] - M[M.length - offsetTendencia];
-        let respuestaTendencia = Math.abs(diferenciaTendencia) < 0.5 
-            ? "Estacionaria / Meseta neutralizada." 
-            : (diferenciaTendencia > 0 ? "Creciente: Expansión masiva activa." : "Decreciente: Proceso sostenido de mitigación.");
-        asignarTextoSeguro('ans-tendencia', respuestaTendencia);
-    } else {
-        asignarTextoSeguro('ans-estabiliza', "Datos insuficientes (t muy corto).");
-        asignarTextoSeguro('ans-tendencia', "Datos insuficientes.");
+        else if (porcentajePico < 40) {
+            semaforo.innerText = "MODERADO";
+            semaforo.style.background = "#cf9b6d";
+            semaforo.style.color = "#222";
+        }
+        else {
+            semaforo.innerText = "CRÍTICO";
+            semaforo.style.background = "#d67c7c";
+            semaforo.style.color = "#fff";
+        }
     }
 }
