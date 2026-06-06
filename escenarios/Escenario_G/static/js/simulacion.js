@@ -15,8 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
     asociarEventoSeguro('btn-sin-mediadores', 'click', function() { resetearTabsVisuales(this); cargarEscenario('sin_mediadores'); });
     asociarEventoSeguro('btn-alta-propagacion', 'click', function() { resetearTabsVisuales(this); cargarEscenario('propagacion'); });
     
-    // 2. Evento ejecutor principal del panel manual
+    // 2. Eventos ejecutores principales del panel manual y restablecimiento
     asociarEventoSeguro('btn-calcular', 'click', lanzarSimulacion);
+    asociarEventoSeguro('btn-reset', 'click', restablecerValores);
     
     // 3. Simulación inicial automática
     lanzarSimulacion();
@@ -78,6 +79,44 @@ function cargarEscenario(tipo) {
 }
 
 /**
+ * Restablece todos los controles y sliders del DOM a sus condiciones de fábrica
+ */
+function restablecerValores() {
+    // Definición de las condiciones iniciales del escenario base
+    const valoresFabrica = {
+        'inp-N0': 950,
+        'inp-M0': 50,
+        'inp-D0': 5,
+        'inp-a': 0.002,
+        'inp-b': 0.05,
+        'inp-c': 0.04,
+        'inp-k': 0.03,
+        'inp-r': 0.10,
+        'inp-tmax': 50,
+        'inp-h': 0.10
+    };
+
+    // Modificar los inputs numéricos del formulario manual
+    Object.keys(valoresFabrica).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = valoresFabrica[id];
+    });
+
+    // Sincronizar sliders paralelos en la UI en caso de estar mapeados
+    const sliders = { 'slide-N0': 950, 'slide-M0': 50, 'slide-D0': 5 };
+    Object.keys(sliders).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = sliders[id];
+    });
+
+    // Remover bordes activos de pestañas de escenarios guardados al volver a manual puro
+    resetearTabsVisuales(null);
+
+    logBitacora("Valores de fábrica restablecidos con éxito. Reiniciando simulación base...");
+    lanzarSimulacion();
+}
+
+/**
  * Captura el payload del DOM con tolerancias de fallo y ejecuta la simulación
  */
 async function lanzarSimulacion() {
@@ -93,9 +132,8 @@ async function lanzarSimulacion() {
     const metodoSeleccionado = elMetodo ? elMetodo.value : 'rk4';
     
     const tMax = obtenerValor('inp-tmax', 50);
-    const hVisual = obtenerValor('inp-h', 0.10); // Paso de integración
+    const hVisual = obtenerValor('inp-h', 0.10); 
     
-    // CORRECCIÓN: Sincronizamos el conteo de iteraciones con el backend
     const pasosCalculados = Math.max(2, Math.floor(tMax / hVisual) + 1);
 
     const lblMetodo = document.getElementById('lbl-motor-metodo');
@@ -104,19 +142,20 @@ async function lanzarSimulacion() {
     if (lblPasos) lblPasos.innerText = pasosCalculados.toString();
 
     const payload = {
-            N0: obtenerValor('inp-N0', 950),
-            M0: obtenerValor('inp-M0', 50),
-            D0: obtenerValor('inp-D0', 5),
-            a: obtenerValor('inp-a', 0.002),
-            b: obtenerValor('inp-b', 0.05),
-            c: obtenerValor('inp-c', 0.04),
-            k: obtenerValor('inp-k', 0.03),
-            r: obtenerValor('inp-r', 0.10),
-            t_max: tMax,
-            h: hVisual,         // <- CORRECCIÓN: Enviar h directamente
-            pasos: pasosCalculados,
-            metodo: metodoSeleccionado
-        };
+        N0: obtenerValor('inp-N0', 950),
+        M0: obtenerValor('inp-M0', 50),
+        D0: obtenerValor('inp-D0', 5),
+        a: obtenerValor('inp-a', 0.002),
+        b: obtenerValor('inp-b', 0.05),
+        c: obtenerValor('inp-c', 0.04),
+        k: obtenerValor('inp-k', 0.03),
+        r: obtenerValor('inp-r', 0.10),
+        t_max: tMax,
+        h: hVisual,         
+        pasos: pasosCalculados,
+        metodo: metodoSeleccionado
+    };
+
     try {
         const respuesta = await fetch('/Escenario_G/api/simular', {
             method: 'POST',
@@ -127,7 +166,6 @@ async function lanzarSimulacion() {
         if (!respuesta.ok) throw new Error(`HTTP error! status: ${respuesta.status}`);
         const resJson = await respuesta.json();
         
-        // CORRECCIÓN: Flexibilidad en la validación. A veces Flask devuelve el dict sin el wrap "status"
         const dataAProcesar = resJson?.data ?? resJson ?? null;
 
         if (!dataAProcesar?.t) {
@@ -286,15 +324,12 @@ function renderizarMapaSocial(data) {
     const width = canvas.offsetWidth;
     const height = canvas.offsetHeight;
 
-    if (width === 0 || height === 0) {
-        return;
-    }
+    if (width === 0 || height === 0) return;
 
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // Fondo base del mapa social
     ctx.clearRect(0, 0, width, height);
     const grad = ctx.createLinearGradient(0, 0, width, height);
     grad.addColorStop(0, '#16191d');
@@ -302,7 +337,6 @@ function renderizarMapaSocial(data) {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, width, height);
 
-    // Red base de calles virtuales
     ctx.strokeStyle = 'rgba(255,255,255,0.08)';
     ctx.lineWidth = 1;
     for (let x = 0; x <= width; x += width / 12) {
@@ -318,7 +352,6 @@ function renderizarMapaSocial(data) {
         ctx.stroke();
     }
 
-    // Puntos de interés social representados por zonas geográficas
     const puntos = [
         { x: width * 0.18, y: height * 0.28, label: 'Centro' },
         { x: width * 0.45, y: height * 0.18, label: 'Norte' },
@@ -333,7 +366,6 @@ function renderizarMapaSocial(data) {
     const total = Math.max(1, N + M + D);
     const intensidad = Math.min(1, M / total);
 
-    // Determine distribution among puntos with a smoother spread
     const fracciones = puntos.map((_, idx) => 0.12 + 0.14 * Math.sin((idx + 1) * 1.1));
     const escalaGlobal = 18 + 42 * intensidad;
     const radioBase = 8;
@@ -343,13 +375,11 @@ function renderizarMapaSocial(data) {
         const radio = radioBase + (valor / Math.max(1, M)) * escalaGlobal;
         const alfa = 0.35 + 0.45 * (valor / Math.max(1, M));
 
-        // Glow exterior
         ctx.beginPath();
         ctx.arc(p.x, p.y, radio * 1.4, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(206, 52, 66, ${alfa * 0.22})`;
         ctx.fill();
 
-        // Círculo principal
         ctx.beginPath();
         ctx.arc(p.x, p.y, radio, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(206, 52, 66, ${0.85 + 0.15 * intensidad})`;
@@ -358,7 +388,6 @@ function renderizarMapaSocial(data) {
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        // Etiqueta simple
         ctx.font = '12px monospace';
         ctx.fillStyle = '#ffffff';
         ctx.fillText(`${p.label}`, p.x + radio + 8, p.y - 6);
@@ -366,7 +395,6 @@ function renderizarMapaSocial(data) {
         ctx.fillText(`${Math.round(valor)} manifestantes`, p.x + radio + 8, p.y + 10);
     });
 
-    // Barra de leyenda de carga social
     const legendWidth = width * 0.38;
     const legendHeight = 60;
     ctx.fillStyle = 'rgba(15, 18, 22, 0.85)';
@@ -380,8 +408,7 @@ function renderizarMapaSocial(data) {
 
 /**
  * Reconstruye y renderiza dinámicamente la tabla matemática usando 
- * directamente los resultados limpios del backend (Flask) en lugar 
- * de forzar un re-cálculo costoso en el frontend.
+ * directamente los resultados limpios del backend (Flask)
  */
 function renderizarTablaEstructural(data, params) {
     const tbody = document.getElementById('tabla-estructural-body');
@@ -394,7 +421,6 @@ function renderizarTablaEstructural(data, params) {
     const fragmento = document.createDocumentFragment();
     
     const totalPuntos = data.t.length;
-    // Muestreo dinámico pero con techo seguro para evitar colapso del DOM
     const muestreo = Math.max(1, Math.floor(totalPuntos / 50)); 
 
     const metodoDetalles = data.metodo_data || [];
@@ -407,14 +433,6 @@ function renderizarTablaEstructural(data, params) {
         const D = data.D[i];
         const P = N + M + D;
         const detalle = metodoDetalles[i] || {};
-
-        // CORRECCIÓN: Para evitar el sobre-procesamiento, mostramos 
-        // la derivada calculada desde las series de tiempo, o simplemente las poblaciones
-        let dm_dt = "0.000";
-        if (i < totalPuntos - 1) {
-             let dt = data.t[i+1] - data.t[i];
-             if(dt > 0) dm_dt = ((data.M[i+1] - data.M[i]) / dt).toFixed(3);
-        }
 
         let col1 = '-';
         let col2 = '-';
@@ -502,9 +520,7 @@ function obtenerOpcionesBase(titulo, xTitle, yTitle, esScatter = false) {
  * Evalúa las trazas numéricas y ejecuta el sistema experto cognitivo de forma segura
  */
 function ejecutarLogicaAutomatizada(data) {
-    if (!data || !data.M || data.M.length === 0) {
-        return;
-    }
+    if (!data || !data.M || data.M.length === 0) return;
 
     const asignarTextoSeguro = (id, texto) => {
         const el = document.getElementById(id);
@@ -517,27 +533,17 @@ function ejecutarLogicaAutomatizada(data) {
 
     const MInicial = M[0];
     const MFinal = M[M.length - 1];
-
     const NInicial = N[0];
     const DInicial = D[0];
-
     const maxM = Math.max(...M);
 
-    // =====================================================
     // 1. ¿EL CONFLICTO TIENDE A ESTABILIZARSE?
-    // =====================================================
-
     const tramoFinal = M.slice(-15);
-
     let estabiliza = false;
-
     if (tramoFinal.length > 5) {
-        const variacion =
-            Math.abs(tramoFinal[tramoFinal.length - 1] - tramoFinal[0]);
-
+        const variacion = Math.abs(tramoFinal[tramoFinal.length - 1] - tramoFinal[0]);
         estabiliza = variacion < 3;
     }
-
     asignarTextoSeguro(
         "ans-estabiliza",
         estabiliza
@@ -545,77 +551,43 @@ function ejecutarLogicaAutomatizada(data) {
             : "No. El conflicto continúa mostrando cambios significativos."
     );
 
-    // =====================================================
     // 2. ¿AUMENTAN O DISMINUYEN LOS MANIFESTANTES?
-    // =====================================================
-
     let tendencia = "";
-
     if (MFinal > MInicial * 1.05) {
-        tendencia =
-            "Aumentan. La movilización social se expande durante la simulación.";
+        tendencia = "Aumentan. La movilización social se expande durante la simulación.";
     } else if (MFinal < MInicial * 0.95) {
-        tendencia =
-            "Disminuyen. El conflicto pierde intensidad con el tiempo.";
+        tendencia = "Disminuyen. El conflicto pierde intensidad con el tiempo.";
     } else {
-        tendencia =
-            "Se mantienen relativamente constantes durante la simulación.";
+        tendencia = "Se mantienen relativamente constantes durante la simulación.";
     }
-
     asignarTextoSeguro("ans-tendencia", tendencia);
 
-    // =====================================================
     // 3. ¿QUÉ PASA SI MEJORA LA TASA DE DIÁLOGO?
-    // =====================================================
-
     asignarTextoSeguro(
         "ans-dialogo",
         "Un incremento de la tasa de diálogo (c) acelera la reducción de manifestantes y favorece la estabilización del sistema."
     );
 
-    // =====================================================
     // 4. ¿QUÉ PASA SI NO EXISTEN MEDIADORES?
-    // =====================================================
-
     let sinMediadores = "";
-
     if (DInicial === 0) {
-        sinMediadores =
-            "En este escenario no existen mediadores. La contención social es mínima y la conflictividad tiende a crecer con mayor facilidad.";
+        sinMediadores = "En este escenario no existen mediadores. La contención social es mínima y la conflictividad tiende a crecer con mayor facilidad.";
     } else {
-        sinMediadores =
-            "Si D₀ = 0, la capacidad de contención disminuye y los manifestantes suelen alcanzar valores más altos.";
+        sinMediadores = "Si D₀ = 0, la capacidad de contención disminuye y los manifestantes suelen alcanzar valores más altos.";
     }
+    asignarTextoSeguro("ans-sin-mediadores", sinMediadores);
 
-    asignarTextoSeguro(
-        "ans-sin-mediadores",
-        sinMediadores
-    );
-
-    // =====================================================
     // 5. ¿QUÉ PARÁMETROS MASIFICAN EL CONFLICTO?
-    // =====================================================
-
     const respuestaMasificacion = [];
-
     if (maxM > (NInicial + MInicial + DInicial) * 0.30) {
-        respuestaMasificacion.push(
-            "alta tasa de propagación (a)"
-        );
+        respuestaMasificacion.push("alta tasa de propagación (a)");
     }
-
     if (DInicial <= 1) {
-        respuestaMasificacion.push(
-            "escasez de mediadores"
-        );
+        respuestaMasificacion.push("escasez de mediadores");
     }
-
     if (MFinal > MInicial) {
-        respuestaMasificacion.push(
-            "baja efectividad del diálogo (c)"
-        );
+        respuestaMasificacion.push("baja efectividad del diálogo (c)");
     }
-
     asignarTextoSeguro(
         "ans-masificacion",
         respuestaMasificacion.length > 0
@@ -623,28 +595,21 @@ function ejecutarLogicaAutomatizada(data) {
             : "No se observan condiciones fuertes de masificación en este escenario."
     );
 
-    // =====================================================
-    // SEMÁFORO
-    // =====================================================
-
+    // SEMÁFORO DE ALERTA
     const total = NInicial + MInicial + DInicial;
     const porcentajePico = (maxM / total) * 100;
-
     const semaforo = document.getElementById("semaforo-alerta");
 
     if (semaforo) {
-
         if (porcentajePico < 15) {
             semaforo.innerText = "BAJO";
             semaforo.style.background = "#a9b8a2";
             semaforo.style.color = "#222";
-        }
-        else if (porcentajePico < 40) {
+        } else if (porcentajePico < 40) {
             semaforo.innerText = "MODERADO";
             semaforo.style.background = "#cf9b6d";
             semaforo.style.color = "#222";
-        }
-        else {
+        } else {
             semaforo.innerText = "CRÍTICO";
             semaforo.style.background = "#d67c7c";
             semaforo.style.color = "#fff";
