@@ -12,37 +12,37 @@ from escenarios.Escenario_G.routes import escenario_G_bp
 
 app.register_blueprint(
     escenario_A_bp, 
-    url_prefix='/escenario_A'
+    url_prefix='/Escenario_A'
 )
 
 app.register_blueprint(
     escenario_B_bp, 
-    url_prefix='/escenario_B'
+    url_prefix='/Escenario_B'
 )
 
 app.register_blueprint(
     escenario_C_bp, 
-    url_prefix='/escenario_C'
+    url_prefix='/Escenario_C'
 )
 
 app.register_blueprint(
     escenario_D_bp, 
-    url_prefix='/escenario_D'
+    url_prefix='/Escenario_D'
 )
 
 app.register_blueprint(
     escenario_E_bp, 
-    url_prefix='/escenario_E'
+    url_prefix='/Escenario_E'
 )
 
 app.register_blueprint(
     escenario_F_bp, 
-    url_prefix='/escenario_F'
+    url_prefix='/Escenario_F'
 )
 
 app.register_blueprint(
     escenario_G_bp, 
-    url_prefix='/escenario_G'
+    url_prefix='/Escenario_G'
 )
 
 
