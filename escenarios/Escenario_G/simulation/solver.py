@@ -1,6 +1,6 @@
 import numpy as np
-from numerical.Heun import resolver_heun
-from numerical.rk4 import resolver_rk4
+from escenarios.Escenario_G.numerical.Heun import resolver_heun
+from escenarios.Escenario_G.numerical.rk4 import resolver_rk4
 
 def modelo_descontento(t, y, params):
     """
