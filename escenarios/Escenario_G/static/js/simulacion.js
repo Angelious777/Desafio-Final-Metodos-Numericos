@@ -81,6 +81,7 @@ function cargarEscenario(tipo) {
  * Captura el payload del DOM con tolerancias de fallo y ejecuta la simulación
  */
 async function lanzarSimulacion() {
+    console.log("Iniciando lanzamiento de simulación...");
     logBitacora("Calculando matrices de difusión social en motor EDO...");
 
     const obtenerValor = (id, porDefecto) => {
@@ -117,7 +118,7 @@ async function lanzarSimulacion() {
             metodo: metodoSeleccionado
         };
     try {
-        const respuesta = await fetch(window.location.origin + '/api/simular', {
+        const respuesta = await fetch('/calcular_dinamica', { // Ruta relativa
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
