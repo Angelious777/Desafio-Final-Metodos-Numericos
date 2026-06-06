@@ -118,7 +118,7 @@ async function lanzarSimulacion() {
             metodo: metodoSeleccionado
         };
     try {
-        const respuesta = await fetch('/calcular_dinamica', { // Ruta relativa
+        const respuesta = await fetch('/Escenario_G/calcular_dinamica', { // Ruta relativa
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
