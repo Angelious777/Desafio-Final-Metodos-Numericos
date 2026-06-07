@@ -44,8 +44,16 @@ def descomposicion_lu_paso_a_paso(A, b):
 @escenario_F_bp.route('/', methods=['GET', 'POST'])         
 @escenario_F_bp.route('/escenario_f', methods=['GET', 'POST']) 
 def escenario_f_get():
-    default_A = [[1.0, 1.0, 1.0], [1.0, 1.005, 0.995], [0.995, 1.0, 1.005]]
-    return render_template('escenario_f.html', A=default_A, rumor_porcentaje=0, num_cond=1.0, L=[], U=[], y=[], x=[])
+    default_A = [[10.0, 2.0, 1.0], [2.0, 8.0, 1.0], [1.0, 1.0, 5.0]]
+    default_b = [100.0, 80.0, 60.0]
+    return render_template(
+        'escenario_f.html', 
+        A=default_A, 
+        b=default_b,
+        rumor_porcentaje=0, 
+        num_cond=1.0, 
+        L=[], U=[], y=[], x=[]
+    )
 
 @escenario_F_bp.route('/calcular', methods=['POST'])
 def calcular():

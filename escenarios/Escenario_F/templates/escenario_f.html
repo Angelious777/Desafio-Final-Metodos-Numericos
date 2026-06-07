@@ -59,15 +59,15 @@
                         <div class="matrix-wrapper">
                             <span class="matrix-bracket-open">[</span>
                             <div class="matrix-inputs">
-                                <input type="number" step="any" name="a00" class="form-control" value="1.0">
-                                <input type="number" step="any" name="a01" class="form-control" value="1.0">
+                                <input type="number" step="any" name="a00" class="form-control" value="10.0">
+                                <input type="number" step="any" name="a01" class="form-control" value="2.0">
                                 <input type="number" step="any" name="a02" class="form-control" value="1.0">
-                                <input type="number" step="any" name="a10" class="form-control" value="1.0">
-                                <input type="number" step="any" name="a11" class="form-control" value="1.005">
-                                <input type="number" step="any" name="a12" class="form-control" value="0.995">
-                                <input type="number" step="any" name="a20" class="form-control" value="0.995">
+                                <input type="number" step="any" name="a10" class="form-control" value="2.0">
+                                <input type="number" step="any" name="a11" class="form-control" value="8.0">
+                                <input type="number" step="any" name="a12" class="form-control" value="1.0">
+                                <input type="number" step="any" name="a20" class="form-control" value="1.0">
                                 <input type="number" step="any" name="a21" class="form-control" value="1.0">
-                                <input type="number" step="any" name="a22" class="form-control" value="1.005">
+                                <input type="number" step="any" name="a22" class="form-control" value="5.0">
                             </div>
                             <span class="matrix-bracket-close">]</span>
                         </div>
@@ -78,15 +78,15 @@
                         <div class="vector-inputs">
                             <div class="text-center">
                                 <label class="d-block small text-muted">Merc. A</label>
-                                <input type="number" step="any" name="b0" class="form-control" value="360">
+                                <input type="number" step="any" name="b0" class="form-control" value="100.0">
                             </div>
                             <div class="text-center">
                                 <label class="d-block small text-muted">Merc. B</label>
-                                <input type="number" step="any" name="b1" class="form-control" value="360">
+                                <input type="number" step="any" name="b1" class="form-control" value="80.0">
                             </div>
                             <div class="text-center">
                                 <label class="d-block small text-muted">Merc. C</label>
-                                <input type="number" step="any" name="b2" class="form-control" value="360">
+                                <input type="number" step="any" name="b2" class="form-control" value="60.0">
                             </div>
                         </div>
                     </div>
@@ -348,9 +348,9 @@
             errorContainer.classList.add('d-none');
             
             const A = [
-                [float(formData.get('a00')), float(formData.get('a01')), float(formData.get('a02'))],
-                [float(formData.get('a10')), float(formData.get('a11')), float(formData.get('a12'))],
-                [float(formData.get('a20')), float(formData.get('a21')), float(formData.get('a22'))]
+                [parseFloat(formData.get('a00')) || 0.0, parseFloat(formData.get('a01')) || 0.0, parseFloat(formData.get('a02')) || 0.0],
+                [parseFloat(formData.get('a10')) || 0.0, parseFloat(formData.get('a11')) || 0.0, parseFloat(formData.get('a12')) || 0.0],
+                [parseFloat(formData.get('a20')) || 0.0, parseFloat(formData.get('a21')) || 0.0, parseFloat(formData.get('a22')) || 0.0]
             ];
 
             // 1. Renderizar Estado del Sistema
