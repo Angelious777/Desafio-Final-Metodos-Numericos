@@ -54,6 +54,96 @@
                 margin: 0 15px;
             }
         }
+
+        /* Grid de conclusiones para mantener el orden retro */
+        .grid-conclusiones {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .card-conclusion-retro {
+            border: 1px solid var(--border);
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        /* ==========================================================================
+           NUEVOS ESTILOS INTERNOS AISLADOS (CÁSCARA VISUAL DE PESTAÑAS)
+           ========================================================================== */
+        .shell-workspace {
+            display: none; /* Se activa dinámicamente */
+            margin-top: 25px;
+            border: 2px solid var(--border-dark, #000);
+        }
+        .shell-tabs-container {
+            display: flex;
+            flex-wrap: wrap;
+            background: #d4d0c8; /* Gris clásico retro */
+            padding: 6px 6px 0 6px;
+            border-bottom: 2px solid #808080;
+            gap: 4px;
+        }
+        .shell-tab {
+            background: #b5b2af;
+            color: #444;
+            border: 1px solid #808080;
+            border-bottom: none;
+            padding: 6px 14px;
+            font-family: monospace;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            min-width: 160px;
+            max-width: 260px;
+            border-radius: 4px 4px 0 0;
+            box-shadow: inset 1px 1px 0px #fff;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .shell-tab:hover {
+            background: #c0c0c0;
+            color: #000;
+        }
+        .shell-tab.shell-active-tab {
+            background: #f1f1f1;
+            color: #000;
+            font-weight: bold;
+            border: 2px solid var(--border-dark, #000);
+            border-bottom: none;
+            margin-bottom: -2px;
+            padding-bottom: 8px;
+            position: relative;
+            z-index: 5;
+            box-shadow: none;
+        }
+        .shell-tab-title {
+            font-size: 11px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .shell-tab-author {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+            font-style: italic;
+        }
+        .shell-tab.shell-active-tab .shell-tab-author {
+            color: #1e40af;
+        }
+        .shell-iframe-wrapper {
+            width: 100%;
+            height: 78vh;
+            min-height: 580px;
+            background: #ffffff;
+        }
+        .shell-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
     </style>
 </head>
 <body class="retro-os-environment">
@@ -149,7 +239,7 @@
                             <p class="q-text small" style="margin-bottom: 0;">Flujos de distribución mediante sistemas de ecuaciones lineales lineales (Jacobi, Gauss-Seidel, SOR, LU, Gradiente Conjugado).</p>
                             <span class="badge-retro badge-v">Vivian Esquivel</span>
                         </div>
-                        <a href="{{ url_for('escenario_A.inicio') }}" class="retro-btn-execute">Ejecutar Módulo</a>
+                        <a href="{{ url_for('escenario_A.inicio') }}" class="retro-btn-execute" onclick="shellEjecutarModulo(event, '{{ url_for('escenario_A.inicio') }}', '[MÓDULO A] Abastecimiento', 'Vivian Esquivel')">Ejecutar Módulo</a>
                     </div>
 
                     <div class="scenario-item-retro">
@@ -158,7 +248,7 @@
                             <p class="q-text small" style="margin-bottom: 0;">Simulación de disminución de stock por demanda mediante ecuaciones diferenciales ordinarias (Euler, Heun, RK4).</p>
                             <span class="badge-retro badge-a">Angel Escobar</span>
                         </div>
-                        <a href="{{ url_for('escenario_B.inicio') }}" class="retro-btn-execute">Ejecutar Módulo</a>
+                        <a href="{{ url_for('escenario_B.inicio') }}" class="retro-btn-execute" onclick="shellEjecutarModulo(event, '{{ url_for('escenario_B.inicio') }}', '[MÓDULO B] Vaciado Reservas', 'Angel Escobar')">Ejecutar Módulo</a>
                     </div>
 
                     <div class="scenario-item-retro">
@@ -167,7 +257,7 @@
                             <p class="q-text small" style="margin-bottom: 0;">Reconstrucción analítica de tendencias y precios de la canasta básica a partir de datos dispersos (Lagrange, Newton, Splines).</p>
                             <span class="badge-retro badge-a">Angel Escobar</span>
                         </div>
-                        <a href="{{ url_for('escenario_C.inicio') }}" class="retro-btn-execute">Ejecutar Módulo</a>
+                        <a href="{{ url_for('escenario_C.inicio') }}" class="retro-btn-execute" onclick="shellEjecutarModulo(event, '{{ url_for('escenario_C.inicio') }}', '[MÓDULO C] Curva Precios', 'Angel Escobar')">Ejecutar Módulo</a>
                     </div>
 
                     <div class="scenario-item-retro">
@@ -176,7 +266,7 @@
                             <p class="q-text small" style="margin-bottom: 0;">Integración numérica del gasto familiar acumulado bajo curvas de inflación progresiva (Trapecio, Simpson 1/3 y 3/8).</p>
                             <span class="badge-retro badge-v">Vivian Esquivel</span>
                         </div>
-                        <a href="{{ url_for('escenario_D.inicio') }}" class="retro-btn-execute">Ejecutar Módulo</a>
+                        <a href="{{ url_for('escenario_D.inicio') }}" class="retro-btn-execute" onclick="shellEjecutarModulo(event, '{{ url_for('escenario_D.inicio') }}', '[MÓDULO D] Costo Acumulado', 'Vivian Esquivel')">Ejecutar Módulo</a>
                     </div>
 
                     <div class="scenario-item-retro">
@@ -185,7 +275,7 @@
                             <p class="q-text small" style="margin-bottom: 0;">Resolución de funciones no lineales para hallar raíces operativas de colapso de ingresos y reposición (Bisección, Newton, Secante).</p>
                             <span class="badge-retro badge-a">Angel Escobar</span>
                         </div>
-                        <a href="{{ url_for('escenario_E.inicio') }}" class="retro-btn-execute">Ejecutar Módulo</a>
+                        <a href="{{ url_for('escenario_E.inicio') }}" class="retro-btn-execute" onclick="shellEjecutarModulo(event, '{{ url_for('escenario_E.inicio') }}', '[MÓDULO E] Umbrales Críticos', 'Angel Escobar')">Ejecutar Módulo</a>
                     </div>
 
                     <div class="scenario-item-retro">
@@ -194,7 +284,7 @@
                             <p class="q-text small" style="margin-bottom: 0;">Modelado de pánico de compras mediante análisis de sistemas lineales mal condicionados, números de condición y perturbaciones.</p>
                             <span class="badge-retro badge-a">Angel Escobar</span>
                         </div>
-                        <a href="{{ url_for('escenario_F.inicio') }}" class="retro-btn-execute">Ejecutar Módulo</a>
+                        <a href="{{ url_for('escenario_F.inicio') }}" class="retro-btn-execute" onclick="shellEjecutarModulo(event, '{{ url_for('escenario_F.inicio') }}', '[MÓDULO F] Control Rumores', 'Angel Escobar')">Ejecutar Módulo</a>
                     </div>
 
                     <div class="scenario-item-retro">
@@ -203,9 +293,75 @@
                             <p class="q-text small" style="margin-bottom: 0;">Evolución temporal de poblaciones sociales dinámicas: Neutrales (N), Manifestantes (M) y Mediadores (D) mediante RK4.</p>
                             <span class="badge-retro badge-v">Vivian Esquivel</span>
                         </div>
-                        <a href="{{ url_for('escenario_G.inicio') }}" class="retro-btn-execute">Ejecutar Módulo</a>
+                        <a href="{{ url_for('escenario_G.inicio') }}" class="retro-btn-execute" onclick="shellEjecutarModulo(event, '{{ url_for('escenario_G.inicio') }}', '[MÓDULO G] Conflicto Social', 'Vivian Esquivel')">Ejecutar Módulo</a>
                     </div>
 
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           NUEVO SECTOR: CONCLUSIONES DEL PROYECTO (SECCIÓN EXIGIDA POR GUÍA)
+           ========================================================================== -->
+        <section class="retro-window" style="margin-top: 20px;">
+            <div class="retro-window-header">
+                <span class="window-title">Conclusiones Generales y Análisis del Modelo Matemático</span>
+            </div>
+            <div class="retro-window-body">
+                <h2 class="q-title">Evaluación Técnica Colectiva</h2>
+                <p class="q-text">
+                    La modelación matemática computacional de fenómenos socioeconómicos complejos permite extraer diagnósticos precisos basados en criterios de convergencia algorítmica, absteniéndose de interpretaciones subjetivas.
+                </p>
+                
+                <div class="grid-conclusiones">
+                    <div class="card-conclusion-retro">
+                        <div class="font-monospace" style="font-weight: bold; font-size: 13px; color: var(--title); margin-bottom: 5px;">1. ¿Qué se aprendió?</div>
+                        <p class="q-text small" style="margin-bottom: 0; text-align: justify;">
+                            Se consolidó la transposición de variables empíricas (días de bloqueo, especulación, canasta básica) a estructuras de cómputo formalizable, validando que los métodos numéricos actúan como un motor analítico indispensable para predecir puntos de quiebre y comportamientos logísticos sistémicos en contextos críticos.
+                        </p>
+                    </div>
+                    
+                    <div class="card-conclusion-retro">
+                        <div class="font-monospace" style="font-weight: bold; font-size: 13px; color: var(--title); margin-bottom: 5px;">2. Método más útil</div>
+                        <p class="q-text small" style="margin-bottom: 0; text-align: justify;">
+                            El método <strong>Runge-Kutta de 4to Orden (RK4)</strong> destacó por su estabilidad asintótica superior frente a Euler y Heun al procesar ecuaciones diferenciales continuas de desocupación de tanques y dinámicas de opinión. Asimismo, los <strong>Splines Cúbicos</strong> demostraron ser óptimos para suavizar curvas de precios sin las oscilaciones indeseadas de Lagrange.
+                        </p>
+                    </div>
+                    
+                    <div class="card-conclusion-retro">
+                        <div class="font-monospace" style="font-weight: bold; font-size: 13px; color: var(--title); margin-bottom: 5px;">3. Limitaciones</div>
+                        <p class="q-text small" style="margin-bottom: 0; text-align: justify;">
+                            Los modelos son altamente sensibles al <strong>mal condicionamiento de datos</strong> (como se evidenció en la simulación de pánico por rumores). Pequeñas perturbaciones del 5% propagan un margen de error severo si el espectro inicial no es acotado, denotando las limitaciones de los supuestos puramente deterministas frente a conductas psicosociales volátiles.
+                        </p>
+                    </div>
+                    
+                    <div class="card-conclusion-retro">
+                        <div class="font-monospace" style="font-weight: bold; font-size: 13px; color: var(--title); margin-bottom: 5px;">4. Mejoras Futuras</div>
+                        <p class="q-text small" style="margin-bottom: 0; text-align: justify;">
+                            Se sugiere incorporar componentes estocásticos y variables probabilísticas (cadenas de Markov o Monte Carlo) para mitigar la rigidez de las tasas constantes de diálogo o consumo. Del mismo modo, la conexión directa a fuentes dinámicas de datos externos optimizaría el cálculo en tiempo real de los números de condición del sistema.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           NUEVO SECTOR: CONSOLE / MULTI-TAB WORKSPACE (LA CÁSCARA VISUAL)
+           ========================================================================== -->
+        <section class="retro-window shell-workspace" id="shell-workspace-window">
+            <div class="retro-window-header">
+                <span class="window-title">ENTORNO DE SIMULACIÓN INTEGRADO (VISTA EN VIVO)</span>
+                <span class="window-title font-monospace" style="font-size: 11px; color: #aaa;">PROCESADOR_AISLADO_ACTIVO</span>
+            </div>
+            
+            <!-- Barra de Pestañas Dinámicas -->
+            <div id="shell-tabs-nav" class="shell-tabs-container">
+                <!-- Se inyectan vía JS al dar clic en Ejecutar -->
+            </div>
+            
+            <div class="retro-window-body" style="padding: 0; background: #fff;">
+                <div class="shell-iframe-wrapper">
+                    <iframe name="shell-iframe-visor" id="shell-iframe-visor" class="shell-iframe" src="about:blank"></iframe>
                 </div>
             </div>
         </section>
@@ -217,6 +373,68 @@
         </footer>
 
     </div>
+
+    <!-- ==========================================================================
+       SCRIPT DE CONTROL DE NAVEGACIÓN INTERNA (SEGURO Y SIN RECARGAS)
+       ========================================================================== -->
+    <script>
+        function shellEjecutarModulo(event, url, moduloNombre, estudianteNombre) {
+            // 1. Prevenir que el navegador cambie de página o abra otra pestaña nativa
+            event.preventDefault();
+            
+            const workspace = document.getElementById('shell-workspace-window');
+            const tabsContainer = document.getElementById('shell-tabs-nav');
+            
+            // 2. Hacer visible el contenedor de ejecución multitab
+            workspace.style.display = 'block';
+            
+            // Generar un ID único sanitizado para la pestaña
+            const tabId = 'tab-' + moduloNombre.replace(/[^a-zA-Z0-9]/g, '');
+            
+            // 3. Si la pestaña de este módulo no existe aún, la creamos de forma dinámica
+            if (!document.getElementById(tabId)) {
+                const nuevaPestaña = document.createElement('div');
+                nuevaPestaña.id = tabId;
+                nuevaPestaña.className = 'shell-tab';
+                nuevaPestaña.innerHTML = `
+                    <span class="shell-tab-title">${moduloNombre}</span>
+                    <span class="shell-tab-author">${estudianteNombre}</span>
+                `;
+                
+                // Evento para cambiar entre pestañas ya cargadas
+                nuevaPestaña.onclick = function() {
+                    shellActivarPestaña(tabId, url);
+                };
+                
+                tabsContainer.appendChild(nuevaPestaña);
+            }
+            
+            // 4. Activar la pestaña recién presionada o existente e incrustarla en el iframe
+            shellActivarPestaña(tabId, url);
+            
+            // 5. Scroll suave automático hacia el área de ejecución para mejorar la usabilidad
+            workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function shellActivarPestaña(tabId, url) {
+            // Remover la clase activa de todas las pestañas existentes
+            const todasLasPestañas = document.querySelectorAll('.shell-tab');
+            todasLasPestañas.forEach(tab => tab.classList.remove('shell-active-tab'));
+            
+            // Marcar como activa la pestaña seleccionada
+            const pestañaObjetivo = document.getElementById(tabId);
+            if (pestañaObjetivo) {
+                pestañaObjetivo.classList.add('shell-active-tab');
+            }
+            
+            // Actualizar la dirección URL del Visor Iframe aislado (solo si es diferente para evitar recargas inútiles)
+            const visorIframe = document.getElementById('shell-iframe-visor');
+            if (visorIframe.getAttribute('data-url-actual') !== url) {
+                visorIframe.src = url;
+                visorIframe.setAttribute('data-url-actual', url);
+            }
+        }
+    </script>
 
 </body>
 </html>
